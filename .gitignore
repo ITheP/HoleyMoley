@@ -361,3 +361,6 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /Arksplorer/TEMP.txt
+
+# Extras
+Thumbs.db
