@@ -65,6 +65,7 @@ namespace HoleyMoley
 
         private void Controller_FormClosed(object sender, FormClosedEventArgs e)
         {
+            ApplicationHandler.CleanUp();
             Application.Exit();
         }
 
@@ -103,6 +104,9 @@ namespace HoleyMoley
             InsertMenu(sysMenuHandle, 6, MF_BYPOSITION, IDM_TEST, "TEST");
 
             UpdateHoleSize();
+
+            //ApplicationHandler.PopulateAppWindows();
+            ApplicationHandler.Init();
         }
 
         private void ProcessTimerRate()
@@ -571,7 +575,7 @@ namespace HoleyMoley
                 return;
 
             // zoom mode is taken care of outside of this, so we aren't continually recalculating it
-            Size size = new Size()
+            var size = new System.Drawing.Size()
             {
                 Width = Zoom.Width,
                 Height = Zoom.Height

@@ -50,7 +50,7 @@
             this.Info.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.Info.Size = new System.Drawing.Size(73, 39);
             this.Info.TabIndex = 3;
-            this.Info.Text = "Holey Moley\r\nI The P\r 2010-2017 ©";
+            this.Info.Text = "Holey Moley\r\nI The P\r 2010-2021 ©";
             this.Info.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // pictureBox2
