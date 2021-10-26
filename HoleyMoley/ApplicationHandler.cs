@@ -22,134 +22,226 @@ namespace HoleyMoley
 
     public static class ApplicationHandler
     {
-
-        // Need to ensure delegate is not collected while we're using it,
-        // storing it in a class field is simplest way to do this.
-    //    static NativeMethods.WinEventDelegate NameChangeDelegate = new NativeMethods.WinEventDelegate(TitleChangeProc);
+        // Store delegates in class field so not collected during use
+        static NativeMethods.WinEventDelegate NameChangeDelegate = new NativeMethods.WinEventDelegate(TitleChangeProc);
         static NativeMethods.WinEventDelegate LocationChangeDelegate = new NativeMethods.WinEventDelegate(LocationChangeProc);
+        static NativeMethods.WinEventDelegate FocusChangeDelegate = new NativeMethods.WinEventDelegate(FocusChangeProc);
+        static NativeMethods.WinEventDelegate DestroyChangeDelegate = new NativeMethods.WinEventDelegate(DestroyChangeProc);
 
         private static IntPtr TitleTextHook { get; set; }
         private static IntPtr LocationChangeHook { get; set; }
+        private static IntPtr FocusChangeHook { get; set; }
+        private static IntPtr DestroyChangeHook { get; set; }
 
         public static void Init()
         {
             // Listen for name change changes across all processes/threads on current desktop...
-         //   TitleTextHook = NativeMethods.SetWinEventHook((uint)ObjectEventContants.EVENT_OBJECT_NAMECHANGE, (uint)ObjectEventContants.EVENT_OBJECT_NAMECHANGE, IntPtr.Zero, NameChangeDelegate, 0, 0, (uint)Flags.WINEVENT_OUTOFCONTEXT);
+            TitleTextHook = NativeMethods.SetWinEventHook((uint)ObjectEventContants.EVENT_OBJECT_NAMECHANGE, (uint)ObjectEventContants.EVENT_OBJECT_NAMECHANGE, IntPtr.Zero, NameChangeDelegate, 0, 0, (uint)Flags.WINEVENT_OUTOFCONTEXT);
 
             LocationChangeHook = NativeMethods.SetWinEventHook((uint)ObjectEventContants.EVENT_OBJECT_LOCATIONCHANGE, (uint)ObjectEventContants.EVENT_OBJECT_LOCATIONCHANGE, IntPtr.Zero, LocationChangeDelegate, 0, 0, (uint)Flags.WINEVENT_OUTOFCONTEXT);
+
+            FocusChangeHook = NativeMethods.SetWinEventHook((uint)ObjectEventContants.EVENT_OBJECT_FOCUS, (uint)ObjectEventContants.EVENT_OBJECT_FOCUS, IntPtr.Zero, FocusChangeDelegate, 0, 0, (uint)Flags.WINEVENT_OUTOFCONTEXT);
+
+            DestroyChangeHook = NativeMethods.SetWinEventHook((uint)ObjectEventContants.EVENT_OBJECT_DESTROY, (uint)ObjectEventContants.EVENT_OBJECT_DESTROY, IntPtr.Zero, DestroyChangeDelegate, 0, 0, (uint)Flags.WINEVENT_OUTOFCONTEXT);
 
             // MessageBox provides the necessary mesage loop that SetWinEventHook requires.
             // In real-world code, use a regular message loop (GetMessage/TranslateMessage/
             // DispatchMessage etc or equivalent.)
-            Debug.Print("Tracking name changes on HWNDs, close message box to exit.");
+            //Debug.Print("Tracking name changes on HWNDs, close message box to exit.");
         }
 
         public static void CleanUp()
         {
+            NativeMethods.UnhookWinEvent(DestroyChangeHook);
+            NativeMethods.UnhookWinEvent(FocusChangeHook);
             NativeMethods.UnhookWinEvent(LocationChangeHook);
-   //         NativeMethods.UnhookWinEvent(TitleTextHook);
+            NativeMethods.UnhookWinEvent(TitleTextHook);
         }
 
-        //static void TitleChangeProc(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime)
-        //{
-        //    // filter out non-HWND namechanges... (eg. items within a listbox)
-        //    if (idObject != 0 || idChild != 0)
-        //    {
-        //        return;
-        //    }
-        //    Debug.Print("Text of hwnd changed {0:x8}", hwnd.ToInt32());
-        //}
+        static void TitleChangeProc(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime)
+        {
+            // filter out non-HWND namechanges... (eg. items within a listbox)
+            if (idObject != 0 || idChild != 0)
+            {
+                return;
+            }
+            //Debug.Print("Text of hwnd changed {0:x8}", hwnd.ToInt32());
+
+            // Always check on title changes, it might change the colour of the highlighting
+
+            long style = (long)NativeMethods.GetWindowLongPtr(hwnd, (int)GetWindowLongFlags.GWL_STYLE);
+            long isTopLevel = style & ((long)WindowStyles.WS_CHILD);
+
+            // Only parents
+            if (isTopLevel != 0)
+                return;
+
+            //Debug.Print($"Title: {hwnd.ToString("x8")}");
+
+            HighlightWindow(hwnd);
+        }
+
+        static void FocusChangeProc(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime)
+        {
+            //     if (idObject != 0 || idChild != 0)
+            //      {
+            //          return;
+            //     }
+
+            if (hwnd == CurrentHwnd)
+                return; // No need to do anything if currently selected!
+
+            //// Ignore the desktop!
+            //if (hwnd == NativeMethods.GetDesktopWindow())
+            //    return;
+
+            //string info = string.Empty;
+            //if ((idObject == (int)SystemObjectIDs.OBJID_ALERT))
+            //    info = " Alert";
+            //else if ((idObject == (int)SystemObjectIDs.OBJID_CARET))
+            //    info = " Caret";
+            //else if ((idObject == (int)SystemObjectIDs.OBJID_CLIENT))
+            //    info = " Client";
+            //else if ((idObject == (int)SystemObjectIDs.OBJID_CURSOR))
+            //    info = " Cursor";
+            //else if ((idObject == (int)SystemObjectIDs.OBJID_HSCROLL))
+            //    info = " HSccroll";
+            //else if ((idObject == (int)SystemObjectIDs.OBJID_MENU))
+            //    info = " Menu";
+            //else if ((idObject == (int)SystemObjectIDs.OBJID_NATIVEOM))
+            //    info = " NativeOM";
+            //else if ((idObject == (int)SystemObjectIDs.OBJID_QUERYCLASSNAMEIDX))
+            //    info = " QueryClassNameIDX";
+            //else if ((idObject == (int)SystemObjectIDs.OBJID_SIZEGRIP))
+            //    info = " SizeGrip";
+            //else if ((idObject == (int)SystemObjectIDs.OBJID_SOUND))
+            //    info = " Sound";
+            //else if ((idObject == (int)SystemObjectIDs.OBJID_SYSMENU))
+            //    info = " SysMenu";
+            //else if ((idObject == (int)SystemObjectIDs.OBJID_TITLEBAR))
+            //    info = " TitleBar";
+            //else if ((idObject == (int)SystemObjectIDs.OBJID_VSCROLL))
+            //    info = " VScroll";
+            //else if ((idObject == (int)SystemObjectIDs.OBJID_WINDOW))
+            //    info = " Window";
+            ////Debug.Print($"Focus of hwnd changed {hwnd.ToString("x8")} idO={idObject} 0x{idObject.ToString("X4")} idC={idChild} ET={eventType} - {info}");
+            //int capacity = NativeMethods.GetWindowTextLength(hwnd) * 2;
+            //StringBuilder stringBuilder = new StringBuilder(capacity);
+            //NativeMethods.GetWindowText(hwnd, stringBuilder, stringBuilder.Capacity);
+            //Debug.Print($"FOCUS: {hwnd.ToString("x8")} {stringBuilder}.{info}");
+
+
+
+
+            // Only Client calls seem to be relevant (and a focus event may be raised when a client + several children all raise focus events - only want the client, not the children)
+            if (idObject != (int)SystemObjectIDs.OBJID_CLIENT)
+                return;
+
+            IntPtr parentHwnd = GetParent(hwnd);
+
+            // ToDo: Cache the Program Manager? Have an ignore list?
+            int capacity = NativeMethods.GetWindowTextLength(parentHwnd) * 2;
+            StringBuilder stringBuilder = new StringBuilder(capacity);
+            NativeMethods.GetWindowText(parentHwnd, stringBuilder, stringBuilder.Capacity);
+
+            // Ignore the desktop
+            if (stringBuilder.ToString() == "Program Manager")
+                return;
+
+            CurrentHwnd = parentHwnd;
+            HighlightWindow(parentHwnd);
+        }
 
         private static Random Rnd { get; set; } = new Random();
+
+        private static IntPtr CurrentHwnd { get; set; } = IntPtr.Zero;
 
         private static IntPtr GetParent(IntPtr hwnd)
         {
             IntPtr parent = NativeMethods.GetAncestor(hwnd, GetAncestorFlags.GetRoot);
-            
+
             if (parent == null || parent == IntPtr.Zero || parent == NativeMethods.GetDesktopWindow())
                 return hwnd;
 
             return parent;
-
-            //IntPtr nextParent = NativeMethods.GetAncestor(parent, GetAncestorFlags.GetParent);
-
-            //if (nextParent == null || nextParent == IntPtr.Zero || nextParent == NativeMethods.GetDesktopWindow())
-            //    return parent;
-
-            //return nextParent;
         }
 
         static void LocationChangeProc(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime)
         {
-            if (idObject == (int)SystemObjectIDs.OBJID_WINDOW ) //&& idChild == CHILDID_SELF)
-            {
-                // hwnd may be a child window
-                // We check for parents, and use if available. Note that we stop searching if parent = desktop window
-                //     int capacity = NativeMethods.GetWindowTextLength( hwnd) * 2;
-                //     StringBuilder stringBuilder = new StringBuilder(capacity);
-                //     NativeMethods.GetWindowText( hwnd, stringBuilder, stringBuilder.Capacity);
-                //     Debug.Print($"Original '{stringBuilder}': {hwnd.ToString("x4")}, Parent: {GetParent(hwnd).ToString("x4")} with desktop={NativeMethods.GetDesktopWindow()}");
+            if (hwnd != CurrentHwnd)
+                return;
 
-                ////     hwnd = GetParent(hwnd);
-                
-                long style = (long)NativeMethods.GetWindowLongPtr(hwnd, (int)GetWindowLongFlags.GWL_STYLE);
-                long isTopLevel = style & ((long)WindowStyles.WS_CHILD);
-
-                // Only parents
-                if (isTopLevel != 0)
-                    return;
-
-                // Windows we are interested in have captions too (it seems)
-                long isCaptioned = style & ((long)WindowStyles.WS_CAPTION);
-                if (isCaptioned == 0)
-                    return;
-
-                IntPtr parent = NativeMethods.GetAncestor(hwnd, GetAncestorFlags.GetRoot);
-                if (parent != hwnd)
-                    return; // child window, ignore
-
-                var rect = new IntRect();
-                NativeMethods.GetWindowRect(hwnd, ref rect);
-                //var relativeRect = new System.Drawing.Rectangle(0, 0, rect.Right - rect.Left, rect.Bottom - rect.Top);
-                int halfBorderSize = 3;
-                int borderSize = halfBorderSize + halfBorderSize;
-                //var borderedRect = new System.Drawing.Rectangle(halfBorderSize, halfBorderSize, rect.Right - rect.Left - borderSize, rect.Bottom - rect.Top - borderSize);
-
-
-                HighlightHandler.SetPosition(hwnd, rect.Left - halfBorderSize, rect.Top - halfBorderSize, rect.Right - rect.Left + borderSize, rect.Bottom - rect.Top + borderSize);
-
-              ////  if (relativeRect.Width > 100 && relativeRect.Height > 100)
-              ////  {
-
-              //      int capacity = NativeMethods.GetWindowTextLength( hwnd) * 2;
-              //      StringBuilder stringBuilder = new StringBuilder(capacity);
-              //      NativeMethods.GetWindowText( hwnd, stringBuilder, stringBuilder.Capacity);
-
-              //      // using (Graphics g = Graphics.FromHwnd(hwnd))
-              //      IntPtr dc = NativeMethods.GetWindowDC(hwnd);
-
-              //      Debug.Print($"Window info {(uint)style} {hwnd.ToString("x8")}.{idObject} DC={dc} - {rect.Left},{rect.Top},{rect.Right},{rect.Bottom} - {rect.Bottom - rect.Top}x{rect.Right - rect.Left} - Child: {idChild} - '{stringBuilder}'");
-
-              //      if (dc != IntPtr.Zero)
-              //      {
-              //          using (Graphics g = Graphics.FromHdc(dc))
-              //          {
-              //              Pen pen = new Pen(Color.FromArgb(128, Rnd.Next(255), Rnd.Next(255), Rnd.Next(255)), borderSize);
-              //             // SolidBrush brush = new SolidBrush(Color.FromArgb(128, Rnd.Next(255), Rnd.Next(255), Rnd.Next(255)));
-              //              g.DrawRectangle(pen, borderedRect);
-              //          }
-              //      }
-              //      NativeMethods.ReleaseDC(hwnd, dc);
-              ////  }
-            }
-
-
-            //// filter out mouse movement/cursor
-            //if (hwnd == IntPtr.Zero || idObject == (int)SystemObjectIDs.OBJID_CURSOR)
+            //if ((SystemObjectIDs)idObject == SystemObjectIDs.OBJID_WINDOW) //&& idChild == CHILDID_SELF)
             //{
-            //    return;
+            //    long style = (long)NativeMethods.GetWindowLongPtr(hwnd, (int)GetWindowLongFlags.GWL_STYLE);
+            //    long isTopLevel = style & ((long)WindowStyles.WS_CHILD);
+
+            //    // Only parents
+            //    if (isTopLevel != 0)
+            //        return;
+
+            //    // Windows we are interested in have captions too (it seems)
+            //    long isCaptioned = style & ((long)WindowStyles.WS_CAPTION);
+            //    if (isCaptioned == 0)
+            //        return;
+
+            //    IntPtr parent = NativeMethods.GetAncestor(hwnd, GetAncestorFlags.GetRoot);
+            //    if (parent != hwnd)
+            //        return; // child window, ignore
+
+            //    // Final check - is what we are seeing the currently focused window?
+            //    if (hwnd != CurrentHwnd)
+            //        return;
+
+            //Debug.Print($"LOCATION: {hwnd.ToString("x8")}");
+            HighlightWindow(GetParent(hwnd));
             //}
-            //Debug.Print("Location of hwnd changed {0:x8}", hwnd.ToInt32());
+        }
+
+        static void DestroyChangeProc(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime)
+        {
+            if (hwnd != CurrentHwnd)
+                return;
+
+            if ((SystemObjectIDs)idObject != SystemObjectIDs.OBJID_WINDOW)
+                return;
+
+            // Byebye to the currently highlighted window - so we hide our highlighting
+            Debug.Print($"DESTROY: {hwnd.ToString("x8")}  - {idObject}");
+            HighlightHandler.Hide();
+        }
+
+        private static void HighlightWindow(IntPtr hwnd)
+        {
+            // Only bother if this is for currently focused window (should never actually not be)
+            if (hwnd != CurrentHwnd)
+                return;
+
+            // Get caption
+            int capacity = NativeMethods.GetWindowTextLength(hwnd) * 2;
+            StringBuilder stringBuilder = new StringBuilder(capacity);
+            NativeMethods.GetWindowText(hwnd, stringBuilder, stringBuilder.Capacity);
+            //Debug.Print($"Original '{stringBuilder}': {hwnd.ToString("x4")}, Parent: {GetParent(hwnd).ToString("x4")} with desktop={NativeMethods.GetDesktopWindow()}");
+
+            string title = stringBuilder.ToString().ToLower();
+
+            Color color;
+            if (title.Contains("live"))
+                color = Color.Red;
+            else if (title.Contains("test"))
+                color = Color.LimeGreen;
+            else if (title.Contains("dev"))
+                color = Color.DodgerBlue;
+            else
+                color = Color.Gold;     // Goldenrod
+
+            var rect = new IntRect();
+            NativeMethods.GetWindowRect(hwnd, ref rect);
+            //var relativeRect = new System.Drawing.Rectangle(0, 0, rect.Right - rect.Left, rect.Bottom - rect.Top);
+            int borderSize = 5;
+            int doubleBorderSize = borderSize + borderSize;
+
+            HighlightHandler.SetPosition(hwnd, rect.Left - borderSize, rect.Top - borderSize, rect.Right - rect.Left + doubleBorderSize, rect.Bottom - rect.Top + doubleBorderSize, color);
         }
 
         public static void PopulateAppWindows()
@@ -214,7 +306,6 @@ namespace HoleyMoley
 
             Cursors.CursorRestore();
         }
-
 
         public enum SystemEventContants : uint
         {
@@ -285,22 +376,40 @@ namespace HoleyMoley
         //    OBJID_NATIVEOM = 0xFFFFFFF0
         //}
 
+        //public enum SystemObjectIDs : int
+        //{
+        //    OBJID_WINDOW = 0x0000,              // 0
+        //    OBJID_SYSMENU = 0xFFFF,             // -1
+        //    OBJID_TITLEBAR = 0xFFFE,            // -2
+        //    OBJID_MENU = 0xFFFD,                // -3
+        //    OBJID_CLIENT = 0xFFFC,              // -4
+        //    OBJID_VSCROLL = 0xFFFB,             // -5
+        //    OBJID_HSCROLL = 0xFFFA,             // -6
+        //    OBJID_SIZEGRIP = 0xFFF9,            // -7
+        //    OBJID_CARET = 0xFFF8,               // -8
+        //    OBJID_CURSOR = 0xFFF7,              // -9
+        //    OBJID_ALERT = 0xFFF6,               // -10
+        //    OBJID_SOUND = 0xFFF5,               // -11
+        //    OBJID_QUERYCLASSNAMEIDX = 0xFFF4,   // -12
+        //    OBJID_NATIVEOM = 0xFFF0             // -16
+        //}
+
         public enum SystemObjectIDs : int
         {
-            OBJID_WINDOW = 0x0000,
-            OBJID_SYSMENU = 0xFFFF,
-            OBJID_TITLEBAR = 0xFFFE,
-            OBJID_MENU = 0xFFFD,
-            OBJID_CLIENT = 0xFFFC,
-            OBJID_VSCROLL = 0xFFFB,
-            OBJID_HSCROLL = 0xFFFA,
-            OBJID_SIZEGRIP = 0xFFF9,
-            OBJID_CARET = 0xFFF8,
-            OBJID_CURSOR = 0xFFF7,
-            OBJID_ALERT = 0xFFF6,
-            OBJID_SOUND = 0xFFF5,
-            OBJID_QUERYCLASSNAMEIDX = 0xFFF4,
-            OBJID_NATIVEOM = 0xFFF0
+            OBJID_WINDOW = 0,              // 0
+            OBJID_SYSMENU = -1,             // -1
+            OBJID_TITLEBAR = -2,            // -2
+            OBJID_MENU = -3,                // -3
+            OBJID_CLIENT = -4,              // -4
+            OBJID_VSCROLL = -5,             // -5
+            OBJID_HSCROLL = -6,             // -6
+            OBJID_SIZEGRIP = -7,            // -7
+            OBJID_CARET = -8,               // -8
+            OBJID_CURSOR = -9,              // -9
+            OBJID_ALERT = -10,               // -10
+            OBJID_SOUND = -11,               // -11
+            OBJID_QUERYCLASSNAMEIDX = -12,   // -12
+            OBJID_NATIVEOM = -16             // -16
         }
 
 

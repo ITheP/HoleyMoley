@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,13 +19,15 @@ namespace HoleyMoley
             }
         }
 
-        public static void SetPosition(IntPtr parent, int x, int y, int w, int h)
+        public static void SetPosition(IntPtr parent, int x, int y, int w, int h, Color color)
         {
+            Highlight.BackColor = color;
             bool result = NativeMethods.SetWindowPos(Highlight.Handle, parent, x, y, w, h, SetWindowPosFlags.NOACTIVATE | SetWindowPosFlags.SHOWWINDOW);
-            //Highlight.Left = x;
-            //Highlight.Top = y;
-            //Highlight.Width = w;
-            //Highlight.Height = h;
+        }
+
+        public static void Hide()
+        {
+            Highlight.Visible = false;
         }
     }
 }
