@@ -18,6 +18,7 @@ namespace HoleyMoley
     // Handle WM_NCPAINT? https://www.codeproject.com/questions/1129299/how-do-i-draw-on-windows-form-titlebar-without-get
     // WM_NCACTIVATE + extra info https://docs.microsoft.com/en-us/windows/win32/gdi/nonclient-area
 
+    // Backing window https://stackoverflow.com/questions/2232727/how-to-draw-outside-a-window
 
     public static class ApplicationHandler
     {
@@ -61,33 +62,85 @@ namespace HoleyMoley
 
         private static Random Rnd { get; set; } = new Random();
 
+        private static IntPtr GetParent(IntPtr hwnd)
+        {
+            IntPtr parent = NativeMethods.GetAncestor(hwnd, GetAncestorFlags.GetRoot);
+            
+            if (parent == null || parent == IntPtr.Zero || parent == NativeMethods.GetDesktopWindow())
+                return hwnd;
+
+            return parent;
+
+            //IntPtr nextParent = NativeMethods.GetAncestor(parent, GetAncestorFlags.GetParent);
+
+            //if (nextParent == null || nextParent == IntPtr.Zero || nextParent == NativeMethods.GetDesktopWindow())
+            //    return parent;
+
+            //return nextParent;
+        }
+
         static void LocationChangeProc(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime)
         {
             if (idObject == (int)SystemObjectIDs.OBJID_WINDOW ) //&& idChild == CHILDID_SELF)
             {
+                // hwnd may be a child window
+                // We check for parents, and use if available. Note that we stop searching if parent = desktop window
+                //     int capacity = NativeMethods.GetWindowTextLength( hwnd) * 2;
+                //     StringBuilder stringBuilder = new StringBuilder(capacity);
+                //     NativeMethods.GetWindowText( hwnd, stringBuilder, stringBuilder.Capacity);
+                //     Debug.Print($"Original '{stringBuilder}': {hwnd.ToString("x4")}, Parent: {GetParent(hwnd).ToString("x4")} with desktop={NativeMethods.GetDesktopWindow()}");
+
+                ////     hwnd = GetParent(hwnd);
+                
+                long style = (long)NativeMethods.GetWindowLongPtr(hwnd, (int)GetWindowLongFlags.GWL_STYLE);
+                long isTopLevel = style & ((long)WindowStyles.WS_CHILD);
+
+                // Only parents
+                if (isTopLevel != 0)
+                    return;
+
+                // Windows we are interested in have captions too (it seems)
+                long isCaptioned = style & ((long)WindowStyles.WS_CAPTION);
+                if (isCaptioned == 0)
+                    return;
+
+                IntPtr parent = NativeMethods.GetAncestor(hwnd, GetAncestorFlags.GetRoot);
+                if (parent != hwnd)
+                    return; // child window, ignore
+
                 var rect = new IntRect();
                 NativeMethods.GetWindowRect(hwnd, ref rect);
-                var relativeRect = new System.Drawing.Rectangle(0, 0, rect.Right - rect.Left, rect.Bottom - rect.Top);
+                //var relativeRect = new System.Drawing.Rectangle(0, 0, rect.Right - rect.Left, rect.Bottom - rect.Top);
                 int halfBorderSize = 3;
                 int borderSize = halfBorderSize + halfBorderSize;
-                var borderedRect = new System.Drawing.Rectangle(halfBorderSize, halfBorderSize, rect.Right - rect.Left - borderSize, rect.Bottom - rect.Top - borderSize);
+                //var borderedRect = new System.Drawing.Rectangle(halfBorderSize, halfBorderSize, rect.Right - rect.Left - borderSize, rect.Bottom - rect.Top - borderSize);
 
-                if (relativeRect.Width > 100 && relativeRect.Height > 100)
-                {
-                    Debug.Print($"Window info - {hwnd} - {rect.Left},{rect.Top},{rect.Right},{rect.Bottom} - {rect.Bottom - rect.Top}x{rect.Right - rect.Left} - Child: {idChild}");
 
-                    // using (Graphics g = Graphics.FromHwnd(hwnd))
-                    IntPtr dc = NativeMethods.GetWindowDC(hwnd);
-                    if (dc != IntPtr.Zero)
-                    {
-                        using (Graphics g = Graphics.FromHdc(dc))
-                        {
-                            Pen pen = new Pen(Color.FromArgb(255, Rnd.Next(255), Rnd.Next(255), Rnd.Next(255)), borderSize);
-                            g.DrawRectangle(pen, borderedRect);
-                        }
-                    }
-                    NativeMethods.ReleaseDC(hwnd, dc);
-                }
+                HighlightHandler.SetPosition(hwnd, rect.Left - halfBorderSize, rect.Top - halfBorderSize, rect.Right - rect.Left + borderSize, rect.Bottom - rect.Top + borderSize);
+
+              ////  if (relativeRect.Width > 100 && relativeRect.Height > 100)
+              ////  {
+
+              //      int capacity = NativeMethods.GetWindowTextLength( hwnd) * 2;
+              //      StringBuilder stringBuilder = new StringBuilder(capacity);
+              //      NativeMethods.GetWindowText( hwnd, stringBuilder, stringBuilder.Capacity);
+
+              //      // using (Graphics g = Graphics.FromHwnd(hwnd))
+              //      IntPtr dc = NativeMethods.GetWindowDC(hwnd);
+
+              //      Debug.Print($"Window info {(uint)style} {hwnd.ToString("x8")}.{idObject} DC={dc} - {rect.Left},{rect.Top},{rect.Right},{rect.Bottom} - {rect.Bottom - rect.Top}x{rect.Right - rect.Left} - Child: {idChild} - '{stringBuilder}'");
+
+              //      if (dc != IntPtr.Zero)
+              //      {
+              //          using (Graphics g = Graphics.FromHdc(dc))
+              //          {
+              //              Pen pen = new Pen(Color.FromArgb(128, Rnd.Next(255), Rnd.Next(255), Rnd.Next(255)), borderSize);
+              //             // SolidBrush brush = new SolidBrush(Color.FromArgb(128, Rnd.Next(255), Rnd.Next(255), Rnd.Next(255)));
+              //              g.DrawRectangle(pen, borderedRect);
+              //          }
+              //      }
+              //      NativeMethods.ReleaseDC(hwnd, dc);
+              ////  }
             }
 
 

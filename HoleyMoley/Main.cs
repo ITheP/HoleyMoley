@@ -63,6 +63,8 @@ namespace HoleyMoley
             controller.ParentForm = this;
             controller.Show(this);
 
+            HighlightHandler.InitHighlight();
+
             //SendMessage(this.Handle, WM_SETREDRAW, true, 0);
             //this.Refresh();
 

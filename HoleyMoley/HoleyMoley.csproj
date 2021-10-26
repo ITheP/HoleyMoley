@@ -113,6 +113,13 @@
       <DependentUpon>Controller.cs</DependentUpon>
     </Compile>
     <Compile Include="CursorHandler.cs" />
+    <Compile Include="HighlightHandler.cs" />
+    <Compile Include="Highlight.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Highlight.Designer.cs">
+      <DependentUpon>Highlight.cs</DependentUpon>
+    </Compile>
     <Compile Include="Main.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -128,6 +135,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Controller.resx">
       <DependentUpon>Controller.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Highlight.resx">
+      <DependentUpon>Highlight.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
