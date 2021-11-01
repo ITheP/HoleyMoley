@@ -6,7 +6,9 @@ using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Windows;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 
 
 namespace HoleyMoley
@@ -23,15 +25,19 @@ namespace HoleyMoley
             InitializeComponent();
         }
 
-        public int width { get; set; } = 1024;
-        public int height { get; set; } = 768;
-        public int xoffset { get; set; } = 0;
-        public int yoffset { get; set; } = 0;
-        public bool margin { get; set; } = true;
-        public int marginDepth { get; set; } = -1;
+        public int Width { get; set; } = 1024;
+        public int Height { get; set; } = 768;
+        public int XOffset { get; set; } = 0;
+        public int YOffset { get; set; } = 0;
+        public bool Margin { get; set; } = true;
+        public int MarginDepth { get; set; } = -1;
 
         private int CrossHairX;
         private int CrossHairY;
+
+        Controller Controller { get; set; }
+        public HoleControls HoleControls { get; set; }
+
 
         private void Main_Load(object sender, EventArgs e)
         {
@@ -48,9 +54,9 @@ namespace HoleyMoley
 
             this.TransparencyKey = System.Drawing.Color.FromArgb(((System.Byte)(255)), ((System.Byte)(128)), ((System.Byte)(128)));
 
-            int exstyle = GetWindowLong(this.Handle, GWL_EXSTYLE);
-            exstyle |= WS_EX_TRANSPARENT;
-            SetWindowLong(this.Handle, GWL_EXSTYLE, exstyle);
+            int exstyle = GetWindowLong(this.Handle, (int)GetWindowLongFlags.GWL_EXSTYLE);
+            exstyle |= (int)WindowStylesEx.WS_EX_TRANSPARENT;
+            SetWindowLong(this.Handle, (int)GetWindowLongFlags.GWL_EXSTYLE, exstyle);
 
             IntPtr hwndf = this.Handle;
             IntPtr hwndParent = GetDesktopWindow();
@@ -59,11 +65,19 @@ namespace HoleyMoley
             this.Opacity = 0.40D;
             this.TopMost = true;
 
-            Controller controller = new Controller();
-            controller.ParentForm = this;
-            controller.Show(this);
+            HoleControls = new HoleControls();
+            HoleControls.Owner = this;
+            HoleControls.TopMost = true;
+            HoleControls.Show();
+            HoleControls.Visible = false;
 
-            HighlightHandler.InitHighlight();
+            Controller = new Controller();
+            Controller.HoleForm = this;
+            Controller.Show(this);
+            HoleControls.Controller = Controller;
+
+            HighlightHandler.AddToIgnoreList(this.Handle);
+            HighlightHandler.AddToIgnoreList(HoleControls.Handle);
 
             //SendMessage(this.Handle, WM_SETREDRAW, true, 0);
             //this.Refresh();
@@ -72,28 +86,39 @@ namespace HoleyMoley
             if (Properties.Settings.Default.OverlayVisible)
                 this.Show();
 
+            
             this.ResumeLayout(false);
+        }
+
+        public void SetControlVisibility(bool visible)
+        {
+            HoleControls.Visible = visible;
         }
 
         public void AlterXOffset(int offset)
         {
-            xoffset += offset;
+            XOffset += offset;
         }
 
         public void AlterYOffset(int offset)
         {
-            yoffset += offset;
+            YOffset += offset;
         }
 
         public void ResetOffset()
         {
-            xoffset = 0;
-            yoffset = 0;
+            XOffset = 0;
+            YOffset = 0;
         }
 
         public void SetColour(Color color)
         {
             this.BackColor = color;
+        }
+
+        public Color GetCurrentColour()
+        {
+            return this.BackColor;
         }
 
         public void SetHole()
@@ -105,21 +130,21 @@ namespace HoleyMoley
             // rect = reference to the entire screen (size)
             Rectangle rect = Screen.PrimaryScreen.WorkingArea;
 
-            this.Hole.Size = new System.Drawing.Size(width, height);
+            this.Hole.Size = new System.Drawing.Size(Width, Height);
 
-            if (margin == true)
+            if (Margin == true)
             {
                 // Scales a margin 50 pixels around the hole
                 // We offset the parent window (this.) in this case
-                this.Size = new System.Drawing.Size(width + (marginDepth * 2), height + (marginDepth * 2));
-                this.Top = ((rect.Height / 2) - (this.Height / 2)) - yoffset;
-                this.Left = (rect.Width / 2) - (this.Width / 2) - xoffset;
+                this.Size = new System.Drawing.Size(Width + (MarginDepth * 2), Height + (MarginDepth * 2));
+                this.Top = ((rect.Height / 2) - (this.Height / 2)) - YOffset - MarginDepth;
+                this.Left = (rect.Width / 2) - (this.Width / 2) - XOffset - MarginDepth;
 
                 System.Diagnostics.Debug.Print("Left=" + this.Left);
 
                 // Remember the hole is placed in relation to the main window, not an absolute position on the screen
-                this.Hole.Top = marginDepth;
-                this.Hole.Left = marginDepth;
+                this.Hole.Top = MarginDepth;
+                this.Hole.Left = MarginDepth;
             }
             else
             {
@@ -129,34 +154,60 @@ namespace HoleyMoley
                 this.Left = 0;
 
                 // We offset the Hole in this case
-                this.Hole.Top = ((rect.Height / 2) - (this.Hole.Height / 2)) - yoffset;
-                this.Hole.Left = ((rect.Width / 2) - (this.Hole.Width / 2)) - xoffset;
+                this.Hole.Top = ((rect.Height / 2) - (this.Hole.Height / 2)) - YOffset;
+                this.Hole.Left = ((rect.Width / 2) - (this.Hole.Width / 2)) - XOffset;
             }
+
+
+            MoveHoleControls();
 
             this.ResumeLayout(false);
         }
 
+        IntRect PreviousAppPos { get; set; }
+        IntPtr PreviousHwnd { get; set; }
+
+        public void MoveWindowToHole(IntPtr hwnd)
+        {
+            if (hwnd == IntPtr.Zero)
+                return;
+
+            var prevRect = new IntRect();
+            NativeMethods.GetWindowRect(hwnd, ref prevRect);
+            PreviousAppPos = prevRect;
+            PreviousHwnd = hwnd;
+
+            var rect = new IntRect();
+            NativeMethods.GetWindowRect(this.Hole.Handle, ref rect);
+
+            //bool result = NativeMethods.SetWindowPos(hwnd, IntPtr.Zero, this.Hole.Top, this.Hole.Left,this.Hole.Width, this.Hole.Height, SetWindowPosFlags.NOACTIVATE | SetWindowPosFlags.SHOWWINDOW);
+            bool result = NativeMethods.SetWindowPos(hwnd, IntPtr.Zero, rect.Left, rect.Top, rect.Right - rect.Left, rect.Bottom - rect.Top, SetWindowPosFlags.NOACTIVATE | SetWindowPosFlags.SHOWWINDOW);
+        }
+
+        public void RestoreAppPos()
+        {
+            if (PreviousHwnd == IntPtr.Zero)
+                return;
+
+            IntRect rect = PreviousAppPos;
+            bool result = NativeMethods.SetWindowPos(PreviousHwnd, IntPtr.Zero, rect.Left, rect.Top, rect.Right - rect.Left, rect.Bottom - rect.Top, SetWindowPosFlags.NOACTIVATE | SetWindowPosFlags.SHOWWINDOW);
+        }
 
         public void SetCrosshairs(int x, int y)
         {
             CrossHairX = x - this.Left;
             CrossHairY = y - this.Top;
-
             CrossHairV.BackColor = this.BackColor;
             CrossHairH.BackColor = this.BackColor;
-
             this.SuspendLayout();
-
             CrossHairV.Top = 0;
             CrossHairV.Left = CrossHairX;
             CrossHairV.Height = this.Size.Height;
             CrossHairV.Width = 1;
-
             CrossHairH.Top = CrossHairY;
             CrossHairH.Left = 0;
             CrossHairH.Height = 1;
             CrossHairH.Width = this.Size.Width;
-
             this.ResumeLayout(false);
 
             //Pen p = new Pen(Color.FromArgb(255,128,0,0));
@@ -180,6 +231,16 @@ namespace HoleyMoley
         private void MoveHandle_MouseDown(object sender, MouseEventArgs e)
         {
             System.Diagnostics.Debug.Print("Here");
+        }
+
+        private void MoveHoleControls()
+        {
+            var rect = new IntRect();
+            NativeMethods.GetWindowRect(this.Hole.Handle, ref rect);
+
+            if (HoleControls != null)
+                // 26 = size of move control
+                HoleControls.Location = new System.Drawing.Point(rect.Left - 25, rect.Top - HoleControls.Height);
         }
     }
 }

@@ -44,5 +44,23 @@
     <Setting Name="FasterRefresh" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
+    <Setting Name="HighlightDepth" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">5</Value>
+    </Setting>
+    <Setting Name="TitleSearch1" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Live</Value>
+    </Setting>
+    <Setting Name="TitleSearch2" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Test</Value>
+    </Setting>
+    <Setting Name="TitleSearch3" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Dev</Value>
+    </Setting>
+    <Setting Name="HighlightAppNames" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="HoleControls" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

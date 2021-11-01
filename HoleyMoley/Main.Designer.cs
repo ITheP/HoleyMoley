@@ -22,8 +22,6 @@ namespace HoleyMoley
         [DllImport("user32.dll", SetLastError = true)]
         static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
 
-        private const int GWL_EXSTYLE = -20;
-        private const int WS_EX_TRANSPARENT = 0x20;
 
         /// <summary>
         /// Required designer variable.
@@ -51,20 +49,11 @@ namespace HoleyMoley
         /// </summary>
         private void InitializeComponent()
         {
-            this.Hole = new System.Windows.Forms.PictureBox();
             this.CrossHairV = new System.Windows.Forms.Panel();
             this.CrossHairH = new System.Windows.Forms.Panel();
+            this.Hole = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.Hole)).BeginInit();
             this.SuspendLayout();
-            // 
-            // Hole
-            // 
-            this.Hole.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.Hole.Location = new System.Drawing.Point(50, 50);
-            this.Hole.Name = "Hole";
-            this.Hole.Size = new System.Drawing.Size(800, 600);
-            this.Hole.TabIndex = 0;
-            this.Hole.TabStop = false;
             // 
             // CrossHairV
             // 
@@ -83,6 +72,15 @@ namespace HoleyMoley
             this.CrossHairH.Size = new System.Drawing.Size(46, 100);
             this.CrossHairH.TabIndex = 35;
             this.CrossHairH.Visible = false;
+            // 
+            // Hole
+            // 
+            this.Hole.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Hole.Location = new System.Drawing.Point(50, 50);
+            this.Hole.Name = "Hole";
+            this.Hole.Size = new System.Drawing.Size(800, 600);
+            this.Hole.TabIndex = 0;
+            this.Hole.TabStop = false;
             // 
             // Main
             // 

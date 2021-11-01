@@ -33,17 +33,18 @@ namespace HoleyMoley
         public const Int32 MF_STRING = 0x0;
         public const Int32 IDM_TEST = 1000;
         public const Int32 WM_NCLBUTTONDBLCLK = 0x00A3;
-        public Main ParentForm;
+        public Main HoleForm;
 
         private Bitmap ZoomBitmap;
         private Graphics ZoomGraphics;
-        private int lastMouseX = -1;
-        private int lastMouseY = -1;
-        private int measureMouseX = 0;
-        private int measureMouseY = 0;
-        private int zoomWidth = -1;
-        private int zoomHeight = -1;
-        private int marginDepth = -1;
+        private int LastMouseX = -1;
+        private int LastMouseY = -1;
+        private int MeasureMouseX = 0;
+        private int MeasureMouseY = 0;
+        private int ZoomWidth = -1;
+        private int ZoomHeight = -1;
+        private int MarginSize = -1;
+        private int HighlightSize = -1;
 
         private bool mouseJustPressed = false;
 
@@ -65,25 +66,29 @@ namespace HoleyMoley
 
         private void Controller_FormClosed(object sender, FormClosedEventArgs e)
         {
-            ApplicationHandler.CleanUp();
+            HighlightHandler.CleanUp();
             Application.Exit();
         }
-
 
         private void Controller_Load(object sender, EventArgs e)
         {
             this.MaximizeBox = false;
 
+            this.SuspendLayout();
+
             LoadSettings();
 
-            ProcessTimerRate();        
+            ShowHideHole();
+            ShowHideZoom();
+            ShowHideHighlighting();
+
+            ProcessTimerRate();
             ProcessMarginDepth();
             ProcessZoomLevel(); // Also initialises ZoomBitmap
             CopyOverZoom();
             SetScreenCrossHairPosition();
 
             SetCalculatedColors();
-            ControlPanel.BackColor = Color.White;
 
             Logo.Visible = false;
 
@@ -105,8 +110,22 @@ namespace HoleyMoley
 
             UpdateHoleSize();
 
+            // HighlightHandler.Init(); Don't need this here - will init when required when ShowHideHighlighting was called earlier
+            HighlightHandler.Controller = this;
+            HighlightHandler.AddToIgnoreList(this.Handle);
+            HighlightHandler.SetMatchList(TitleSearch1.Name, TitleSearch1.Text, TitleSearch1.BackColor);
+            HighlightHandler.SetMatchList(TitleSearch2.Name, TitleSearch2.Text, TitleSearch2.BackColor);
+            HighlightHandler.SetMatchList(TitleSearch3.Name, TitleSearch3.Text, TitleSearch3.BackColor);
+            HighlightHandler.SetNoMatchColor(TitleSearchNotFound.BackColor);
+            ProcessHighlightDepth();
+
             //ApplicationHandler.PopulateAppWindows();
-            ApplicationHandler.Init();
+            this.ResumeLayout();
+        }
+
+        public void SetHighlightingTitle(string title)
+        {
+            HighlightingTitle.Text = title;
         }
 
         private void ProcessTimerRate()
@@ -119,15 +138,19 @@ namespace HoleyMoley
 
         private void InitCrossHair()
         {
+            // Make sure the CrossHair's are top/left aligned in the designer
+            // Setting Top/Left below (commented out) screws up with auto-resizing container panel
+            // Commented code left for reference
+
             CrossHairV.Width = 1;
             CrossHairV.Height = Zoom.Height;
-            CrossHairV.Top = Zoom.Top;
+            // CrossHairV.Top = Zoom.Top;
             CrossHairV.Left = Zoom.Left + (Zoom.Width / 2);
 
             CrossHairH.Width = Zoom.Width;
             CrossHairH.Height = 1;
             CrossHairH.Top = Zoom.Top + (Zoom.Height / 2);
-            CrossHairH.Left = Zoom.Left;
+            // CrossHairH.Left = Zoom.Left;
         }
 
         //protected override void WndProc(ref Message m)
@@ -173,20 +196,12 @@ namespace HoleyMoley
 
         private void OpacityLevel_ValueChanged(object sender, EventArgs e)
         {
-            ParentForm.Opacity = (double)(OpacityLevel.Value) / 10.0D;
+            HoleForm.Opacity = (double)(OpacityLevel.Value) / 10.0D;
         }
 
         private void HoleSize_SelectedIndexChanged(object sender, EventArgs e)
         {
             UpdateHoleSize();
-        }
-
-        private void Toggle_Click(object sender, EventArgs e)
-        {
-            if (ParentForm.Visible)
-                ParentForm.Hide();
-            else
-                ParentForm.Show();
         }
 
         private void Margin_CheckedChanged(object sender, EventArgs e)
@@ -202,11 +217,11 @@ namespace HoleyMoley
                 HoleW.Text = size.Width.ToString();
                 HoleH.Text = size.Height.ToString();
 
-                ParentForm.margin = Margin.Checked;
-                ParentForm.marginDepth = marginDepth;
-                ParentForm.width = size.Width;
-                ParentForm.height = size.Height;
-                ParentForm.SetHole();
+                HoleForm.Margin = Margin.Checked;
+                HoleForm.MarginDepth = MarginSize;
+                HoleForm.Width = size.Width;
+                HoleForm.Height = size.Height;
+                HoleForm.SetHole();
 
                 //if (HoleSize.Text == "Size to screen")
                 //{
@@ -229,8 +244,8 @@ namespace HoleyMoley
             if (tmp == "Size to screen")
             {
                 Rectangle rect = Screen.PrimaryScreen.WorkingArea;
-                size.Width = rect.Width - (marginDepth * 2);
-                size.Height = rect.Height - (marginDepth * 2);
+                size.Width = rect.Width - (MarginSize * 2);
+                size.Height = rect.Height - (MarginSize * 2);
             }
             else
             {
@@ -278,20 +293,42 @@ namespace HoleyMoley
 
         private void ColourPicker_Click(object sender, EventArgs e)
         {
+            if (!EnableHole.Checked)
+                return;
+
             if (BorderColour.ShowDialog(this) == DialogResult.OK)
             {
-                ColourPicker.FillColor = BorderColour.Color;
+                SetColorPickerColor(BorderColour.Color);    // Colour can be overridden by enable/disabling holes
                 SetCalculatedColors();
-                ParentForm.SetColour(BorderColour.Color);
+                HoleForm.SetColour(BorderColour.Color);
             }
+        }
+
+        private void SetColorPickerColor(Color color)
+        {
+            ColourPicker.FillColor = color;
         }
 
         private void SetCalculatedColors()
         {
-            this.BackColor = Color.FromArgb((int)(BorderColour.Color.R / 1.69), (int)(BorderColour.Color.G / 1.69), (int)(BorderColour.Color.B / 1.69));
+            // Make darker
+            //this.BackColor = Color.FromArgb((int)(BorderColour.Color.R / 1.69), (int)(BorderColour.Color.G / 1.69), (int)(BorderColour.Color.B / 1.69));
+
+            // Make lighter
+            int r = (int)((BorderColour.Color.R * 0.5d) + 64);
+            if (r > 255)
+                r = 255;
+            int g = (int)((BorderColour.Color.G * 0.5d) + 64);
+            if (g > 255)
+                g = 255;
+            int b = (int)((BorderColour.Color.B * 0.5d) + 64);
+            if (b > 255)
+                b = 255;
+            this.BackColor = Color.FromArgb(r, g, b);
+
             //CrossHairV.BackColor = this.BackColor;
             //CrossHairH.BackColor = this.BackColor;
-            ZoomSeparator.BackColor = this.BackColor;
+            //ZoomSeparator.BackColor = this.BackColor;
         }
 
         private void Logo_MouseClick(object sender, MouseEventArgs e)
@@ -423,10 +460,10 @@ namespace HoleyMoley
 
                             LastMousePos = MHS.pt;
 
-                            ParentForm.AlterXOffset(xdif);
-                            ParentForm.AlterYOffset(ydif);
+                            HoleForm.AlterXOffset(xdif);
+                            HoleForm.AlterYOffset(ydif);
 
-                            ParentForm.SetHole();
+                            HoleForm.SetHole();
                         }
 
                         //Create a string variable that shows the current mouse coordinates.
@@ -439,7 +476,7 @@ namespace HoleyMoley
         }
 
 
-        private void Move_MouseDown(object sender, MouseEventArgs e)
+        public void Move_MouseDown(object sender, MouseEventArgs e)
         {
             if (hHook == 0)
             {
@@ -475,9 +512,9 @@ namespace HoleyMoley
 
         private void CentreHole()
         {
-            ParentForm.xoffset = 0;
-            ParentForm.yoffset = 0;
-            ParentForm.SetHole();
+            HoleForm.XOffset = 0;
+            HoleForm.YOffset = 0;
+            HoleForm.SetHole();
         }
 
         private void Controller_MouseEnter(object sender, EventArgs e)
@@ -533,15 +570,15 @@ namespace HoleyMoley
 
             bool Update = false;
 
-            if (lastMouseX != Cursor.Position.X)
+            if (LastMouseX != Cursor.Position.X)
             {
-                lastMouseX = Cursor.Position.X;
+                LastMouseX = Cursor.Position.X;
                 Update = true;
             }
 
-            if (lastMouseY != Cursor.Position.Y)
+            if (LastMouseY != Cursor.Position.Y)
             {
-                lastMouseY = Cursor.Position.Y;
+                LastMouseY = Cursor.Position.Y;
                 Update = true;
             }
 
@@ -549,8 +586,8 @@ namespace HoleyMoley
             {
                 if (!mouseJustPressed)
                 {
-                    measureMouseX = lastMouseX;
-                    measureMouseY = lastMouseY;
+                    MeasureMouseX = LastMouseX;
+                    MeasureMouseY = LastMouseY;
                     mouseJustPressed = true;
                 }
             }
@@ -566,13 +603,16 @@ namespace HoleyMoley
                 SetScreenCrossHairPosition();
             }
 
-            MouseMeasure.Text = $"{lastMouseX - measureMouseX},{lastMouseY - measureMouseY}";
+            MouseMeasure.Text = $"{LastMouseX - MeasureMouseX},{LastMouseY - MeasureMouseY}";
         }
 
         private void CopyOverZoom()
         {
-            if (!ControlPanel.Visible)
+            if (!ControlPanel.Visible || !Zoom.Visible)
+            {
+                Zoom.Image = null;
                 return;
+            }
 
             // zoom mode is taken care of outside of this, so we aren't continually recalculating it
             var size = new System.Drawing.Size()
@@ -583,7 +623,7 @@ namespace HoleyMoley
             int halfWidth = size.Width / 2;
             int halfHeight = size.Height / 2;
 
-            ZoomGraphics.CopyFromScreen(lastMouseX - (zoomWidth / 2), lastMouseY - (zoomHeight / 2), 0, 0, size); //, CopyPixelOperation.SourceCopy);
+            ZoomGraphics.CopyFromScreen(LastMouseX - (ZoomWidth / 2), LastMouseY - (ZoomHeight / 2), 0, 0, size); //, CopyPixelOperation.SourceCopy);
 
             Zoom.Image = (Image)ZoomBitmap;
         }
@@ -592,10 +632,10 @@ namespace HoleyMoley
         {
             int zoomLevel = ZoomLevel.Value;
 
-            zoomWidth = Zoom.Width / zoomLevel;
-            zoomHeight = Zoom.Height / zoomLevel;
+            ZoomWidth = Zoom.Width / zoomLevel;
+            ZoomHeight = Zoom.Height / zoomLevel;
 
-            ZoomBitmap = new Bitmap(zoomWidth, zoomHeight);
+            ZoomBitmap = new Bitmap(ZoomWidth, ZoomHeight);
             ZoomGraphics = Graphics.FromImage(ZoomBitmap);
 
             //ZoomGraphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
@@ -619,11 +659,17 @@ namespace HoleyMoley
             }
         }
 
+        private void ProcessHighlightDepth()
+        {
+            HighlightSize = HighlightDepth.Value;
+            HighlightHandler.SetBorderSize(HighlightSize);
+        }
+
         private void ProcessMarginDepth()
         {
-            marginDepth = MarginDepth.Value * 25;
-            if (marginDepth == 0)
-                marginDepth = 1;
+            MarginSize = MarginDepth.Value * 25;
+            if (MarginSize == 0)
+                MarginSize = 1;
         }
 
         private void MarginDepth_ValueChanged(object sender, EventArgs e)
@@ -641,8 +687,8 @@ namespace HoleyMoley
         {
             bool state = CrossHair.Checked;
 
-            CrossHairV.Visible = state;
-            CrossHairH.Visible = state;
+            CrossHairV.Visible = state & Zoom.Visible;
+            CrossHairH.Visible = state & Zoom.Visible;
         }
 
         private void ScreenCrossHairs_CheckedChanged(object sender, EventArgs e)
@@ -654,12 +700,12 @@ namespace HoleyMoley
         {
             bool state = ScreenCrossHairs.Checked;
 
-            ParentForm.SetCrosshairsVisibility(state);
+            HoleForm.SetCrosshairsVisibility(state);
         }
 
         private void SetScreenCrossHairPosition()
         {
-            ParentForm.SetCrosshairs(lastMouseX, lastMouseY);
+            HoleForm.SetCrosshairs(LastMouseX, LastMouseY);
         }
 
         private void Zoom_Click(object sender, EventArgs e)
@@ -700,39 +746,64 @@ namespace HoleyMoley
             //filename = Path.GetDirectoryName(Assembly.GetEntryAssembly().GetName().CodeBase);
             //%USERPROFILE%\AppData\Local
 
+            // Hole
             Properties.Settings.Default.HoleSize = HoleSize.Text;
             Properties.Settings.Default.OpacityLevel = OpacityLevel.Value;
             Properties.Settings.Default.Margin = Margin.Checked;
             Properties.Settings.Default.ScreenCrossHairs = ScreenCrossHairs.Checked;
             Properties.Settings.Default.MarginDepth = MarginDepth.Value;
+            Properties.Settings.Default.OverlayVisible = HoleForm.Visible;
+            Properties.Settings.Default.PosX = HoleForm.XOffset;
+            Properties.Settings.Default.PosY = HoleForm.YOffset;
+            Properties.Settings.Default.ControllerX = this.Left;
+            Properties.Settings.Default.ControllerY = this.Top;
+            Properties.Settings.Default.HoleControls = HoleControls.Checked;
+
+            // Highlighting
+            Properties.Settings.Default.HighlightAppNames = HighlightAppNames.Text;
+            Properties.Settings.Default.HighlightDepth = HighlightDepth.Value;
+            Properties.Settings.Default.TitleSearch1 = TitleSearch1.Text;
+            Properties.Settings.Default.TitleSearch2 = TitleSearch2.Text;
+            Properties.Settings.Default.TitleSearch3 = TitleSearch3.Text;
+
+            // Zoom
             Properties.Settings.Default.ZoomLevel = ZoomLevel.Value;
             Properties.Settings.Default.ConstantUpdate = ConstantUpdate.Checked;
             Properties.Settings.Default.CrossHair = CrossHair.Checked;
-            Properties.Settings.Default.OverlayVisible = ParentForm.Visible;
-            Properties.Settings.Default.PosX = ParentForm.xoffset;
-            Properties.Settings.Default.PosY = ParentForm.yoffset;
-            Properties.Settings.Default.ControllerX = this.Left;
-            Properties.Settings.Default.ControllerY = this.Top;
             Properties.Settings.Default.FasterRefresh = FasterRefresh.Checked;
+
             Properties.Settings.Default.Save();
         }
 
 
         private void LoadSettings()
         {
+            // Hole
             HoleSize.Text = Properties.Settings.Default.HoleSize;
             OpacityLevel.Value = Properties.Settings.Default.OpacityLevel;
             Margin.Checked = Properties.Settings.Default.Margin;
             ScreenCrossHairs.Checked = Properties.Settings.Default.ScreenCrossHairs;
             MarginDepth.Value = Properties.Settings.Default.MarginDepth;
+            HoleForm.XOffset = Properties.Settings.Default.PosX;
+            HoleForm.YOffset = Properties.Settings.Default.PosY;
+            this.Left = Properties.Settings.Default.ControllerX;
+            this.Top = Properties.Settings.Default.ControllerY;
+            HoleControls.Checked = Properties.Settings.Default.HoleControls;
+            HoleForm.SetControlVisibility(HoleControls.Checked);
+
+            // Highlighting
+            HighlightAppNames.Text = Properties.Settings.Default.HighlightAppNames;
+            HighlightDepth.Value = Properties.Settings.Default.HighlightDepth;
+            TitleSearch1.Text = Properties.Settings.Default.TitleSearch1;
+            TitleSearch2.Text = Properties.Settings.Default.TitleSearch2;
+            TitleSearch3.Text = Properties.Settings.Default.TitleSearch3;
+
+            // Zoom
             ZoomLevel.Value = Properties.Settings.Default.ZoomLevel;
             ConstantUpdate.Checked = Properties.Settings.Default.ConstantUpdate;
             CrossHair.Checked = Properties.Settings.Default.CrossHair;
-            ParentForm.xoffset = Properties.Settings.Default.PosX;
-            ParentForm.yoffset = Properties.Settings.Default.PosY;
-            this.Left = Properties.Settings.Default.ControllerX;
-            this.Top = Properties.Settings.Default.ControllerY;
             FasterRefresh.Checked = Properties.Settings.Default.FasterRefresh;
+
         }
 
         private void Controller_FormClosing(object sender, FormClosingEventArgs e)
@@ -744,6 +815,154 @@ namespace HoleyMoley
         {
             ProcessTimerRate();
         }
+
+        private void EnableHole_CheckedChanged(object sender, EventArgs e)
+        {
+            ShowHideHole();
+            EnableDisableMoveAppToHole();
+        }
+
+        private void EnableDisableMoveAppToHole()
+        {
+            MoveAppToHole.Enabled = EnableHole.Checked & EnableHilighting.Checked;
+            RestoreApp.Enabled = MoveAppToHole.Enabled;
+            HoleForm.HoleControls.EnableDisableMoveAppToHole(MoveAppToHole.Enabled);
+        }
+
+        private void ShowHideHole()
+        {
+            this.SuspendLayout();
+
+            if (EnableHole.Checked)
+            {
+                HoleForm.Show();
+                HoleForm.HoleControls.Visible = HoleControls.Checked;
+                ControlEnablement(HolePanel, "HoleVisibility", true);
+                SetColorPickerColor(BorderColour.Color);
+            }
+            else
+            {
+                HoleForm.Hide();
+                HoleForm.HoleControls.Hide();
+                ControlEnablement(HolePanel, "HoleVisibility", false);
+                SetColorPickerColor(Color.LightGray);
+            }
+
+            SetCheckBoxText(EnableHole);
+
+            this.ResumeLayout();
+        }
+
+        private void EnableZoom_CheckedChanged(object sender, EventArgs e)
+        {
+            ShowHideZoom();
+        }
+
+        private void ShowHideZoom()
+        {
+            if (EnableZoom.Checked)
+                ControlVisibility(ZoomPanel, "ZoomVisibility", true);
+            else
+                ControlVisibility(ZoomPanel, "ZoomVisibility", false);
+
+            SetCrossHairVisibility();
+
+            SetCheckBoxText(EnableZoom);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="root">Root control we check for visibility for - will also check all child controls</param>
+        /// <param name="tag"></param>
+        /// <param name="state"></param>
+        private void ControlVisibility(Control root, string tag, bool state)
+        {
+            if ((string)root.Tag == tag)
+                root.Visible = state;
+
+            // We also have to recurse down any children
+            foreach (Control child in root.Controls)
+                ControlVisibility(child, tag, state);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="root">Root control we check enablement for - will also check all child controls</param>
+        /// <param name="tag"></param>
+        /// <param name="state"></param>
+        private void ControlEnablement(Control root, string tag, bool state)
+        {
+            if ((string)root.Tag == tag)
+                root.Enabled = state;
+
+            // We also have to recurse down any children
+            foreach (Control child in root.Controls)
+                ControlEnablement(child, tag, state);
+        }
+
+        private void SetCheckBoxText(CheckBox checkBox)
+        {
+            if (checkBox.Checked)
+                checkBox.Text = "On";
+            else
+                checkBox.Text = "Off";
+        }
+
+        private void EnableHilighting_CheckedChanged(object sender, EventArgs e)
+        {
+            ShowHideHighlighting();
+            EnableDisableMoveAppToHole();
+        }
+
+        private void ShowHideHighlighting()
+        {
+            if (EnableHilighting.Checked)
+            {
+                HighlightHandler.Show();
+                ControlEnablement(HighlightingPanel, "HilightingVisibility", true);
+            }
+            else
+            {
+                HighlightHandler.Hide();
+                ControlEnablement(HighlightingPanel, "HilightingVisibility", false);
+            }
+
+            SetCheckBoxText(EnableHilighting);
+        }
+
+        private void HighlightDepth_ValueChanged(object sender, EventArgs e)
+        {
+            ProcessHighlightDepth();
+            HighlightHandler.ReHighlightWindow();
+        }
+
+        private void MoveAppToHole_Click(object sender, EventArgs e)
+        {
+            MoveApptoHole();
+        }
+
+        public void MoveApptoHole()
+        {
+            HoleForm.MoveWindowToHole(HighlightHandler.CurrentHwnd);
+        }
+
+        private void HoleControls_Click(object sender, EventArgs e)
+        {
+            HoleForm.SetControlVisibility(HoleControls.Checked);
+        }
+
+        private void RestoreApp_Click(object sender, EventArgs e)
+        {
+            RestoreAppPos();
+        }
+
+        public void RestoreAppPos()
+        {
+            HoleForm.RestoreAppPos();
+        }
+
     }
 
     public class Settings

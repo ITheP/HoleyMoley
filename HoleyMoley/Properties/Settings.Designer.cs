@@ -190,5 +190,77 @@ namespace HoleyMoley.Properties {
                 this["FasterRefresh"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("5")]
+        public int HighlightDepth {
+            get {
+                return ((int)(this["HighlightDepth"]));
+            }
+            set {
+                this["HighlightDepth"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Live")]
+        public string TitleSearch1 {
+            get {
+                return ((string)(this["TitleSearch1"]));
+            }
+            set {
+                this["TitleSearch1"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Test")]
+        public string TitleSearch2 {
+            get {
+                return ((string)(this["TitleSearch2"]));
+            }
+            set {
+                this["TitleSearch2"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Dev")]
+        public string TitleSearch3 {
+            get {
+                return ((string)(this["TitleSearch3"]));
+            }
+            set {
+                this["TitleSearch3"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string HighlightAppNames {
+            get {
+                return ((string)(this["HighlightAppNames"]));
+            }
+            set {
+                this["HighlightAppNames"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool HoleControls {
+            get {
+                return ((bool)(this["HoleControls"]));
+            }
+            set {
+                this["HoleControls"] = value;
+            }
+        }
     }
 }

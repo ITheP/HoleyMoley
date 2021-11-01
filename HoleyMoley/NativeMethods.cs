@@ -7,6 +7,8 @@ namespace HoleyMoley
 {
     internal static class NativeMethods
     {
+        private const int WS_EX_TRANSPARENT = 0x20;
+
         #region User32
         public const int CURSOR_SHOWING = 0x00000001;
 
@@ -69,6 +71,9 @@ namespace HoleyMoley
 
         [DllImport("user32.dll", SetLastError = true)]
         public static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, SetWindowPosFlags uFlags);
+
+        [DllImport("user32.dll", EntryPoint = "FindWindow", SetLastError = true)]
+        public static extern IntPtr FindWindowByCaption(IntPtr ZeroOnly, string lpWindowName);
 
         #endregion
 
@@ -268,6 +273,154 @@ namespace HoleyMoley
         WS_VSCROLL = 0x200000
     }
 
+    public enum WindowStylesEx : uint
+    {
+        /// <summary>Specifies a window that accepts drag-drop files.</summary>
+        WS_EX_ACCEPTFILES = 0x00000010,
+
+        /// <summary>Forces a top-level window onto the taskbar when the window is visible.</summary>
+        WS_EX_APPWINDOW = 0x00040000,
+
+        /// <summary>Specifies a window that has a border with a sunken edge.</summary>
+        WS_EX_CLIENTEDGE = 0x00000200,
+
+        /// <summary>
+        /// Specifies a window that paints all descendants in bottom-to-top painting order using double-buffering.
+        /// This cannot be used if the window has a class style of either CS_OWNDC or CS_CLASSDC. This style is not supported in Windows 2000.
+        /// </summary>
+        /// <remarks>
+        /// With WS_EX_COMPOSITED set, all descendants of a window get bottom-to-top painting order using double-buffering.
+        /// Bottom-to-top painting order allows a descendent window to have translucency (alpha) and transparency (color-key) effects,
+        /// but only if the descendent window also has the WS_EX_TRANSPARENT bit set.
+        /// Double-buffering allows the window and its descendents to be painted without flicker.
+        /// </remarks>
+        WS_EX_COMPOSITED = 0x02000000,
+
+        /// <summary>
+        /// Specifies a window that includes a question mark in the title bar. When the user clicks the question mark,
+        /// the cursor changes to a question mark with a pointer. If the user then clicks a child window, the child receives a WM_HELP message.
+        /// The child window should pass the message to the parent window procedure, which should call the WinHelp function using the HELP_WM_HELP command.
+        /// The Help application displays a pop-up window that typically contains help for the child window.
+        /// WS_EX_CONTEXTHELP cannot be used with the WS_MAXIMIZEBOX or WS_MINIMIZEBOX styles.
+        /// </summary>
+        WS_EX_CONTEXTHELP = 0x00000400,
+
+        /// <summary>
+        /// Specifies a window which contains child windows that should take part in dialog box navigation.
+        /// If this style is specified, the dialog manager recurses into children of this window when performing navigation operations
+        /// such as handling the TAB key, an arrow key, or a keyboard mnemonic.
+        /// </summary>
+        WS_EX_CONTROLPARENT = 0x00010000,
+
+        /// <summary>Specifies a window that has a double border.</summary>
+        WS_EX_DLGMODALFRAME = 0x00000001,
+
+        /// <summary>
+        /// Specifies a window that is a layered window.
+        /// This cannot be used for child windows or if the window has a class style of either CS_OWNDC or CS_CLASSDC.
+        /// </summary>
+        WS_EX_LAYERED = 0x00080000,
+
+        /// <summary>
+        /// Specifies a window with the horizontal origin on the right edge. Increasing horizontal values advance to the left.
+        /// The shell language must support reading-order alignment for this to take effect.
+        /// </summary>
+        WS_EX_LAYOUTRTL = 0x00400000,
+
+        /// <summary>Specifies a window that has generic left-aligned properties. This is the default.</summary>
+        WS_EX_LEFT = 0x00000000,
+
+        /// <summary>
+        /// Specifies a window with the vertical scroll bar (if present) to the left of the client area.
+        /// The shell language must support reading-order alignment for this to take effect.
+        /// </summary>
+        WS_EX_LEFTSCROLLBAR = 0x00004000,
+
+        /// <summary>
+        /// Specifies a window that displays text using left-to-right reading-order properties. This is the default.
+        /// </summary>
+        WS_EX_LTRREADING = 0x00000000,
+
+        /// <summary>
+        /// Specifies a multiple-document interface (MDI) child window.
+        /// </summary>
+        WS_EX_MDICHILD = 0x00000040,
+
+        /// <summary>
+        /// Specifies a top-level window created with this style does not become the foreground window when the user clicks it.
+        /// The system does not bring this window to the foreground when the user minimizes or closes the foreground window.
+        /// The window does not appear on the taskbar by default. To force the window to appear on the taskbar, use the WS_EX_APPWINDOW style.
+        /// To activate the window, use the SetActiveWindow or SetForegroundWindow function.
+        /// </summary>
+        WS_EX_NOACTIVATE = 0x08000000,
+
+        /// <summary>
+        /// Specifies a window which does not pass its window layout to its child windows.
+        /// </summary>
+        WS_EX_NOINHERITLAYOUT = 0x00100000,
+
+        /// <summary>
+        /// Specifies that a child window created with this style does not send the WM_PARENTNOTIFY message to its parent window when it is created or destroyed.
+        /// </summary>
+        WS_EX_NOPARENTNOTIFY = 0x00000004,
+
+        /// <summary>
+        /// The window does not render to a redirection surface.
+        /// This is for windows that do not have visible content or that use mechanisms other than surfaces to provide their visual.
+        /// </summary>
+        WS_EX_NOREDIRECTIONBITMAP = 0x00200000,
+
+        /// <summary>Specifies an overlapped window.</summary>
+        WS_EX_OVERLAPPEDWINDOW = WS_EX_WINDOWEDGE | WS_EX_CLIENTEDGE,
+
+        /// <summary>Specifies a palette window, which is a modeless dialog box that presents an array of commands.</summary>
+        WS_EX_PALETTEWINDOW = WS_EX_WINDOWEDGE | WS_EX_TOOLWINDOW | WS_EX_TOPMOST,
+
+        /// <summary>
+        /// Specifies a window that has generic "right-aligned" properties. This depends on the window class.
+        /// The shell language must support reading-order alignment for this to take effect.
+        /// Using the WS_EX_RIGHT style has the same effect as using the SS_RIGHT (static), ES_RIGHT (edit), and BS_RIGHT/BS_RIGHTBUTTON (button) control styles.
+        /// </summary>
+        WS_EX_RIGHT = 0x00001000,
+
+        /// <summary>Specifies a window with the vertical scroll bar (if present) to the right of the client area. This is the default.</summary>
+        WS_EX_RIGHTSCROLLBAR = 0x00000000,
+
+        /// <summary>
+        /// Specifies a window that displays text using right-to-left reading-order properties.
+        /// The shell language must support reading-order alignment for this to take effect.
+        /// </summary>
+        WS_EX_RTLREADING = 0x00002000,
+
+        /// <summary>Specifies a window with a three-dimensional border style intended to be used for items that do not accept user input.</summary>
+        WS_EX_STATICEDGE = 0x00020000,
+
+        /// <summary>
+        /// Specifies a window that is intended to be used as a floating toolbar.
+        /// A tool window has a title bar that is shorter than a normal title bar, and the window title is drawn using a smaller font.
+        /// A tool window does not appear in the taskbar or in the dialog that appears when the user presses ALT+TAB.
+        /// If a tool window has a system menu, its icon is not displayed on the title bar.
+        /// However, you can display the system menu by right-clicking or by typing ALT+SPACE.
+        /// </summary>
+        WS_EX_TOOLWINDOW = 0x00000080,
+
+        /// <summary>
+        /// Specifies a window that should be placed above all non-topmost windows and should stay above them, even when the window is deactivated.
+        /// To add or remove this style, use the SetWindowPos function.
+        /// </summary>
+        WS_EX_TOPMOST = 0x00000008,
+
+        /// <summary>
+        /// Specifies a window that should not be painted until siblings beneath the window (that were created by the same thread) have been painted.
+        /// The window appears transparent because the bits of underlying sibling windows have already been painted.
+        /// To achieve transparency without these restrictions, use the SetWindowRgn function.
+        /// </summary>
+        WS_EX_TRANSPARENT = 0x00000020,
+
+        /// <summary>Specifies a window that has a border with a raised edge.</summary>
+        WS_EX_WINDOWEDGE = 0x00000100
+    }
+
     public enum SetWindowPosFlags : uint
     {
         NOSIZE = 0x0001,
@@ -285,5 +438,119 @@ namespace HoleyMoley
         NOSENDCHANGING = 0x0400,
         DEFERERASE = 0x2000,
         ASYNCWINDOWPOS = 0x4000
+    }
+
+    public enum SystemEventContants : uint
+    {
+        EVENT_SYSTEM_SOUND = 0x1,
+        EVENT_SYSTEM_ALERT = 0x2,
+        EVENT_SYSTEM_FOREGROUND = 0x3,
+        EVENT_SYSTEM_MENUSTART = 0x4,
+        EVENT_SYSTEM_MENUEND = 0x5,
+        EVENT_SYSTEM_MENUPOPUPSTART = 0x6,
+        EVENT_SYSTEM_MENUPOPUPEND = 0x7,
+        EVENT_SYSTEM_CAPTURESTART = 0x8,
+        EVENT_SYSTEM_CAPTUREEND = 0x9,
+        EVENT_SYSTEM_MOVESIZESTART = 0xa,
+        EVENT_SYSTEM_MOVESIZEEND = 0xb,
+        EVENT_SYSTEM_CONTEXTHELPSTART = 0xc,
+        EVENT_SYSTEM_CONTEXTHELPEND = 0xd,
+        EVENT_SYSTEM_DRAGDROPSTART = 0xe,
+        EVENT_SYSTEM_DRAGDROPEND = 0xf,
+        EVENT_SYSTEM_DIALOGSTART = 0x10,
+        EVENT_SYSTEM_DIALOGEND = 0x11,
+        EVENT_SYSTEM_SCROLLINGSTART = 0x12,
+        EVENT_SYSTEM_SCROLLINGEND = 0x13,
+        EVENT_SYSTEM_SWITCHSTART = 0x14,
+        EVENT_SYSTEM_SWITCHEND = 0x15,
+        EVENT_SYSTEM_MINIMIZESTART = 0x16,
+        EVENT_SYSTEM_MINIMIZEEND = 0x17
+    }
+
+    public enum ObjectEventContants : uint
+    {
+        EVENT_OBJECT_CREATE = 0x8000,
+        EVENT_OBJECT_DESTROY = 0x8001,
+        EVENT_OBJECT_SHOW = 0x8002,
+        EVENT_OBJECT_HIDE = 0x8003,
+        EVENT_OBJECT_REORDER = 0x8004,
+        EVENT_OBJECT_FOCUS = 0x8005,
+        EVENT_OBJECT_SELECTION = 0x8006,
+        EVENT_OBJECT_SELECTIONADD = 0x8007,
+        EVENT_OBJECT_SELECTIONREMOVE = 0x8008,
+        EVENT_OBJECT_SELECTIONWITHIN = 0x8009,
+        EVENT_OBJECT_STATECHANGE = 0x800A,
+        EVENT_OBJECT_LOCATIONCHANGE = 0x800B,
+        EVENT_OBJECT_NAMECHANGE = 0x800C,
+        EVENT_OBJECT_DESCRIPTIONCHANGE = 0x800D,
+        EVENT_OBJECT_VALUECHANGE = 0x800E,
+        EVENT_OBJECT_PARENTCHANGE = 0x800F,
+        EVENT_OBJECT_HELPCHANGE = 0x8010,
+        EVENT_OBJECT_DEFACTIONCHANGE = 0x8011,
+        EVENT_OBJECT_ACCELERATORCHANGE = 0x8012
+    }
+
+    //// possible marshaling unmanaged type conflict/problem between 32/64 bit
+    //public enum SystemObjectIDs : long
+    //{
+    //    OBJID_WINDOW = 0x00000000,
+    //    OBJID_SYSMENU = 0xFFFFFFFF,
+    //    OBJID_TITLEBAR = 0xFFFFFFFE,
+    //    OBJID_MENU = 0xFFFFFFFD,
+    //    OBJID_CLIENT = 0xFFFFFFFC,
+    //    OBJID_VSCROLL = 0xFFFFFFFB,
+    //    OBJID_HSCROLL = 0xFFFFFFFA,
+    //    OBJID_SIZEGRIP = 0xFFFFFFF9,
+    //    OBJID_CARET = 0xFFFFFFF8,
+    //    OBJID_CURSOR = 0xFFFFFFF7,
+    //    OBJID_ALERT = 0xFFFFFFF6,
+    //    OBJID_SOUND = 0xFFFFFFF5,
+    //    OBJID_QUERYCLASSNAMEIDX = 0xFFFFFFF4,
+    //    OBJID_NATIVEOM = 0xFFFFFFF0
+    //}
+
+    //public enum SystemObjectIDs : int
+    //{
+    //    OBJID_WINDOW = 0x0000,              // 0
+    //    OBJID_SYSMENU = 0xFFFF,             // -1
+    //    OBJID_TITLEBAR = 0xFFFE,            // -2
+    //    OBJID_MENU = 0xFFFD,                // -3
+    //    OBJID_CLIENT = 0xFFFC,              // -4
+    //    OBJID_VSCROLL = 0xFFFB,             // -5
+    //    OBJID_HSCROLL = 0xFFFA,             // -6
+    //    OBJID_SIZEGRIP = 0xFFF9,            // -7
+    //    OBJID_CARET = 0xFFF8,               // -8
+    //    OBJID_CURSOR = 0xFFF7,              // -9
+    //    OBJID_ALERT = 0xFFF6,               // -10
+    //    OBJID_SOUND = 0xFFF5,               // -11
+    //    OBJID_QUERYCLASSNAMEIDX = 0xFFF4,   // -12
+    //    OBJID_NATIVEOM = 0xFFF0             // -16
+    //}
+
+    public enum SystemObjectIDs : int
+    {
+        OBJID_WINDOW = 0,              // 0
+        OBJID_SYSMENU = -1,             // -1
+        OBJID_TITLEBAR = -2,            // -2
+        OBJID_MENU = -3,                // -3
+        OBJID_CLIENT = -4,              // -4
+        OBJID_VSCROLL = -5,             // -5
+        OBJID_HSCROLL = -6,             // -6
+        OBJID_SIZEGRIP = -7,            // -7
+        OBJID_CARET = -8,               // -8
+        OBJID_CURSOR = -9,              // -9
+        OBJID_ALERT = -10,               // -10
+        OBJID_SOUND = -11,               // -11
+        OBJID_QUERYCLASSNAMEIDX = -12,   // -12
+        OBJID_NATIVEOM = -16             // -16
+    }
+
+
+    public enum Flags : uint
+    {
+        WINEVENT_OUTOFCONTEXT = 0x0000,
+        WINEVENT_SKIPOWNTHREAD = 0x0001,
+        WINEVENT_SKIPOWNPROCESS = 0x0002,
+        WINEVENT_INCONTEXT = 0x0004
     }
 }
