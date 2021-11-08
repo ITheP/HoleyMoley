@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Xml.Linq;
 
 namespace HoleyMoley
 {
@@ -99,6 +100,162 @@ namespace HoleyMoley
 
         #endregion
 
+#if DEBUG
+        public static string WindowInfo(IntPtr hwnd, int idObject = 0)
+        {
+            string objectInfo = string.Empty;
+            if (idObject == 0)
+            {
+                objectInfo = "Not set";
+            }
+            else
+            {
+                if ((idObject == (int)SystemObjectIDs.OBJID_ALERT))
+                    objectInfo = "Alert";
+                else if ((idObject == (int)SystemObjectIDs.OBJID_CARET))
+                    objectInfo = "Caret";
+                else if ((idObject == (int)SystemObjectIDs.OBJID_CLIENT))
+                    objectInfo = "Client";
+                else if ((idObject == (int)SystemObjectIDs.OBJID_CURSOR))
+                    objectInfo = "Cursor";
+                else if ((idObject == (int)SystemObjectIDs.OBJID_HSCROLL))
+                    objectInfo = "HSccroll";
+                else if ((idObject == (int)SystemObjectIDs.OBJID_MENU))
+                    objectInfo = "Menu";
+                else if ((idObject == (int)SystemObjectIDs.OBJID_NATIVEOM))
+                    objectInfo = "NativeOM";
+                else if ((idObject == (int)SystemObjectIDs.OBJID_QUERYCLASSNAMEIDX))
+                    objectInfo = "QueryClassNameIDX";
+                else if ((idObject == (int)SystemObjectIDs.OBJID_SIZEGRIP))
+                    objectInfo = "SizeGrip";
+                else if ((idObject == (int)SystemObjectIDs.OBJID_SOUND))
+                    objectInfo = "Sound";
+                else if ((idObject == (int)SystemObjectIDs.OBJID_SYSMENU))
+                    objectInfo = "SysMenu";
+                else if ((idObject == (int)SystemObjectIDs.OBJID_TITLEBAR))
+                    objectInfo = "TitleBar";
+                else if ((idObject == (int)SystemObjectIDs.OBJID_VSCROLL))
+                    objectInfo = "VScroll";
+                else if ((idObject == (int)SystemObjectIDs.OBJID_WINDOW))
+                    objectInfo = "Window";
+            }
+
+            long style = (long)NativeMethods.GetWindowLongPtr(hwnd, (int)GetWindowLongFlags.GWL_STYLE);
+            StringBuilder styleInfo = new StringBuilder();
+            if ((style & (long)WindowStyles.WS_BORDER) != 0)
+                styleInfo.Append(" Border");
+            if ((style & (long)WindowStyles.WS_CAPTION) != 0)
+                styleInfo.Append(" Caption");
+            if ((style & (long)WindowStyles.WS_CHILD) != 0)
+                styleInfo.Append(" Child");
+            if ((style & (long)WindowStyles.WS_CLIPCHILDREN) != 0)
+                styleInfo.Append(" ClipChildren");
+            if ((style & (long)WindowStyles.WS_CLIPSIBLINGS) != 0)
+                styleInfo.Append(" ClipSiblings");
+            if ((style & (long)WindowStyles.WS_DISABLED) != 0)
+                styleInfo.Append(" Disabled");
+            if ((style & (long)WindowStyles.WS_DLGFRAME) != 0)
+                styleInfo.Append(" DLGFrame");
+            if ((style & (long)WindowStyles.WS_GROUP) != 0)
+                styleInfo.Append(" Group");
+            if ((style & (long)WindowStyles.WS_HSCROLL) != 0)
+                styleInfo.Append(" HScroll");
+            if ((style & (long)WindowStyles.WS_MAXIMIZE) != 0)
+                styleInfo.Append(" Maximize");
+            if ((style & (long)WindowStyles.WS_MAXIMIZEBOX) != 0)
+                styleInfo.Append(" MaximizeBox");
+            if ((style & (long)WindowStyles.WS_MINIMIZE) != 0)
+                styleInfo.Append(" Minimize");
+            if ((style & (long)WindowStyles.WS_MINIMIZEBOX) != 0)
+                styleInfo.Append(" MinimizeBox");
+            if ((style & (long)WindowStyles.WS_OVERLAPPED) != 0)
+                styleInfo.Append(" Overlapped");
+            if ((style & (long)WindowStyles.WS_OVERLAPPEDWINDOW) != 0)
+                styleInfo.Append(" OverlappedWindow");
+            if ((style & (long)WindowStyles.WS_POPUP) != 0)
+                styleInfo.Append(" PopUp");
+            if ((style & (long)WindowStyles.WS_POPUPWINDOW) != 0)
+                styleInfo.Append(" PopUpWindow");
+            if ((style & (long)WindowStyles.WS_SIZEFRAME) != 0)
+                styleInfo.Append(" SizeFrame");
+            if ((style & (long)WindowStyles.WS_SYSMENU) != 0)
+                styleInfo.Append(" SysMenu");
+            if ((style & (long)WindowStyles.WS_TABSTOP) != 0)
+                styleInfo.Append(" TabStop");
+            if ((style & (long)WindowStyles.WS_VISIBLE) != 0)
+                styleInfo.Append(" Visible");
+            if ((style & (long)WindowStyles.WS_VSCROLL) != 0)
+                styleInfo.Append(" VScroll");
+
+            long exStyle = (long)NativeMethods.GetWindowLongPtr(hwnd, (int)GetWindowLongFlags.GWL_EXSTYLE);
+            StringBuilder exStyleInfo = new StringBuilder();
+            if ((exStyle & (long)WindowStylesEx.WS_EX_ACCEPTFILES) != 0)
+                exStyleInfo.Append(" AcceptFiles");
+            if ((exStyle & (long)WindowStylesEx.WS_EX_APPWINDOW) != 0)
+                exStyleInfo.Append(" AppWindow");
+            if ((exStyle & (long)WindowStylesEx.WS_EX_CLIENTEDGE) != 0)
+                exStyleInfo.Append(" ClientEdge");
+            if ((exStyle & (long)WindowStylesEx.WS_EX_COMPOSITED) != 0)
+                exStyleInfo.Append(" Composited");
+            if ((exStyle & (long)WindowStylesEx.WS_EX_CONTEXTHELP) != 0)
+                exStyleInfo.Append(" ContextHelp");
+            if ((exStyle & (long)WindowStylesEx.WS_EX_CONTROLPARENT) != 0)
+                exStyleInfo.Append(" ControlParent");
+            if ((exStyle & (long)WindowStylesEx.WS_EX_DLGMODALFRAME) != 0)
+                exStyleInfo.Append(" DLGModalFrame");
+            if ((exStyle & (long)WindowStylesEx.WS_EX_LAYERED) != 0)
+                exStyleInfo.Append(" Layered");
+            if ((exStyle & (long)WindowStylesEx.WS_EX_LAYOUTRTL) != 0)
+                exStyleInfo.Append(" LayoutRTL");
+            if ((exStyle & (long)WindowStylesEx.WS_EX_LEFT) != 0)
+                exStyleInfo.Append(" Left");
+            if ((exStyle & (long)WindowStylesEx.WS_EX_LEFTSCROLLBAR) != 0)
+                exStyleInfo.Append(" LeftScrollBar");
+            if ((exStyle & (long)WindowStylesEx.WS_EX_LTRREADING) != 0)
+                exStyleInfo.Append(" LTRReading");
+            if ((exStyle & (long)WindowStylesEx.WS_EX_MDICHILD) != 0)
+                exStyleInfo.Append(" MDIChild");
+            if ((exStyle & (long)WindowStylesEx.WS_EX_NOACTIVATE) != 0)
+                exStyleInfo.Append(" NoActivate");
+            if ((exStyle & (long)WindowStylesEx.WS_EX_NOINHERITLAYOUT) != 0)
+                exStyleInfo.Append(" NoInheritLayout");
+            if ((exStyle & (long)WindowStylesEx.WS_EX_NOPARENTNOTIFY) != 0)
+                exStyleInfo.Append(" NoParentNotify");
+            if ((exStyle & (long)WindowStylesEx.WS_EX_NOREDIRECTIONBITMAP) != 0)
+                exStyleInfo.Append(" NoRedirectionBitmap");
+            if ((exStyle & (long)WindowStylesEx.WS_EX_OVERLAPPEDWINDOW) != 0)
+                exStyleInfo.Append(" OverlappedWindow");
+            if ((exStyle & (long)WindowStylesEx.WS_EX_PALETTEWINDOW) != 0)
+                exStyleInfo.Append(" PaletteWindow");
+            if ((exStyle & (long)WindowStylesEx.WS_EX_RIGHT) != 0)
+                exStyleInfo.Append(" Right");
+            if ((exStyle & (long)WindowStylesEx.WS_EX_RIGHTSCROLLBAR) != 0)
+                exStyleInfo.Append(" RightScrollBar");
+            if ((exStyle & (long)WindowStylesEx.WS_EX_RTLREADING) != 0)
+                exStyleInfo.Append(" RTLReading");
+            if ((exStyle & (long)WindowStylesEx.WS_EX_STATICEDGE) != 0)
+                exStyleInfo.Append(" StaticEdge");
+            if ((exStyle & (long)WindowStylesEx.WS_EX_TOOLWINDOW) != 0)
+                exStyleInfo.Append(" ToolWindow");
+            if ((exStyle & (long)WindowStylesEx.WS_EX_TOPMOST) != 0)
+                exStyleInfo.Append(" TopMost");
+            if ((exStyle & (long)WindowStylesEx.WS_EX_TRANSPARENT) != 0)
+                exStyleInfo.Append(" Transparent");
+            if ((exStyle & (long)WindowStylesEx.WS_EX_WINDOWEDGE) != 0)
+                exStyleInfo.Append(" WindowEdge");
+
+            int capacity = NativeMethods.GetWindowTextLength(hwnd) * 2;
+            StringBuilder sb = new StringBuilder(capacity);
+            NativeMethods.GetWindowText(hwnd, sb, sb.Capacity);
+            string title = sb.ToString();
+            if (string.IsNullOrEmpty(title))
+                title = "Not set";
+            else
+                title = $"'{title}'";
+
+            return $"0x{hwnd.ToString("x8")} Title: {sb}, Object: {objectInfo}, WindowStyles:{styleInfo}, WindowStylesEx:{exStyleInfo}";
+        }
+#endif
     }
 
     [StructLayout(LayoutKind.Sequential)]

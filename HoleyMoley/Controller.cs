@@ -608,7 +608,8 @@ namespace HoleyMoley
 
         private void CopyOverZoom()
         {
-            if (!ControlPanel.Visible || !Zoom.Visible)
+            // ToDo: Had an exception when escilation screen appeared running admin app (on the CopyFromScreen) - see if it's just the mouse position messing things up (TBC)
+            if (!ControlPanel.Visible || !Zoom.Visible || LastMouseX < 0 || LastMouseY < 0)
             {
                 Zoom.Image = null;
                 return;

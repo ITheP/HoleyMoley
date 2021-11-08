@@ -130,13 +130,16 @@ namespace HoleyMoley
 
         public static void Hide()
         {
-            CleanUp();
+            //CleanUp();
+            Highlight.Visible = false;
         }
 
         public static void Show()
         {
             if (Highlight == null)
                 Init();
+            //else
+            //    Highlight.Visible = true;
 
             // We don't actually show anything till a window event occures to trigger highlighting to actually do something
         }
@@ -155,13 +158,9 @@ namespace HoleyMoley
         {
             // filter out non-HWND namechanges... (eg. items within a listbox)
             if (idObject != 0 || idChild != 0)
-            {
                 return;
-            }
-            //Debug.Print("Text of hwnd changed {0:x8}", hwnd.ToInt32());
 
             // Always check on title changes, it might change the colour of the highlighting
-
             long style = (long)NativeMethods.GetWindowLongPtr(hwnd, (int)GetWindowLongFlags.GWL_STYLE);
             long isTopLevel = style & ((long)WindowStyles.WS_CHILD);
 
@@ -176,57 +175,35 @@ namespace HoleyMoley
 
         static void FocusChangeProc(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime)
         {
-            //     if (idObject != 0 || idChild != 0)
-            //      {
-            //          return;
-            //     }
+            //if (idObject != 0 || idChild != 0)
+            //{
+            //    return;
+            //}
 
             if (hwnd == CurrentHwnd)
                 return; // No need to do anything if currently selected!
 
-            //// Ignore the desktop!
-            //if (hwnd == NativeMethods.GetDesktopWindow())
-            //    return;
-
-            //string info = string.Empty;
-            //if ((idObject == (int)SystemObjectIDs.OBJID_ALERT))
-            //    info = " Alert";
-            //else if ((idObject == (int)SystemObjectIDs.OBJID_CARET))
-            //    info = " Caret";
-            //else if ((idObject == (int)SystemObjectIDs.OBJID_CLIENT))
-            //    info = " Client";
-            //else if ((idObject == (int)SystemObjectIDs.OBJID_CURSOR))
-            //    info = " Cursor";
-            //else if ((idObject == (int)SystemObjectIDs.OBJID_HSCROLL))
-            //    info = " HSccroll";
-            //else if ((idObject == (int)SystemObjectIDs.OBJID_MENU))
-            //    info = " Menu";
-            //else if ((idObject == (int)SystemObjectIDs.OBJID_NATIVEOM))
-            //    info = " NativeOM";
-            //else if ((idObject == (int)SystemObjectIDs.OBJID_QUERYCLASSNAMEIDX))
-            //    info = " QueryClassNameIDX";
-            //else if ((idObject == (int)SystemObjectIDs.OBJID_SIZEGRIP))
-            //    info = " SizeGrip";
-            //else if ((idObject == (int)SystemObjectIDs.OBJID_SOUND))
-            //    info = " Sound";
-            //else if ((idObject == (int)SystemObjectIDs.OBJID_SYSMENU))
-            //    info = " SysMenu";
-            //else if ((idObject == (int)SystemObjectIDs.OBJID_TITLEBAR))
-            //    info = " TitleBar";
-            //else if ((idObject == (int)SystemObjectIDs.OBJID_VSCROLL))
-            //    info = " VScroll";
-            //else if ((idObject == (int)SystemObjectIDs.OBJID_WINDOW))
-            //    info = " Window";
-            //int capacity = NativeMethods.GetWindowTextLength(hwnd) * 2;
-            //StringBuilder stringBuilder = new StringBuilder(capacity);
-            //NativeMethods.GetWindowText(hwnd, stringBuilder, stringBuilder.Capacity);
-            //Debug.Print($"FOCUS: {hwnd.ToString("x8")} {stringBuilder}.{info}");
+#if DEBUG
+            Debug.Print($"{DateTime.Now} FOCUS: {NativeMethods.WindowInfo(hwnd, idObject)}");
+#endif
 
             // Only Client calls seem to be relevant (and a focus event may be raised when a client + several children all raise focus events - only want the client, not the children)
             if (idObject != (int)SystemObjectIDs.OBJID_CLIENT)
                 return;
 
+            // Ignore ToolWindow windows (covers things like combobox pop ups)
+            // Note that viewing e.g. combobox popups, every single row seems to generate a focus event as you move a mouse over them
+            long exStyle = (long)NativeMethods.GetWindowLongPtr(hwnd, (int)GetWindowLongFlags.GWL_EXSTYLE);
+            if ((exStyle & (long)WindowStylesEx.WS_EX_TOOLWINDOW) != 0)
+                return;
+
+            // Pallet windows are used for valid windows AND system windows (such as pop up windows for task bar). Checking for nondirectionalbitmap seems to sort this...
+            if ((exStyle & (long)WindowStylesEx.WS_EX_PALETTEWINDOW) != 0 && (exStyle & (long)WindowStylesEx.WS_EX_NOREDIRECTIONBITMAP) != 0)
+                return;
+
             IntPtr parentHwnd = GetParent(hwnd);
+
+            Debug.Print($"{DateTime.Now} ...: hwnd={hwnd}, parent={parentHwnd}");
 
             if (IgnoreHwnds.Contains(parentHwnd))
                 return;
@@ -288,6 +265,8 @@ namespace HoleyMoley
 
             if ((SystemObjectIDs)idObject != SystemObjectIDs.OBJID_WINDOW)
                 return;
+
+            // Destroy can be nothing more than minimizing to task bar - not closing a window. Obviously does the same thing :)
 
             // Byebye to the currently highlighted window - so we hide our highlighting
             Debug.Print($"DESTROY: {hwnd.ToString("x8")}  - {idObject}");
