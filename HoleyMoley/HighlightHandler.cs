@@ -19,7 +19,7 @@ namespace HoleyMoley
 
         private static Dictionary<string, MatchMaker> MatchLists { get; set; } = new Dictionary<string, MatchMaker>();
         private static Color NoMatchColor { get; set; } = Color.Goldenrod;
-        public static Controller Controller { get; set; }
+        public static UI UI { get; set; }
         private static int BorderSize { get; set; } = 5;
         private static int DoubleBorderSize { get; set; } = 10;
 
@@ -78,8 +78,8 @@ namespace HoleyMoley
 
                 CurrentHwnd = IntPtr.Zero;
 
-                if (Controller != null)
-                    Controller.SetHighlightingTitle(null);
+                if (UI != null)
+                    UI.SetHighlightingTitle(null);
             }
         }
 
@@ -216,7 +216,7 @@ namespace HoleyMoley
         {
             IntPtr parent = NativeMethods.GetAncestor(hwnd, GetAncestorFlags.GetRoot);
 
-            if (parent == null || parent == IntPtr.Zero || parent == NativeMethods.GetDesktopWindow())
+            if (parent == IntPtr.Zero || parent == NativeMethods.GetDesktopWindow())
                 return hwnd;
 
             return parent;
@@ -325,7 +325,7 @@ namespace HoleyMoley
                     //            break;
                 }
 
-                Controller.SetHighlightingTitle(title);
+                UI.SetHighlightingTitle(title);
             }
         ColorSet:
 

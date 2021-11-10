@@ -14,7 +14,7 @@ using System.Diagnostics;
 namespace HoleyMoley
 {
 
-    public partial class Controller : Form
+    public partial class UI : Form
     {
         //[DllImport("user32.dll")]
         //private static extern int GetSystemMenu(int hwnd, int bRevert);
@@ -48,7 +48,7 @@ namespace HoleyMoley
 
         private bool mouseJustPressed = false;
 
-        public Controller()
+        public UI()
         {
             InitializeComponent();
         }
@@ -111,7 +111,7 @@ namespace HoleyMoley
             UpdateHoleSize();
 
             // HighlightHandler.Init(); Don't need this here - will init when required when ShowHideHighlighting was called earlier
-            HighlightHandler.Controller = this;
+            HighlightHandler.UI = this;
             HighlightHandler.AddToIgnoreList(this.Handle);
             HighlightHandler.SetMatchList(TitleSearch1.Name, TitleSearch1.Text, TitleSearch1.BackColor);
             HighlightHandler.SetMatchList(TitleSearch2.Name, TitleSearch2.Text, TitleSearch2.BackColor);
@@ -306,7 +306,8 @@ namespace HoleyMoley
 
         private void SetColorPickerColor(Color color)
         {
-            ColourPicker.FillColor = color;
+           // ColourPicker.FillColor = color;
+            ColourPicker.BackColor = color;
         }
 
         private void SetCalculatedColors()
@@ -399,8 +400,7 @@ namespace HoleyMoley
         }
 
         [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
-        public static extern int SetWindowsHookEx(int idHook, HookProc lpfn,
-        IntPtr hInstance, int threadId);
+        public static extern int SetWindowsHookEx(int idHook, HookProc lpfn, IntPtr hInstance, int threadId);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
         public static extern bool UnhookWindowsHookEx(int idHook);
@@ -492,7 +492,9 @@ namespace HoleyMoley
                 // Create an instance of HookProc.
                 MouseHookProcedure = new HookProc(this.MouseHookProc); //Controller.MouseHookProc);
 
-                hHook = SetWindowsHookEx(WH_MOUSE, MouseHookProcedure, (IntPtr)0, AppDomain.GetCurrentThreadId()); // System.Threading.Thread.CurrentThread.ManagedThreadId); // AppDomain.GetCurrentThreadId());
+                // ToDo: Process.GetCurrentProcess().Threads[0].Id instead?
+                hHook = SetWindowsHookEx(WH_MOUSE, MouseHookProcedure, (IntPtr)0, Process.GetCurrentProcess().Threads[0].Id);
+           //     hHook = SetWindowsHookEx(WH_MOUSE, MouseHookProcedure, (IntPtr)0, AppDomain.GetCurrentThreadId()); // System.Threading.Thread.CurrentThread.ManagedThreadId); // AppDomain.GetCurrentThreadId());
                 //If the SetWindowsHookEx function fails.
                 if (hHook == 0)
                 {

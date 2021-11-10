@@ -11,7 +11,7 @@ namespace HoleyMoley
 {
     public partial class HoleControls : Form
     {
-        public Controller Controller { get; set; }
+        public UI UI { get; set; }
 
         public HoleControls()
         {
@@ -26,17 +26,17 @@ namespace HoleyMoley
 
         private void Move_MouseDown(object sender, MouseEventArgs e)
         {
-            Controller.Move_MouseDown(sender, e);
+            UI.Move_MouseDown(sender, e);
         }
 
         private void MoveAppToHole_Click(object sender, EventArgs e)
         {
-            Controller.MoveApptoHole();
+            UI.MoveApptoHole();
         }
 
         private void RestoreApp_Click(object sender, EventArgs e)
         {
-            Controller.RestoreAppPos();
+            UI.RestoreAppPos();
         }
     }
 }

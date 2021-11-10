@@ -1,15 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Windows;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
-
 
 namespace HoleyMoley
 {
@@ -35,7 +26,7 @@ namespace HoleyMoley
         private int CrossHairX;
         private int CrossHairY;
 
-        Controller Controller { get; set; }
+        UI UI { get; set; }
         public HoleControls HoleControls { get; set; }
 
 
@@ -71,10 +62,10 @@ namespace HoleyMoley
             HoleControls.Show();
             HoleControls.Visible = false;
 
-            Controller = new Controller();
-            Controller.HoleForm = this;
-            Controller.Show(this);
-            HoleControls.Controller = Controller;
+            UI = new UI();
+            UI.HoleForm = this;
+            UI.Show(this);
+            HoleControls.UI = UI;
 
             HighlightHandler.AddToIgnoreList(this.Handle);
             HighlightHandler.AddToIgnoreList(HoleControls.Handle);

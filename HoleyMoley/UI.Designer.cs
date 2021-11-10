@@ -1,6 +1,6 @@
 ﻿namespace HoleyMoley
 {
-    partial class Controller
+    partial class UI
     {
         /// <summary>
         /// Required designer variable.
@@ -30,7 +30,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Controller));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UI));
             this.BorderColour = new System.Windows.Forms.ColorDialog();
             this.label14 = new System.Windows.Forms.Label();
             this.EnableZoom = new System.Windows.Forms.CheckBox();
@@ -64,13 +64,12 @@
             this.label4 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.OpacityLevel = new System.Windows.Forms.TrackBar();
-            this.ColourPicker = new Microsoft.VisualBasic.PowerPacks.RectangleShape();
+            this.ColourPicker = new System.Windows.Forms.Button();
             this.ZoomLevel = new System.Windows.Forms.TrackBar();
             this.About = new System.Windows.Forms.Button();
             this.Logo = new System.Windows.Forms.PictureBox();
             this.MouseTimer = new System.Windows.Forms.Timer(this.components);
             this.HolePanel = new System.Windows.Forms.Panel();
-            this.shapeContainer2 = new Microsoft.VisualBasic.PowerPacks.ShapeContainer();
             this.ControlPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.TopPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.HighlightingPanel = new System.Windows.Forms.Panel();
@@ -528,13 +527,13 @@
             // 
             // ColourPicker
             // 
-            this.ColourPicker.FillColor = System.Drawing.Color.Lime;
-            this.ColourPicker.FillGradientStyle = Microsoft.VisualBasic.PowerPacks.FillGradientStyle.Vertical;
-            this.ColourPicker.FillStyle = Microsoft.VisualBasic.PowerPacks.FillStyle.Solid;
+            this.ColourPicker.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ColourPicker.BackColor = System.Drawing.Color.Lime;
             this.ColourPicker.Location = new System.Drawing.Point(7, 65);
             this.ColourPicker.Name = "ColourPicker";
             this.ColourPicker.Size = new System.Drawing.Size(22, 20);
             this.ColourPicker.Tag = "HoleVisibility";
+            this.Centre.UseVisualStyleBackColor = false;
             this.ColourPicker.Click += new System.EventHandler(this.ColourPicker_Click);
             // 
             // ZoomLevel
@@ -598,25 +597,14 @@
             this.HolePanel.Controls.Add(this.label6);
             this.HolePanel.Controls.Add(this.Move);
             this.HolePanel.Controls.Add(this.Centre);
+            this.HolePanel.Controls.Add(this.ColourPicker);
             this.HolePanel.Controls.Add(this.MarginDepth);
             this.HolePanel.Controls.Add(this.OpacityLevel);
-            this.HolePanel.Controls.Add(this.shapeContainer2);
             this.HolePanel.Location = new System.Drawing.Point(0, 0);
             this.HolePanel.Margin = new System.Windows.Forms.Padding(0);
             this.HolePanel.Name = "HolePanel";
             this.HolePanel.Size = new System.Drawing.Size(200, 240);
             this.HolePanel.TabIndex = 14;
-            // 
-            // shapeContainer2
-            // 
-            this.shapeContainer2.Location = new System.Drawing.Point(0, 0);
-            this.shapeContainer2.Margin = new System.Windows.Forms.Padding(0);
-            this.shapeContainer2.Name = "shapeContainer2";
-            this.shapeContainer2.Shapes.AddRange(new Microsoft.VisualBasic.PowerPacks.Shape[] {
-            this.ColourPicker});
-            this.shapeContainer2.Size = new System.Drawing.Size(198, 238);
-            this.shapeContainer2.TabIndex = 40;
-            this.shapeContainer2.TabStop = false;
             // 
             // ControlPanel
             // 
@@ -1019,7 +1007,7 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TrackBar OpacityLevel;
-        private Microsoft.VisualBasic.PowerPacks.RectangleShape ColourPicker;
+        private System.Windows.Forms.Button ColourPicker;
         private System.Windows.Forms.Button Centre;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Button Move;
@@ -1065,7 +1053,6 @@
         private System.Windows.Forms.CheckBox checkBox4;
         private System.Windows.Forms.TrackBar HighlightDepth;
         private System.Windows.Forms.Panel InfoPanel;
-        private Microsoft.VisualBasic.PowerPacks.ShapeContainer shapeContainer2;
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.CheckBox checkBox1;
