@@ -14,9 +14,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GitHub Pages", "GitHub Page
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GFX", "GFX", "{C808F43D-C20F-4A09-9963-8BCB2F33E620}"
 	ProjectSection(SolutionItems) = preProject
-		GFX\logo 001.c4d = GFX\logo 001.c4d
-		GFX\logo 001.ico = GFX\logo 001.ico
-		GFX\logo 001.png = GFX\logo 001.png
+		GFX\Logo 002-003.ai = GFX\Logo 002-003.ai
+		GFX\Logo 002x256.png = GFX\Logo 002x256.png
+		GFX\Logo 002x64.png = GFX\Logo 002x64.png
 	EndProjectSection
 EndProject
 Global

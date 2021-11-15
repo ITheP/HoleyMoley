@@ -168,7 +168,9 @@ namespace HoleyMoley
             if (isTopLevel != 0)
                 return;
 
-            //Debug.Print($"Title: {hwnd.ToString("x8")}");
+#if DEBUG
+            Debug.Print($"{DateTime.Now} TITLE: {NativeMethods.WindowInfo(hwnd, idObject)}");
+#endif
 
             HighlightWindow(hwnd);
         }
@@ -268,8 +270,12 @@ namespace HoleyMoley
 
             // Destroy can be nothing more than minimizing to task bar - not closing a window. Obviously does the same thing :)
 
+#if DEBUG
+            Debug.Print($"{DateTime.Now} DESTROY: {NativeMethods.WindowInfo(hwnd, idObject)}");
+#endif
+
             // Byebye to the currently highlighted window - so we hide our highlighting
-            Debug.Print($"DESTROY: {hwnd.ToString("x8")}  - {idObject}");
+
             HighlightHandler.Hide();
         }
 
@@ -286,6 +292,9 @@ namespace HoleyMoley
             // Only bother if this is for currently focused window (should never actually not be)
             if (hwnd != CurrentHwnd || hwnd == IntPtr.Zero)
                 return;
+
+            // Get .exe information
+
 
             if (!ignoreTitleCheck)
             {

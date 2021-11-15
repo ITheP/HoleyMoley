@@ -20,7 +20,7 @@ namespace HoleyMoley
         public int Height { get; set; } = 768;
         public int XOffset { get; set; } = 0;
         public int YOffset { get; set; } = 0;
-        public bool Margin { get; set; } = true;
+        public bool MarginEnabled { get; set; } = true;
         public int MarginDepth { get; set; } = -1;
 
         private int CrossHairX;
@@ -123,7 +123,7 @@ namespace HoleyMoley
 
             this.Hole.Size = new System.Drawing.Size(Width, Height);
 
-            if (Margin == true)
+            if (MarginEnabled == true)
             {
                 // Scales a margin 50 pixels around the hole
                 // We offset the parent window (this.) in this case

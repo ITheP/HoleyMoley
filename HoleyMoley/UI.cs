@@ -204,7 +204,7 @@ namespace HoleyMoley
             UpdateHoleSize();
         }
 
-        private void Margin_CheckedChanged(object sender, EventArgs e)
+        private void EnableMargin_CheckedChanged(object sender, EventArgs e)
         {
             UpdateHoleSize();
         }
@@ -217,7 +217,7 @@ namespace HoleyMoley
                 HoleW.Text = size.Width.ToString();
                 HoleH.Text = size.Height.ToString();
 
-                HoleForm.Margin = Margin.Checked;
+                HoleForm.MarginEnabled = EnableMargin.Checked;
                 HoleForm.MarginDepth = MarginSize;
                 HoleForm.Width = size.Width;
                 HoleForm.Height = size.Height;
@@ -339,9 +339,31 @@ namespace HoleyMoley
 
         private void ToggleEverything()
         {
+            this.SuspendLayout();
+
             ControlPanel.Visible = !ControlPanel.Visible;
             Logo.Visible = !ControlPanel.Visible;
+
+            if (Logo.Visible)
+            {
+                this.MinimizeBox = false;
+                this.MaximizeBox = false;
+                this.Text = "HM";
+            //    this.AutoSize = false;
+            //    this.Width = 34;
+            //    this.Height = 96;
+            }
+            else
+            {
+                this.MinimizeBox = true;
+                this.MaximizeBox = false;
+                this.Text = "Holey Moley";
+            //    this.AutoSize = true;
+            }
+
             CopyOverZoom();
+
+            this.ResumeLayout();
         }
 
         private void About_Click(object sender, EventArgs e)
@@ -752,7 +774,7 @@ namespace HoleyMoley
             // Hole
             Properties.Settings.Default.HoleSize = HoleSize.Text;
             Properties.Settings.Default.OpacityLevel = OpacityLevel.Value;
-            Properties.Settings.Default.Margin = Margin.Checked;
+            Properties.Settings.Default.Margin = EnableMargin.Checked;
             Properties.Settings.Default.ScreenCrossHairs = ScreenCrossHairs.Checked;
             Properties.Settings.Default.MarginDepth = MarginDepth.Value;
             Properties.Settings.Default.OverlayVisible = HoleForm.Visible;
@@ -784,7 +806,7 @@ namespace HoleyMoley
             // Hole
             HoleSize.Text = Properties.Settings.Default.HoleSize;
             OpacityLevel.Value = Properties.Settings.Default.OpacityLevel;
-            Margin.Checked = Properties.Settings.Default.Margin;
+            EnableMargin.Checked = Properties.Settings.Default.Margin;
             ScreenCrossHairs.Checked = Properties.Settings.Default.ScreenCrossHairs;
             MarginDepth.Value = Properties.Settings.Default.MarginDepth;
             HoleForm.XOffset = Properties.Settings.Default.PosX;

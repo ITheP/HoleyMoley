@@ -14,6 +14,8 @@ v1.6 Test - 08/11/2021
 v1.7 Test - 10/11/2021
 - Upgrade to .net 6
 - Remove dependency on VisualBasic.PowerPacks (was used for rectangle control)
+- Windows min/max/title bar tweaks
+- Logo changes
 
 ToDo:
 - Make sure all settings are saving/restoring properly, including what is enabled/disabled
