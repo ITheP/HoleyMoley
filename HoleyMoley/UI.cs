@@ -133,7 +133,7 @@ namespace HoleyMoley
             if (FasterRefresh.Checked)
                 MouseTimer.Interval = 16;
             else
-                MouseTimer.Interval = 32;
+                MouseTimer.Interval = 64;
         }
 
         private void InitCrossHair()
@@ -862,14 +862,14 @@ namespace HoleyMoley
             {
                 HoleForm.Show();
                 HoleForm.HoleControls.Visible = HoleControls.Checked;
-                ControlEnablement(HolePanel, "HoleVisibility", true);
+                ControlVisibility(HolePanel, "HoleVisibility", true);
                 SetColorPickerColor(BorderColour.Color);
             }
             else
             {
                 HoleForm.Hide();
                 HoleForm.HoleControls.Hide();
-                ControlEnablement(HolePanel, "HoleVisibility", false);
+                ControlVisibility(HolePanel, "HoleVisibility", false);
                 SetColorPickerColor(Color.LightGray);
             }
 
@@ -946,12 +946,13 @@ namespace HoleyMoley
             if (EnableHilighting.Checked)
             {
                 HighlightHandler.Show();
-                ControlEnablement(HighlightingPanel, "HilightingVisibility", true);
+             //   ControlEnablement(HighlightingPanel, "HilightingVisibility", true);
+                ControlVisibility(HighlightingPanel, "HilightingVisibility", true);
             }
             else
             {
                 HighlightHandler.Hide();
-                ControlEnablement(HighlightingPanel, "HilightingVisibility", false);
+                ControlVisibility(HighlightingPanel, "HilightingVisibility", false);
             }
 
             SetCheckBoxText(EnableHilighting);
@@ -988,6 +989,18 @@ namespace HoleyMoley
             HoleForm.RestoreAppPos();
         }
 
+        private void TitleSearch1Colour_Click(object sender, EventArgs e)
+        {
+            if (!EnableHole.Checked)
+                return;
+
+            if (BorderColour.ShowDialog(this) == DialogResult.OK)
+            {
+                SetColorPickerColor(BorderColour.Color);    // Colour can be overridden by enable/disabling holes
+                SetCalculatedColors();
+                HoleForm.SetColour(BorderColour.Color);
+            }
+        }
     }
 
     public class Settings

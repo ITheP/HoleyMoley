@@ -60,11 +60,14 @@
   <metadata name="BorderColour.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
+  <metadata name="ToolTip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>261, 17</value>
+  </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="Logo.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAA
-        rgAAAK4B+ff3XQAACb1JREFUeF7lWlt2G7kV1KrmKxvIYnoF+cgK8jNryM9sQD+ZZOzxU35I1oMPiKT4
+        qAAAAKgBefSzxgAACb1JREFUeF7lWlt2G7kV1KrmKxvIYnoF+cgK8jNryM9sQD+ZZOzxU35I1oMPiKT4
         aEqULIoyRUmm7XGcKgBN4qLRJJqUkpzDe04dC7fb3agqNC4aza0fP35sNILJTUIwuUkIJjcJucRv/6io
         J79W1dN/VtXv/6qpZ7/V1PMndfXiaV29/F2pV8+O1evnx2rnRUO9fdlQ71411fvXTbW701J7b1rqw9sT
         tf+urQ7et9Xhbkcd7XVU5UNXVfe7qrbfU/WDVKnDVB0f9VWj0lfN6qlq1U7VSf1MtdWZ6hwPVLcxUL3m
@@ -111,6 +114,9 @@
   </data>
   <metadata name="MouseTimer.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>142, 17</value>
+  </metadata>
+  <metadata name="ToolTip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>261, 17</value>
   </metadata>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>228</value>

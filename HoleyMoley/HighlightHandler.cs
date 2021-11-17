@@ -304,7 +304,8 @@ namespace HoleyMoley
                 NativeMethods.GetWindowText(hwnd, stringBuilder, stringBuilder.Capacity);
                 //Debug.Print($"Original '{stringBuilder}': {hwnd.ToString("x4")}, Parent: {GetParent(hwnd).ToString("x4")} with desktop={NativeMethods.GetDesktopWindow()}");
 
-                string title = stringBuilder.ToString().ToLower();
+                string title = stringBuilder.ToString();
+                string lcaseTitle = title.ToLower();
 
                 CurrentColor = NoMatchColor;
 
@@ -321,7 +322,7 @@ namespace HoleyMoley
 
                     foreach (var match in matchMaker.MatchList)
                     {
-                        if (title.Contains(match))
+                        if (lcaseTitle.Contains(match))
                         {
                             CurrentColor = matchMaker.Color;
                             //                searching = false;
