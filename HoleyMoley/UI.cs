@@ -70,17 +70,13 @@ namespace HoleyMoley
             Application.Exit();
         }
 
-        private void Controller_Load(object sender, EventArgs e)
+        private void UI_Load(object sender, EventArgs e)
         {
             this.MaximizeBox = false;
 
             this.SuspendLayout();
 
             LoadSettings();
-
-            ShowHideHole();
-            ShowHideZoom();
-            ShowHideHighlighting();
 
             ProcessTimerRate();
             ProcessMarginDepth();
@@ -118,6 +114,10 @@ namespace HoleyMoley
             HighlightHandler.SetMatchList(TitleSearch3.Name, TitleSearch3.Text, TitleSearch3.BackColor);
             HighlightHandler.SetNoMatchColor(TitleSearchNotFound.BackColor);
             ProcessHighlightDepth();
+
+            ShowHideHole();
+            ShowHideZoom();
+            ShowHideHighlighting();
 
             //ApplicationHandler.PopulateAppWindows();
             this.ResumeLayout();
@@ -771,64 +771,81 @@ namespace HoleyMoley
             //filename = Path.GetDirectoryName(Assembly.GetEntryAssembly().GetName().CodeBase);
             //%USERPROFILE%\AppData\Local
 
+            var settings = Properties.Settings.Default;
+
             // Hole
-            Properties.Settings.Default.HoleSize = HoleSize.Text;
-            Properties.Settings.Default.OpacityLevel = OpacityLevel.Value;
-            Properties.Settings.Default.Margin = EnableMargin.Checked;
-            Properties.Settings.Default.ScreenCrossHairs = ScreenCrossHairs.Checked;
-            Properties.Settings.Default.MarginDepth = MarginDepth.Value;
-            Properties.Settings.Default.OverlayVisible = HoleForm.Visible;
-            Properties.Settings.Default.PosX = HoleForm.XOffset;
-            Properties.Settings.Default.PosY = HoleForm.YOffset;
-            Properties.Settings.Default.ControllerX = this.Left;
-            Properties.Settings.Default.ControllerY = this.Top;
-            Properties.Settings.Default.HoleControls = HoleControls.Checked;
+            settings.HoleEnabled = EnableHole.Checked;
+            settings.HoleSize = HoleSize.Text;
+            settings.OpacityLevel = OpacityLevel.Value;
+            settings.Margin = EnableMargin.Checked;
+            settings.ScreenCrossHairs = ScreenCrossHairs.Checked;
+            settings.MarginDepth = MarginDepth.Value;
+            settings.OverlayVisible = HoleForm.Visible;
+            settings.PosX = HoleForm.XOffset;
+            settings.PosY = HoleForm.YOffset;
+            settings.ControllerX = this.Left;
+            settings.ControllerY = this.Top;
+            settings.HoleControls = HoleControls.Checked;
 
             // Highlighting
-            Properties.Settings.Default.HighlightAppNames = HighlightAppNames.Text;
-            Properties.Settings.Default.HighlightDepth = HighlightDepth.Value;
-            Properties.Settings.Default.TitleSearch1 = TitleSearch1.Text;
-            Properties.Settings.Default.TitleSearch2 = TitleSearch2.Text;
-            Properties.Settings.Default.TitleSearch3 = TitleSearch3.Text;
+            settings.HighlightingEnabled = EnableHilighting.Checked;
+            settings.HighlightAppNames = HighlightAppNames.Text;
+            settings.HighlightDepth = HighlightDepth.Value;
+            settings.TitleSearch1 = TitleSearch1.Text;
+            settings.TitleSearch2 = TitleSearch2.Text;
+            settings.TitleSearch3 = TitleSearch3.Text;
+            settings.TitleSearch1Colour = TitleSearch1Colour.BackColor;
+            settings.TitleSearch2Colour = TitleSearch2Colour.BackColor;
+            settings.TitleSearch3Colour = TitleSearch3Colour.BackColor;
+            settings.TitleSearch4Colour = TitleSearch4Colour.BackColor;
 
             // Zoom
-            Properties.Settings.Default.ZoomLevel = ZoomLevel.Value;
-            Properties.Settings.Default.ConstantUpdate = ConstantUpdate.Checked;
-            Properties.Settings.Default.CrossHair = CrossHair.Checked;
-            Properties.Settings.Default.FasterRefresh = FasterRefresh.Checked;
+            settings.ZoomEnabled = EnableZoom.Checked;
+            settings.ZoomLevel = ZoomLevel.Value;
+            settings.ConstantUpdate = ConstantUpdate.Checked;
+            settings.CrossHair = CrossHair.Checked;
+            settings.FasterRefresh = FasterRefresh.Checked;
 
-            Properties.Settings.Default.Save();
+            settings.Save();
         }
 
 
         private void LoadSettings()
         {
+            var settings = HoleyMoley.Properties.Settings.Default;
+
             // Hole
-            HoleSize.Text = Properties.Settings.Default.HoleSize;
-            OpacityLevel.Value = Properties.Settings.Default.OpacityLevel;
-            EnableMargin.Checked = Properties.Settings.Default.Margin;
-            ScreenCrossHairs.Checked = Properties.Settings.Default.ScreenCrossHairs;
-            MarginDepth.Value = Properties.Settings.Default.MarginDepth;
-            HoleForm.XOffset = Properties.Settings.Default.PosX;
-            HoleForm.YOffset = Properties.Settings.Default.PosY;
-            this.Left = Properties.Settings.Default.ControllerX;
-            this.Top = Properties.Settings.Default.ControllerY;
-            HoleControls.Checked = Properties.Settings.Default.HoleControls;
+            EnableHole.Checked = settings.HoleEnabled;
+            HoleSize.Text = settings.HoleSize;
+            OpacityLevel.Value = settings.OpacityLevel;
+            EnableMargin.Checked = settings.Margin;
+            ScreenCrossHairs.Checked = settings.ScreenCrossHairs;
+            MarginDepth.Value = settings.MarginDepth;
+            HoleForm.XOffset = settings.PosX;
+            HoleForm.YOffset = settings.PosY;
+            this.Left = settings.ControllerX;
+            this.Top = settings.ControllerY;
+            HoleControls.Checked = settings.HoleControls;
             HoleForm.SetControlVisibility(HoleControls.Checked);
 
             // Highlighting
-            HighlightAppNames.Text = Properties.Settings.Default.HighlightAppNames;
-            HighlightDepth.Value = Properties.Settings.Default.HighlightDepth;
-            TitleSearch1.Text = Properties.Settings.Default.TitleSearch1;
-            TitleSearch2.Text = Properties.Settings.Default.TitleSearch2;
-            TitleSearch3.Text = Properties.Settings.Default.TitleSearch3;
+            EnableHilighting.Checked = settings.HighlightingEnabled;
+            HighlightAppNames.Text = settings.HighlightAppNames;
+            HighlightDepth.Value = settings.HighlightDepth;
+            TitleSearch1.Text = settings.TitleSearch1;
+            TitleSearch2.Text = settings.TitleSearch2;
+            TitleSearch3.Text = settings.TitleSearch3;
+            TitleSearch1Colour.BackColor = settings.TitleSearch1Colour;
+            TitleSearch2Colour.BackColor = settings.TitleSearch2Colour;
+            TitleSearch3Colour.BackColor = settings.TitleSearch3Colour;
+            TitleSearch4Colour.BackColor = settings.TitleSearch4Colour;
 
             // Zoom
-            ZoomLevel.Value = Properties.Settings.Default.ZoomLevel;
-            ConstantUpdate.Checked = Properties.Settings.Default.ConstantUpdate;
-            CrossHair.Checked = Properties.Settings.Default.CrossHair;
-            FasterRefresh.Checked = Properties.Settings.Default.FasterRefresh;
-
+            EnableZoom.Checked = settings.ZoomEnabled;
+            ZoomLevel.Value = settings.ZoomLevel;
+            ConstantUpdate.Checked = settings.ConstantUpdate;
+            CrossHair.Checked = settings.CrossHair;
+            FasterRefresh.Checked = settings.FasterRefresh;
         }
 
         private void Controller_FormClosing(object sender, FormClosingEventArgs e)

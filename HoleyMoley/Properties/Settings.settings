@@ -62,5 +62,26 @@
     <Setting Name="HoleControls" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
+    <Setting Name="TitleSearch1Colour" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">Red</Value>
+    </Setting>
+    <Setting Name="TitleSearch2Colour" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">LimeGreen</Value>
+    </Setting>
+    <Setting Name="TitleSearch3Colour" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">DodgerBlue</Value>
+    </Setting>
+    <Setting Name="TitleSearch4Colour" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">Gold</Value>
+    </Setting>
+    <Setting Name="HoleEnabled" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="HighlightingEnabled" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="ZoomEnabled" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

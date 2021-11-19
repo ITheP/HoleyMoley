@@ -262,5 +262,89 @@ namespace HoleyMoley.Properties {
                 this["HoleControls"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Red")]
+        public global::System.Drawing.Color TitleSearch1Colour {
+            get {
+                return ((global::System.Drawing.Color)(this["TitleSearch1Colour"]));
+            }
+            set {
+                this["TitleSearch1Colour"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("LimeGreen")]
+        public global::System.Drawing.Color TitleSearch2Colour {
+            get {
+                return ((global::System.Drawing.Color)(this["TitleSearch2Colour"]));
+            }
+            set {
+                this["TitleSearch2Colour"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("DodgerBlue")]
+        public global::System.Drawing.Color TitleSearch3Colour {
+            get {
+                return ((global::System.Drawing.Color)(this["TitleSearch3Colour"]));
+            }
+            set {
+                this["TitleSearch3Colour"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Gold")]
+        public global::System.Drawing.Color TitleSearch4Colour {
+            get {
+                return ((global::System.Drawing.Color)(this["TitleSearch4Colour"]));
+            }
+            set {
+                this["TitleSearch4Colour"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool HoleEnabled {
+            get {
+                return ((bool)(this["HoleEnabled"]));
+            }
+            set {
+                this["HoleEnabled"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool HighlightingEnabled {
+            get {
+                return ((bool)(this["HighlightingEnabled"]));
+            }
+            set {
+                this["HighlightingEnabled"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ZoomEnabled {
+            get {
+                return ((bool)(this["ZoomEnabled"]));
+            }
+            set {
+                this["ZoomEnabled"] = value;
+            }
+        }
     }
 }

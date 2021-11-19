@@ -59,6 +59,10 @@
             this.HoleControls = new System.Windows.Forms.CheckBox();
             this.ControlPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.HighlightingPanel = new System.Windows.Forms.Panel();
+            this.TitleSearch4Colour = new System.Windows.Forms.Button();
+            this.TitleSearch3Colour = new System.Windows.Forms.Button();
+            this.TitleSearch2Colour = new System.Windows.Forms.Button();
+            this.TitleSearch1Colour = new System.Windows.Forms.Button();
             this.label21 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.RestoreApp = new System.Windows.Forms.Button();
@@ -95,10 +99,6 @@
             this.MouseMeasure = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.ToolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.TitleSearch1Colour = new System.Windows.Forms.Button();
-            this.TitleSearch2Colour = new System.Windows.Forms.Button();
-            this.TitleSearch3Colour = new System.Windows.Forms.Button();
-            this.TitleSearch4Colour = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.MarginDepth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.OpacityLevel)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Logo)).BeginInit();
@@ -545,6 +545,59 @@
             this.HighlightingPanel.Padding = new System.Windows.Forms.Padding(0, 0, 0, 4);
             this.HighlightingPanel.Size = new System.Drawing.Size(453, 201);
             this.HighlightingPanel.TabIndex = 17;
+            // 
+            // TitleSearch4Colour
+            // 
+            this.TitleSearch4Colour.BackColor = System.Drawing.Color.Gold;
+            this.TitleSearch4Colour.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.TitleSearch4Colour.Location = new System.Drawing.Point(340, 145);
+            this.TitleSearch4Colour.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.TitleSearch4Colour.Name = "TitleSearch4Colour";
+            this.TitleSearch4Colour.Size = new System.Drawing.Size(26, 23);
+            this.TitleSearch4Colour.TabIndex = 55;
+            this.TitleSearch4Colour.Tag = "HilightingVisibility";
+            this.ToolTip.SetToolTip(this.TitleSearch4Colour, "Colour of the Holes border. Click to change.");
+            this.TitleSearch4Colour.UseVisualStyleBackColor = false;
+            // 
+            // TitleSearch3Colour
+            // 
+            this.TitleSearch3Colour.BackColor = System.Drawing.Color.DodgerBlue;
+            this.TitleSearch3Colour.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.TitleSearch3Colour.Location = new System.Drawing.Point(229, 145);
+            this.TitleSearch3Colour.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.TitleSearch3Colour.Name = "TitleSearch3Colour";
+            this.TitleSearch3Colour.Size = new System.Drawing.Size(26, 23);
+            this.TitleSearch3Colour.TabIndex = 54;
+            this.TitleSearch3Colour.Tag = "HilightingVisibility";
+            this.ToolTip.SetToolTip(this.TitleSearch3Colour, "Colour of the Holes border. Click to change.");
+            this.TitleSearch3Colour.UseVisualStyleBackColor = false;
+            // 
+            // TitleSearch2Colour
+            // 
+            this.TitleSearch2Colour.BackColor = System.Drawing.Color.LimeGreen;
+            this.TitleSearch2Colour.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.TitleSearch2Colour.Location = new System.Drawing.Point(119, 145);
+            this.TitleSearch2Colour.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.TitleSearch2Colour.Name = "TitleSearch2Colour";
+            this.TitleSearch2Colour.Size = new System.Drawing.Size(26, 23);
+            this.TitleSearch2Colour.TabIndex = 53;
+            this.TitleSearch2Colour.Tag = "HilightingVisibility";
+            this.ToolTip.SetToolTip(this.TitleSearch2Colour, "Colour of the Holes border. Click to change.");
+            this.TitleSearch2Colour.UseVisualStyleBackColor = false;
+            // 
+            // TitleSearch1Colour
+            // 
+            this.TitleSearch1Colour.BackColor = System.Drawing.Color.Red;
+            this.TitleSearch1Colour.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.TitleSearch1Colour.Location = new System.Drawing.Point(8, 145);
+            this.TitleSearch1Colour.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.TitleSearch1Colour.Name = "TitleSearch1Colour";
+            this.TitleSearch1Colour.Size = new System.Drawing.Size(26, 23);
+            this.TitleSearch1Colour.TabIndex = 52;
+            this.TitleSearch1Colour.Tag = "HilightingVisibility";
+            this.ToolTip.SetToolTip(this.TitleSearch1Colour, "Colour of the Holes border. Click to change.");
+            this.TitleSearch1Colour.UseVisualStyleBackColor = false;
+            this.TitleSearch1Colour.Click += new System.EventHandler(this.TitleSearch1Colour_Click);
             // 
             // label21
             // 
@@ -1013,59 +1066,6 @@
             this.label12.Text = "Pos.";
             this.label12.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // TitleSearch1Colour
-            // 
-            this.TitleSearch1Colour.BackColor = System.Drawing.Color.Red;
-            this.TitleSearch1Colour.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.TitleSearch1Colour.Location = new System.Drawing.Point(8, 145);
-            this.TitleSearch1Colour.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.TitleSearch1Colour.Name = "TitleSearch1Colour";
-            this.TitleSearch1Colour.Size = new System.Drawing.Size(26, 23);
-            this.TitleSearch1Colour.TabIndex = 52;
-            this.TitleSearch1Colour.Tag = "HoleVisibility";
-            this.ToolTip.SetToolTip(this.TitleSearch1Colour, "Colour of the Holes border. Click to change.");
-            this.TitleSearch1Colour.UseVisualStyleBackColor = false;
-            this.TitleSearch1Colour.Click += new System.EventHandler(this.TitleSearch1Colour_Click);
-            // 
-            // TitleSearch2Colour
-            // 
-            this.TitleSearch2Colour.BackColor = System.Drawing.Color.LimeGreen;
-            this.TitleSearch2Colour.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.TitleSearch2Colour.Location = new System.Drawing.Point(119, 145);
-            this.TitleSearch2Colour.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.TitleSearch2Colour.Name = "TitleSearch2Colour";
-            this.TitleSearch2Colour.Size = new System.Drawing.Size(26, 23);
-            this.TitleSearch2Colour.TabIndex = 53;
-            this.TitleSearch2Colour.Tag = "HoleVisibility";
-            this.ToolTip.SetToolTip(this.TitleSearch2Colour, "Colour of the Holes border. Click to change.");
-            this.TitleSearch2Colour.UseVisualStyleBackColor = false;
-            // 
-            // TitleSearch3Colour
-            // 
-            this.TitleSearch3Colour.BackColor = System.Drawing.Color.DodgerBlue;
-            this.TitleSearch3Colour.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.TitleSearch3Colour.Location = new System.Drawing.Point(229, 145);
-            this.TitleSearch3Colour.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.TitleSearch3Colour.Name = "TitleSearch3Colour";
-            this.TitleSearch3Colour.Size = new System.Drawing.Size(26, 23);
-            this.TitleSearch3Colour.TabIndex = 54;
-            this.TitleSearch3Colour.Tag = "HoleVisibility";
-            this.ToolTip.SetToolTip(this.TitleSearch3Colour, "Colour of the Holes border. Click to change.");
-            this.TitleSearch3Colour.UseVisualStyleBackColor = false;
-            // 
-            // TitleSearch4Colour
-            // 
-            this.TitleSearch4Colour.BackColor = System.Drawing.Color.Gold;
-            this.TitleSearch4Colour.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.TitleSearch4Colour.Location = new System.Drawing.Point(340, 145);
-            this.TitleSearch4Colour.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.TitleSearch4Colour.Name = "TitleSearch4Colour";
-            this.TitleSearch4Colour.Size = new System.Drawing.Size(26, 23);
-            this.TitleSearch4Colour.TabIndex = 55;
-            this.TitleSearch4Colour.Tag = "HoleVisibility";
-            this.ToolTip.SetToolTip(this.TitleSearch4Colour, "Colour of the Holes border. Click to change.");
-            this.TitleSearch4Colour.UseVisualStyleBackColor = false;
-            // 
             // UI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -1085,7 +1085,7 @@
             this.Deactivate += new System.EventHandler(this.Controller_Deactivate);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Controller_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Controller_FormClosed);
-            this.Load += new System.EventHandler(this.Controller_Load);
+            this.Load += new System.EventHandler(this.UI_Load);
             this.MouseEnter += new System.EventHandler(this.Controller_MouseEnter);
             this.MouseLeave += new System.EventHandler(this.Controller_MouseLeave);
             ((System.ComponentModel.ISupportInitialize)(this.MarginDepth)).EndInit();
