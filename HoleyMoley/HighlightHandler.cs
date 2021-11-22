@@ -6,6 +6,7 @@ using System.Text;
 using System.Diagnostics;
 using System.Windows;
 using System.Text.RegularExpressions;
+using System.Runtime.InteropServices;
 
 namespace HoleyMoley
 {
@@ -115,7 +116,7 @@ namespace HoleyMoley
 
             if (MatchLists.TryGetValue(name, out matchMaker))
             {
-                matchMaker.Color = color;    
+                matchMaker.Color = color;
             }
         }
 
@@ -137,8 +138,23 @@ namespace HoleyMoley
             // ToDo: Will not setting color here if it's not changed save us any performance?
             Highlight.BackColor = color;
             bool result = NativeMethods.SetWindowPos(Highlight.Handle, parent, x, y, w, h, SetWindowPosFlags.NOACTIVATE | SetWindowPosFlags.SHOWWINDOW);
-        }
+            if (result)
+            {
+                if (UI.DebugEnabled())
+                    UI.AddToDebug($"SetPosition Success @ [{x},{y}] [{w},{h}] (Parent {parent.ToString("x8")})");
+            }
+            else
+            {
+                int error = Marshal.GetLastWin32Error();
+                //result = NativeMethods.SetWindowPos(Highlight.Handle, (IntPtr)(-2), x, y, w, h, SetWindowPosFlags.NOACTIVATE | SetWindowPosFlags.SHOWWINDOW);
 
+                if (UI.DebugEnabled())
+                {
+                    UI.AddToDebug($"SetPosition {(result ? "Success" : "Failed")} @ [{x},{y}] [{w},{h}] (Error {error})");
+                }
+            }
+
+        }
         public static void Hide()
         {
             //CleanUp();
@@ -179,12 +195,13 @@ namespace HoleyMoley
             if (isTopLevel != 0)
                 return;
 
-#if DEBUG
-            Debug.Print($"{DateTime.Now} TITLE: {NativeMethods.WindowInfo(hwnd, idObject)}");
-#endif
+            if (UI.DebugEnabled())
+                UI.AddToDebug($"{DateTime.Now:HH:mm:ss.ff} Highlight.TitleChange: {NativeMethods.WindowInfo(hwnd, idObject)}");
 
             HighlightWindow(hwnd);
         }
+
+        private static DateTime FocusDebugTimestamp { get; set; } = DateTime.Now;
 
         static void FocusChangeProc(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime)
         {
@@ -193,34 +210,75 @@ namespace HoleyMoley
             //    return;
             //}
 
-            if (hwnd == CurrentHwnd)
-                return; // No need to do anything if currently selected!
+            IntPtr parentHwnd = IntPtr.Zero;
+            parentHwnd = GetParent(hwnd);
 
-#if DEBUG
-            Debug.Print($"{DateTime.Now} FOCUS: {NativeMethods.WindowInfo(hwnd, idObject)}");
-#endif
+            // Debug.Print($"Focus In - hwnd = {hwnd.ToString("x8")}, CurrentHwnd = {CurrentHwnd.ToString("x8")}, ParentHwnd = {parentHwnd.ToString("x8")}");
 
+            bool ignore = false;
+            string ignoreReason = string.Empty;
+
+            // No need to do anything if currently selected!
+            if (parentHwnd == CurrentHwnd)
+            {
+                ignore = true;
+                ignoreReason = "Ignored: Re-Focus of already highlighted window";
+            }
             // Only Client calls seem to be relevant (and a focus event may be raised when a client + several children all raise focus events - only want the client, not the children)
-            if (idObject != (int)SystemObjectIDs.OBJID_CLIENT)
+            else if (idObject != (int)SystemObjectIDs.OBJID_CLIENT)
+            {
+                ignore = true;
+                ignoreReason = "Ignored: Not a Client call";
+            }
+            else
+            {
+                // Ignore ToolWindow windows (covers things like combobox pop ups)
+                // Note that viewing e.g. combobox popups, every single row seems to generate a focus event as you move a mouse over them
+                // Did use hwnd, seems happy enough checking the parentHwnd
+                long style = (long)NativeMethods.GetWindowLongPtr(parentHwnd, (int)GetWindowLongFlags.GWL_STYLE);
+                long exStyle = (long)NativeMethods.GetWindowLongPtr(parentHwnd, (int)GetWindowLongFlags.GWL_EXSTYLE);
+
+                if ((exStyle & (long)WindowStylesEx.WS_EX_TOOLWINDOW) != 0 && (style & (long)WindowStyles.WS_POPUPWINDOW) != 0)
+                {
+                    ignore = true;
+                    ignoreReason = "Ignored: WS_EX_ToolWindow with WS_PopUpWindow set";
+                }
+                // Pallet windows are used for valid windows AND system windows (such as pop up windows for task bar). Checking for nondirectionalbitmap seems to sort this...
+                else if ((exStyle & (long)WindowStylesEx.WS_EX_PALETTEWINDOW) != 0 && (exStyle & (long)WindowStylesEx.WS_EX_NOREDIRECTIONBITMAP) != 0)
+                {
+                    ignore = true;
+                    ignoreReason = "Ignored: WS_EX_PaletteWindow with WS_EX_NoRedirectionBitmap set";
+                }
+            }
+
+            if (!ignore)
+            {
+                if (IgnoreHwnds.Contains(parentHwnd))
+                {
+                    ignore = true;
+                    ignoreReason = "Ignored: parentHwnd part of ignore list";
+                }
+            }
+
+            if (UI.DebugEnabled())
+            {
+                string debug = $"{DateTime.Now:HH:mm:ss.ff} Highlight.Focus (Current {CurrentHwnd.ToString("x8")}): {ignoreReason}{System.Environment.NewLine}{NativeMethods.WindowInfo(parentHwnd, idObject)}";
+
+                if (parentHwnd != IntPtr.Zero)
+                    debug = $"{debug}{System.Environment.NewLine}   Parent: {parentHwnd.ToString("x8")} (highlight target hwnd)";
+
+                if ((DateTime.Now - FocusDebugTimestamp).TotalSeconds > 1)
+                {
+                    debug = $"{debug}{System.Environment.NewLine}{System.Environment.NewLine}################################";
+                    FocusDebugTimestamp = DateTime.Now;
+                }
+
+                UI.AddToDebug(debug);
+            }
+
+            if (ignore)
                 return;
-
-            // Ignore ToolWindow windows (covers things like combobox pop ups)
-            // Note that viewing e.g. combobox popups, every single row seems to generate a focus event as you move a mouse over them
-            long exStyle = (long)NativeMethods.GetWindowLongPtr(hwnd, (int)GetWindowLongFlags.GWL_EXSTYLE);
-            if ((exStyle & (long)WindowStylesEx.WS_EX_TOOLWINDOW) != 0)
-                return;
-
-            // Pallet windows are used for valid windows AND system windows (such as pop up windows for task bar). Checking for nondirectionalbitmap seems to sort this...
-            if ((exStyle & (long)WindowStylesEx.WS_EX_PALETTEWINDOW) != 0 && (exStyle & (long)WindowStylesEx.WS_EX_NOREDIRECTIONBITMAP) != 0)
-                return;
-
-            IntPtr parentHwnd = GetParent(hwnd);
-
-            Debug.Print($"{DateTime.Now} ...: hwnd={hwnd}, parent={parentHwnd}");
-
-            if (IgnoreHwnds.Contains(parentHwnd))
-                return;
-
+            Debug.Print($"Current = {CurrentHwnd.ToString("x8")}, new parent = {parentHwnd.ToString("x8")}");
             CurrentHwnd = parentHwnd;
             HighlightWindow(parentHwnd);
         }
@@ -237,7 +295,7 @@ namespace HoleyMoley
 
         static void LocationChangeProc(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime)
         {
-            if (hwnd != CurrentHwnd)
+            if (hwnd != CurrentHwnd || (SystemObjectIDs)idObject == SystemObjectIDs.OBJID_CARET || (SystemObjectIDs)idObject == SystemObjectIDs.OBJID_CURSOR)
                 return;
 
             //if ((SystemObjectIDs)idObject == SystemObjectIDs.OBJID_WINDOW) //&& idChild == CHILDID_SELF)
@@ -266,7 +324,7 @@ namespace HoleyMoley
 
             if (hwnd == IntPtr.Zero)
                 Highlight.Visible = false;
-
+            Debug.Print("Location change");
             HighlightWindow(GetParent(hwnd), true);
             //}
         }
@@ -281,9 +339,8 @@ namespace HoleyMoley
 
             // Destroy can be nothing more than minimizing to task bar - not closing a window. Obviously does the same thing :)
 
-#if DEBUG
-            Debug.Print($"{DateTime.Now} DESTROY: {NativeMethods.WindowInfo(hwnd, idObject)}");
-#endif
+            if (UI.DebugEnabled())
+                UI.AddToDebug($"{DateTime.Now:HH:mm:ss.ff} Highlight.Destroy: {NativeMethods.WindowInfo(hwnd, idObject)}");
 
             // Byebye to the currently highlighted window - so we hide our highlighting
 

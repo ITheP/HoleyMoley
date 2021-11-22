@@ -10,6 +10,7 @@ using System.Runtime.InteropServices;
 using System.IO;
 using System.Reflection;
 using System.Diagnostics;
+using System.Security.Principal;
 
 namespace HoleyMoley
 {
@@ -35,18 +36,20 @@ namespace HoleyMoley
         public const Int32 WM_NCLBUTTONDBLCLK = 0x00A3;
         public Hole HoleForm { get; set; }
 
-        private Bitmap ZoomBitmap;
-        private Graphics ZoomGraphics;
-        private int LastMouseX = -1;
-        private int LastMouseY = -1;
-        private int MeasureMouseX = 0;
-        private int MeasureMouseY = 0;
-        private int ZoomWidth = -1;
-        private int ZoomHeight = -1;
-        private int MarginSize = -1;
-        private int HighlightSize = -1;
+        private Bitmap ZoomBitmap { get; set; }
+        private Graphics ZoomGraphics { get; set; }
+        private int LastMouseX { get; set; } = -1;
+        private int LastMouseY { get; set; } = -1;
+        private int MeasureMouseX { get; set; } = 0;
+        private int MeasureMouseY { get; set; } = 0;
+        private int ZoomWidth { get; set; } = -1;
+        private int ZoomHeight { get; set; } = -1;
+        private int MarginSize { get; set; } = -1;
+        private int HighlightSize { get; set; } = -1;
 
-        private bool mouseJustPressed = false;
+        private bool mouseJustPressed { get; set; } = false;
+
+        private bool IsAdministrator { get; set; } = false;
 
         public Main()
         {
@@ -123,6 +126,13 @@ namespace HoleyMoley
             ShowHideHole();
             ShowHideZoom();
             ShowHideHighlighting();
+
+            using (var identity = WindowsIdentity.GetCurrent())
+            {
+                var principal = new WindowsPrincipal(identity);
+                IsAdministrator = principal.IsInRole(WindowsBuiltInRole.Administrator);
+            }
+            AdministratorWarning.Visible = !IsAdministrator;
 
             //ApplicationHandler.PopulateAppWindows();
             this.ResumeLayout();
@@ -311,7 +321,7 @@ namespace HoleyMoley
 
         private void SetColorPickerColor(Color color)
         {
-           // ColourPicker.FillColor = color;
+            // ColourPicker.FillColor = color;
             HoleColour.BackColor = color;
         }
 
@@ -354,16 +364,16 @@ namespace HoleyMoley
                 this.MinimizeBox = false;
                 this.MaximizeBox = false;
                 this.Text = "HM";
-            //    this.AutoSize = false;
-            //    this.Width = 34;
-            //    this.Height = 96;
+                //    this.AutoSize = false;
+                //    this.Width = 34;
+                //    this.Height = 96;
             }
             else
             {
                 this.MinimizeBox = true;
                 this.MaximizeBox = false;
                 this.Text = "Holey Moley";
-            //    this.AutoSize = true;
+                //    this.AutoSize = true;
             }
 
             CopyOverZoom();
@@ -521,7 +531,7 @@ namespace HoleyMoley
 
                 // ToDo: Process.GetCurrentProcess().Threads[0].Id instead?
                 hHook = SetWindowsHookEx(WH_MOUSE, MouseHookProcedure, (IntPtr)0, Process.GetCurrentProcess().Threads[0].Id);
-           //     hHook = SetWindowsHookEx(WH_MOUSE, MouseHookProcedure, (IntPtr)0, AppDomain.GetCurrentThreadId()); // System.Threading.Thread.CurrentThread.ManagedThreadId); // AppDomain.GetCurrentThreadId());
+                //     hHook = SetWindowsHookEx(WH_MOUSE, MouseHookProcedure, (IntPtr)0, AppDomain.GetCurrentThreadId()); // System.Threading.Thread.CurrentThread.ManagedThreadId); // AppDomain.GetCurrentThreadId());
                 //If the SetWindowsHookEx function fails.
                 if (hHook == 0)
                 {
@@ -968,7 +978,7 @@ namespace HoleyMoley
             if (EnableHilighting.Checked)
             {
                 HighlightHandler.Show();
-             //   ControlEnablement(HighlightingPanel, "HilightingVisibility", true);
+                //   ControlEnablement(HighlightingPanel, "HilightingVisibility", true);
                 ControlVisibility(HighlightingPanel, "HilightingVisibility", true);
             }
             else
@@ -1042,6 +1052,46 @@ namespace HoleyMoley
         private void TitleSearchNotFoundColour_Click(object sender, EventArgs e)
         {
             HandleHighlightColourPicker(TitleSearchNotFoundColour);
+        }
+
+        private void EnableDebug_Click(object sender, EventArgs e)
+        {
+            if (DebugPanel.Visible)
+            {
+                DebugPanel.Visible = false;
+            }
+            else
+            {
+                DebugPanel.Visible = true;
+                AddToDebug($"Starting debug @ {DateTime.Now:HH:mm.ff}...");
+            }
+        }
+
+        private List<String> DebugData { get; set; } = new(20);
+
+        public bool DebugEnabled()
+        {
+            return DebugPanel.Visible;
+        }
+
+        public void AddToDebug(string content)
+        {
+            if (!DebugPanel.Visible)
+                return;
+
+            if (DebugData.Count == DebugData.Capacity)
+            {
+                DebugData.RemoveAt(DebugData.Count - 1);
+            }
+
+            DebugData.Insert(0, content);
+            //DebugInfo.Text = DebugData.ToString();
+            DebugInfo.Text = string.Join($"{System.Environment.NewLine}{System.Environment.NewLine}", DebugData);
+        }
+
+        private void AdministratorWarning_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Holey Moley isn't running with Administrator privaledges, so may not be able to highlight all windows (due to access restrictions). This will affect things such as Remote Desktop Connection parent windows.", "Access permission restrictions", MessageBoxButtons.OK, MessageBoxIcon.Warning); 
         }
     }
 

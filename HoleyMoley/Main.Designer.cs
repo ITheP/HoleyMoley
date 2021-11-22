@@ -94,11 +94,15 @@
             this.label10 = new System.Windows.Forms.Label();
             this.ZoomLevel = new System.Windows.Forms.TrackBar();
             this.InfoPanel = new System.Windows.Forms.Panel();
+            this.EnableDebug = new System.Windows.Forms.Button();
             this.MousePosition = new System.Windows.Forms.Label();
             this.label18 = new System.Windows.Forms.Label();
             this.MouseMeasure = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
+            this.DebugPanel = new System.Windows.Forms.Panel();
+            this.DebugInfo = new System.Windows.Forms.TextBox();
             this.ToolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.AdministratorWarning = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.MarginDepth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.OpacityLevel)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Logo)).BeginInit();
@@ -110,6 +114,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.Zoom)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ZoomLevel)).BeginInit();
             this.InfoPanel.SuspendLayout();
+            this.DebugPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // ColourPicker
@@ -408,10 +413,10 @@
             // About
             // 
             this.About.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.About.Location = new System.Drawing.Point(381, 6);
+            this.About.Location = new System.Drawing.Point(378, 6);
             this.About.Margin = new System.Windows.Forms.Padding(4, 3, 8, 6);
             this.About.Name = "About";
-            this.About.Size = new System.Drawing.Size(62, 27);
+            this.About.Size = new System.Drawing.Size(65, 27);
             this.About.TabIndex = 10;
             this.About.Text = "About";
             this.ToolTip.SetToolTip(this.About, "Extra information about Holey Moley");
@@ -505,12 +510,13 @@
             this.ControlPanel.Controls.Add(this.HighlightingPanel);
             this.ControlPanel.Controls.Add(this.ZoomPanel);
             this.ControlPanel.Controls.Add(this.InfoPanel);
+            this.ControlPanel.Controls.Add(this.DebugPanel);
             this.ControlPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.ControlPanel.Location = new System.Drawing.Point(0, 0);
             this.ControlPanel.Margin = new System.Windows.Forms.Padding(0);
             this.ControlPanel.Name = "ControlPanel";
             this.ControlPanel.Padding = new System.Windows.Forms.Padding(2, 3, 2, 2);
-            this.ControlPanel.Size = new System.Drawing.Size(457, 962);
+            this.ControlPanel.Size = new System.Drawing.Size(457, 1533);
             this.ControlPanel.TabIndex = 15;
             // 
             // HighlightingPanel
@@ -1013,6 +1019,8 @@
             this.InfoPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.InfoPanel.BackColor = System.Drawing.Color.White;
             this.InfoPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.InfoPanel.Controls.Add(this.AdministratorWarning);
+            this.InfoPanel.Controls.Add(this.EnableDebug);
             this.InfoPanel.Controls.Add(this.MousePosition);
             this.InfoPanel.Controls.Add(this.label18);
             this.InfoPanel.Controls.Add(this.About);
@@ -1023,6 +1031,19 @@
             this.InfoPanel.Name = "InfoPanel";
             this.InfoPanel.Size = new System.Drawing.Size(453, 41);
             this.InfoPanel.TabIndex = 16;
+            // 
+            // EnableDebug
+            // 
+            this.EnableDebug.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.EnableDebug.Location = new System.Drawing.Point(310, 6);
+            this.EnableDebug.Margin = new System.Windows.Forms.Padding(4, 3, 8, 6);
+            this.EnableDebug.Name = "EnableDebug";
+            this.EnableDebug.Size = new System.Drawing.Size(62, 27);
+            this.EnableDebug.TabIndex = 43;
+            this.EnableDebug.Text = "Debug";
+            this.ToolTip.SetToolTip(this.EnableDebug, "Extra information about Holey Moley");
+            this.EnableDebug.UseVisualStyleBackColor = true;
+            this.EnableDebug.Click += new System.EventHandler(this.EnableDebug_Click);
             // 
             // MousePosition
             // 
@@ -1069,6 +1090,47 @@
             this.label12.Text = "Pos.";
             this.label12.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // DebugPanel
+            // 
+            this.DebugPanel.AutoSize = true;
+            this.DebugPanel.BackColor = System.Drawing.Color.White;
+            this.DebugPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.DebugPanel.Controls.Add(this.DebugInfo);
+            this.DebugPanel.Location = new System.Drawing.Point(2, 962);
+            this.DebugPanel.Margin = new System.Windows.Forms.Padding(0, 2, 0, 0);
+            this.DebugPanel.Name = "DebugPanel";
+            this.DebugPanel.Padding = new System.Windows.Forms.Padding(0, 4, 0, 4);
+            this.DebugPanel.Size = new System.Drawing.Size(453, 569);
+            this.DebugPanel.TabIndex = 16;
+            // 
+            // DebugInfo
+            // 
+            this.DebugInfo.AcceptsReturn = true;
+            this.DebugInfo.AcceptsTab = true;
+            this.DebugInfo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.DebugInfo.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.DebugInfo.Location = new System.Drawing.Point(9, 7);
+            this.DebugInfo.Margin = new System.Windows.Forms.Padding(4, 3, 8, 3);
+            this.DebugInfo.Multiline = true;
+            this.DebugInfo.Name = "DebugInfo";
+            this.DebugInfo.ReadOnly = true;
+            this.DebugInfo.Size = new System.Drawing.Size(434, 553);
+            this.DebugInfo.TabIndex = 0;
+            // 
+            // AdministratorWarning
+            // 
+            this.AdministratorWarning.Font = new System.Drawing.Font("Segoe MDL2 Assets", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.AdministratorWarning.ForeColor = System.Drawing.Color.Red;
+            this.AdministratorWarning.Location = new System.Drawing.Point(277, 6);
+            this.AdministratorWarning.Margin = new System.Windows.Forms.Padding(4, 3, 8, 6);
+            this.AdministratorWarning.Name = "AdministratorWarning";
+            this.AdministratorWarning.Size = new System.Drawing.Size(28, 27);
+            this.AdministratorWarning.TabIndex = 44;
+            this.AdministratorWarning.Text = "";
+            this.ToolTip.SetToolTip(this.AdministratorWarning, "Extra information about Holey Moley");
+            this.AdministratorWarning.UseVisualStyleBackColor = true;
+            this.AdministratorWarning.Click += new System.EventHandler(this.AdministratorWarning_Click);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -1076,7 +1138,7 @@
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.ClientSize = new System.Drawing.Size(951, 1005);
+            this.ClientSize = new System.Drawing.Size(951, 1535);
             this.Controls.Add(this.ControlPanel);
             this.Controls.Add(this.Logo);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
@@ -1107,6 +1169,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.ZoomLevel)).EndInit();
             this.InfoPanel.ResumeLayout(false);
             this.InfoPanel.PerformLayout();
+            this.DebugPanel.ResumeLayout(false);
+            this.DebugPanel.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1182,5 +1246,9 @@
         private System.Windows.Forms.Button TitleSearch3Colour;
         private System.Windows.Forms.Button TitleSearch2Colour;
         private System.Windows.Forms.Button TitleSearch1Colour;
+        private System.Windows.Forms.Button EnableDebug;
+        private System.Windows.Forms.Panel DebugPanel;
+        private System.Windows.Forms.TextBox DebugInfo;
+        private System.Windows.Forms.Button AdministratorWarning;
     }
 }
