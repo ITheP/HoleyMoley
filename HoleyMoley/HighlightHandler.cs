@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Diagnostics;
 using System.Windows;
+using System.Text.RegularExpressions;
 
 namespace HoleyMoley
 {
@@ -19,7 +20,7 @@ namespace HoleyMoley
 
         private static Dictionary<string, MatchMaker> MatchLists { get; set; } = new Dictionary<string, MatchMaker>();
         private static Color NoMatchColor { get; set; } = Color.Goldenrod;
-        public static UI UI { get; set; }
+        public static Main UI { get; set; }
         private static int BorderSize { get; set; } = 5;
         private static int DoubleBorderSize { get; set; } = 10;
 
@@ -106,6 +107,16 @@ namespace HoleyMoley
 
             matchMaker.SetMatches(matches);
 
+        }
+
+        public static void ChangeMatchlistColor(string name, Color color)
+        {
+            MatchMaker matchMaker;
+
+            if (MatchLists.TryGetValue(name, out matchMaker))
+            {
+                matchMaker.Color = color;    
+            }
         }
 
         public static void AddToIgnoreList(IntPtr hwnd)
