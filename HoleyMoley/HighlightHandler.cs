@@ -158,7 +158,8 @@ namespace HoleyMoley
         public static void Hide()
         {
             //CleanUp();
-            Highlight.Visible = false;
+            if (Highlight != null)
+                Highlight.Visible = false;
         }
 
         public static void Show()

@@ -34,8 +34,10 @@
             this.Info = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.Scroller = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Scroller)).BeginInit();
             this.SuspendLayout();
             // 
             // timer1
@@ -46,6 +48,7 @@
             // Info
             // 
             this.Info.AutoSize = true;
+            this.Info.BackColor = System.Drawing.Color.Transparent;
             this.Info.Location = new System.Drawing.Point(183, 9);
             this.Info.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.Info.Name = "Info";
@@ -77,6 +80,16 @@
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
+            // Scroller
+            // 
+            this.Scroller.BackColor = System.Drawing.Color.Yellow;
+            this.Scroller.Location = new System.Drawing.Point(0, 0);
+            this.Scroller.Margin = new System.Windows.Forms.Padding(0);
+            this.Scroller.Name = "Scroller";
+            this.Scroller.Size = new System.Drawing.Size(439, 64);
+            this.Scroller.TabIndex = 5;
+            this.Scroller.TabStop = false;
+            // 
             // About
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -86,13 +99,16 @@
             this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.Info);
             this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.Scroller);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.Name = "About";
             this.Text = "About";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.About_FormClosing);
             this.Load += new System.EventHandler(this.About_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Scroller)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -104,5 +120,6 @@
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Label Info;
         private System.Windows.Forms.PictureBox pictureBox2;
+        private System.Windows.Forms.PictureBox Scroller;
     }
 }

@@ -20,8 +20,8 @@
             base.Dispose(disposing);
         }
 
-        
-       #region Windows Form Designer generated code
+
+        #region Windows Form Designer generated code
 
         /// <summary>
         /// Required method for Designer support - do not modify
@@ -94,6 +94,7 @@
             this.label10 = new System.Windows.Forms.Label();
             this.ZoomLevel = new System.Windows.Forms.TrackBar();
             this.InfoPanel = new System.Windows.Forms.Panel();
+            this.AdministratorWarning = new System.Windows.Forms.Button();
             this.EnableDebug = new System.Windows.Forms.Button();
             this.MousePosition = new System.Windows.Forms.Label();
             this.label18 = new System.Windows.Forms.Label();
@@ -102,7 +103,6 @@
             this.DebugPanel = new System.Windows.Forms.Panel();
             this.DebugInfo = new System.Windows.Forms.TextBox();
             this.ToolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.AdministratorWarning = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.MarginDepth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.OpacityLevel)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Logo)).BeginInit();
@@ -126,8 +126,8 @@
             this.EnableHole.Appearance = System.Windows.Forms.Appearance.Button;
             this.EnableHole.Checked = true;
             this.EnableHole.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.EnableHole.Location = new System.Drawing.Point(406, 8);
-            this.EnableHole.Margin = new System.Windows.Forms.Padding(4, 3, 8, 3);
+            this.EnableHole.Location = new System.Drawing.Point(411, 3);
+            this.EnableHole.Margin = new System.Windows.Forms.Padding(4, 3, 3, 3);
             this.EnableHole.Name = "EnableHole";
             this.EnableHole.Size = new System.Drawing.Size(37, 27);
             this.EnableHole.TabIndex = 39;
@@ -141,7 +141,7 @@
             // 
             this.label13.AutoSize = true;
             this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label13.Location = new System.Drawing.Point(4, 10);
+            this.label13.Location = new System.Drawing.Point(2, 5);
             this.label13.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(42, 20);
@@ -153,7 +153,7 @@
             this.ScreenCrossHairs.AutoSize = true;
             this.ScreenCrossHairs.Checked = true;
             this.ScreenCrossHairs.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.ScreenCrossHairs.Location = new System.Drawing.Point(172, 145);
+            this.ScreenCrossHairs.Location = new System.Drawing.Point(172, 140);
             this.ScreenCrossHairs.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.ScreenCrossHairs.Name = "ScreenCrossHairs";
             this.ScreenCrossHairs.Size = new System.Drawing.Size(15, 14);
@@ -167,7 +167,7 @@
             // 
             this.label11.AutoSize = true;
             this.label11.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label11.Location = new System.Drawing.Point(101, 144);
+            this.label11.Location = new System.Drawing.Point(101, 139);
             this.label11.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(63, 13);
@@ -180,7 +180,7 @@
             // 
             this.Move.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Move.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.Move.Location = new System.Drawing.Point(345, 41);
+            this.Move.Location = new System.Drawing.Point(345, 36);
             this.Move.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.Move.Name = "Move";
             this.Move.Size = new System.Drawing.Size(98, 27);
@@ -194,7 +194,7 @@
             // Centre
             // 
             this.Centre.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.Centre.Location = new System.Drawing.Point(282, 41);
+            this.Centre.Location = new System.Drawing.Point(282, 36);
             this.Centre.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.Centre.Name = "Centre";
             this.Centre.Size = new System.Drawing.Size(57, 27);
@@ -209,7 +209,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label6.Location = new System.Drawing.Point(230, 48);
+            this.label6.Location = new System.Drawing.Point(230, 43);
             this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(49, 13);
@@ -221,7 +221,7 @@
             // 
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label9.Location = new System.Drawing.Point(4, 117);
+            this.label9.Location = new System.Drawing.Point(4, 112);
             this.label9.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(39, 13);
@@ -232,7 +232,7 @@
             // MarginDepth
             // 
             this.MarginDepth.AccessibleDescription = "";
-            this.MarginDepth.Location = new System.Drawing.Point(62, 107);
+            this.MarginDepth.Location = new System.Drawing.Point(62, 102);
             this.MarginDepth.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.MarginDepth.Name = "MarginDepth";
             this.MarginDepth.Size = new System.Drawing.Size(162, 45);
@@ -245,7 +245,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(138, 78);
+            this.label5.Location = new System.Drawing.Point(138, 73);
             this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(13, 15);
@@ -268,7 +268,7 @@
             "1050",
             "1080",
             "1200"});
-            this.HoleH.Location = new System.Drawing.Point(155, 75);
+            this.HoleH.Location = new System.Drawing.Point(155, 70);
             this.HoleH.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.HoleH.MaxDropDownItems = 16;
             this.HoleH.Name = "HoleH";
@@ -292,7 +292,7 @@
             "1600",
             "1680",
             "1920"});
-            this.HoleW.Location = new System.Drawing.Point(62, 75);
+            this.HoleW.Location = new System.Drawing.Point(62, 70);
             this.HoleW.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.HoleW.MaxDropDownItems = 16;
             this.HoleW.Name = "HoleW";
@@ -308,8 +308,8 @@
             this.EnableMargin.AutoSize = true;
             this.EnableMargin.Checked = true;
             this.EnableMargin.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.EnableMargin.Location = new System.Drawing.Point(62, 145);
-            this.EnableMargin.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.EnableMargin.Location = new System.Drawing.Point(62, 140);
+            this.EnableMargin.Margin = new System.Windows.Forms.Padding(4, 3, 4, 7);
             this.EnableMargin.Name = "EnableMargin";
             this.EnableMargin.Size = new System.Drawing.Size(15, 14);
             this.EnableMargin.TabIndex = 14;
@@ -336,7 +336,7 @@
             "800x0",
             "0x600",
             "Size to screen"});
-            this.HoleSize.Location = new System.Drawing.Point(62, 44);
+            this.HoleSize.Location = new System.Drawing.Point(62, 39);
             this.HoleSize.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.HoleSize.MaxDropDownItems = 16;
             this.HoleSize.Name = "HoleSize";
@@ -350,7 +350,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(4, 47);
+            this.label2.Location = new System.Drawing.Point(4, 42);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(27, 15);
@@ -362,7 +362,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label4.Location = new System.Drawing.Point(4, 144);
+            this.label4.Location = new System.Drawing.Point(4, 139);
             this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(44, 13);
@@ -374,7 +374,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label1.Location = new System.Drawing.Point(230, 117);
+            this.label1.Location = new System.Drawing.Point(230, 112);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(46, 13);
@@ -385,7 +385,7 @@
             // OpacityLevel
             // 
             this.OpacityLevel.AccessibleDescription = "";
-            this.OpacityLevel.Location = new System.Drawing.Point(284, 107);
+            this.OpacityLevel.Location = new System.Drawing.Point(284, 102);
             this.OpacityLevel.Margin = new System.Windows.Forms.Padding(4, 3, 5, 3);
             this.OpacityLevel.Minimum = 1;
             this.OpacityLevel.Name = "OpacityLevel";
@@ -400,7 +400,7 @@
             // 
             this.HoleColour.BackColor = System.Drawing.Color.Lime;
             this.HoleColour.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.HoleColour.Location = new System.Drawing.Point(8, 75);
+            this.HoleColour.Location = new System.Drawing.Point(8, 70);
             this.HoleColour.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.HoleColour.Name = "HoleColour";
             this.HoleColour.Size = new System.Drawing.Size(26, 23);
@@ -413,10 +413,10 @@
             // About
             // 
             this.About.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.About.Location = new System.Drawing.Point(378, 6);
-            this.About.Margin = new System.Windows.Forms.Padding(4, 3, 8, 6);
+            this.About.Location = new System.Drawing.Point(394, 3);
+            this.About.Margin = new System.Windows.Forms.Padding(4, 3, 3, 3);
             this.About.Name = "About";
-            this.About.Size = new System.Drawing.Size(65, 27);
+            this.About.Size = new System.Drawing.Size(54, 27);
             this.About.TabIndex = 10;
             this.About.Text = "About";
             this.ToolTip.SetToolTip(this.About, "Extra information about Holey Moley");
@@ -470,15 +470,14 @@
             this.HolePanel.Location = new System.Drawing.Point(2, 3);
             this.HolePanel.Margin = new System.Windows.Forms.Padding(0);
             this.HolePanel.Name = "HolePanel";
-            this.HolePanel.Padding = new System.Windows.Forms.Padding(0, 0, 0, 4);
-            this.HolePanel.Size = new System.Drawing.Size(453, 168);
+            this.HolePanel.Size = new System.Drawing.Size(453, 163);
             this.HolePanel.TabIndex = 14;
             // 
             // label20
             // 
             this.label20.AutoSize = true;
             this.label20.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label20.Location = new System.Drawing.Point(211, 144);
+            this.label20.Location = new System.Drawing.Point(211, 139);
             this.label20.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(51, 13);
@@ -491,7 +490,7 @@
             this.HoleControls.AutoSize = true;
             this.HoleControls.Checked = true;
             this.HoleControls.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.HoleControls.Location = new System.Drawing.Point(270, 145);
+            this.HoleControls.Location = new System.Drawing.Point(270, 140);
             this.HoleControls.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.HoleControls.Name = "HoleControls";
             this.HoleControls.Size = new System.Drawing.Size(15, 14);
@@ -516,7 +515,7 @@
             this.ControlPanel.Margin = new System.Windows.Forms.Padding(0);
             this.ControlPanel.Name = "ControlPanel";
             this.ControlPanel.Padding = new System.Windows.Forms.Padding(2, 3, 2, 2);
-            this.ControlPanel.Size = new System.Drawing.Size(457, 1533);
+            this.ControlPanel.Size = new System.Drawing.Size(457, 1506);
             this.ControlPanel.TabIndex = 15;
             // 
             // HighlightingPanel
@@ -545,18 +544,17 @@
             this.HighlightingPanel.Controls.Add(this.label16);
             this.HighlightingPanel.Controls.Add(this.EnableHilighting);
             this.HighlightingPanel.Controls.Add(this.HighlightDepth);
-            this.HighlightingPanel.Location = new System.Drawing.Point(2, 173);
+            this.HighlightingPanel.Location = new System.Drawing.Point(2, 168);
             this.HighlightingPanel.Margin = new System.Windows.Forms.Padding(0, 2, 0, 0);
             this.HighlightingPanel.Name = "HighlightingPanel";
-            this.HighlightingPanel.Padding = new System.Windows.Forms.Padding(0, 0, 0, 4);
-            this.HighlightingPanel.Size = new System.Drawing.Size(453, 201);
+            this.HighlightingPanel.Size = new System.Drawing.Size(453, 196);
             this.HighlightingPanel.TabIndex = 17;
             // 
             // TitleSearchNotFoundColour
             // 
             this.TitleSearchNotFoundColour.BackColor = System.Drawing.Color.Gold;
             this.TitleSearchNotFoundColour.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.TitleSearchNotFoundColour.Location = new System.Drawing.Point(340, 145);
+            this.TitleSearchNotFoundColour.Location = new System.Drawing.Point(340, 140);
             this.TitleSearchNotFoundColour.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.TitleSearchNotFoundColour.Name = "TitleSearchNotFoundColour";
             this.TitleSearchNotFoundColour.Size = new System.Drawing.Size(26, 23);
@@ -570,7 +568,7 @@
             // 
             this.TitleSearch3Colour.BackColor = System.Drawing.Color.DodgerBlue;
             this.TitleSearch3Colour.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.TitleSearch3Colour.Location = new System.Drawing.Point(229, 145);
+            this.TitleSearch3Colour.Location = new System.Drawing.Point(229, 140);
             this.TitleSearch3Colour.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.TitleSearch3Colour.Name = "TitleSearch3Colour";
             this.TitleSearch3Colour.Size = new System.Drawing.Size(26, 23);
@@ -584,7 +582,7 @@
             // 
             this.TitleSearch2Colour.BackColor = System.Drawing.Color.LimeGreen;
             this.TitleSearch2Colour.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.TitleSearch2Colour.Location = new System.Drawing.Point(119, 145);
+            this.TitleSearch2Colour.Location = new System.Drawing.Point(119, 140);
             this.TitleSearch2Colour.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.TitleSearch2Colour.Name = "TitleSearch2Colour";
             this.TitleSearch2Colour.Size = new System.Drawing.Size(26, 23);
@@ -598,7 +596,7 @@
             // 
             this.TitleSearch1Colour.BackColor = System.Drawing.Color.Red;
             this.TitleSearch1Colour.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.TitleSearch1Colour.Location = new System.Drawing.Point(8, 145);
+            this.TitleSearch1Colour.Location = new System.Drawing.Point(8, 140);
             this.TitleSearch1Colour.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.TitleSearch1Colour.Name = "TitleSearch1Colour";
             this.TitleSearch1Colour.Size = new System.Drawing.Size(26, 23);
@@ -612,7 +610,7 @@
             // 
             this.label21.AutoSize = true;
             this.label21.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label21.Location = new System.Drawing.Point(4, 126);
+            this.label21.Location = new System.Drawing.Point(4, 121);
             this.label21.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(253, 13);
@@ -624,7 +622,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label3.Location = new System.Drawing.Point(4, 76);
+            this.label3.Location = new System.Drawing.Point(4, 71);
             this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(348, 13);
@@ -635,7 +633,7 @@
             // RestoreApp
             // 
             this.RestoreApp.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.RestoreApp.Location = new System.Drawing.Point(378, 41);
+            this.RestoreApp.Location = new System.Drawing.Point(378, 36);
             this.RestoreApp.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.RestoreApp.Name = "RestoreApp";
             this.RestoreApp.Size = new System.Drawing.Size(65, 27);
@@ -649,7 +647,7 @@
             // HighlightAppNames
             // 
             this.HighlightAppNames.BackColor = System.Drawing.SystemColors.Window;
-            this.HighlightAppNames.Location = new System.Drawing.Point(8, 96);
+            this.HighlightAppNames.Location = new System.Drawing.Point(8, 91);
             this.HighlightAppNames.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.HighlightAppNames.Name = "HighlightAppNames";
             this.HighlightAppNames.Size = new System.Drawing.Size(435, 23);
@@ -661,7 +659,7 @@
             // HighlightingTitle
             // 
             this.HighlightingTitle.Font = new System.Drawing.Font("Arial Narrow", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.HighlightingTitle.Location = new System.Drawing.Point(104, 12);
+            this.HighlightingTitle.Location = new System.Drawing.Point(104, 7);
             this.HighlightingTitle.Margin = new System.Windows.Forms.Padding(4, 0, 9, 0);
             this.HighlightingTitle.Name = "HighlightingTitle";
             this.HighlightingTitle.Size = new System.Drawing.Size(299, 21);
@@ -675,7 +673,7 @@
             this.TitleSearchNotFound.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.TitleSearchNotFound.Enabled = false;
             this.TitleSearchNotFound.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
-            this.TitleSearchNotFound.Location = new System.Drawing.Point(366, 149);
+            this.TitleSearchNotFound.Location = new System.Drawing.Point(366, 144);
             this.TitleSearchNotFound.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.TitleSearchNotFound.Name = "TitleSearchNotFound";
             this.TitleSearchNotFound.Size = new System.Drawing.Size(76, 13);
@@ -687,7 +685,7 @@
             // TitleSearch3
             // 
             this.TitleSearch3.BackColor = System.Drawing.Color.White;
-            this.TitleSearch3.Location = new System.Drawing.Point(255, 145);
+            this.TitleSearch3.Location = new System.Drawing.Point(255, 140);
             this.TitleSearch3.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.TitleSearch3.Name = "TitleSearch3";
             this.TitleSearch3.Size = new System.Drawing.Size(76, 23);
@@ -698,7 +696,7 @@
             // TitleSearch2
             // 
             this.TitleSearch2.BackColor = System.Drawing.Color.White;
-            this.TitleSearch2.Location = new System.Drawing.Point(145, 145);
+            this.TitleSearch2.Location = new System.Drawing.Point(145, 140);
             this.TitleSearch2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.TitleSearch2.Name = "TitleSearch2";
             this.TitleSearch2.Size = new System.Drawing.Size(76, 23);
@@ -709,7 +707,7 @@
             // TitleSearch1
             // 
             this.TitleSearch1.BackColor = System.Drawing.Color.White;
-            this.TitleSearch1.Location = new System.Drawing.Point(34, 145);
+            this.TitleSearch1.Location = new System.Drawing.Point(34, 140);
             this.TitleSearch1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.TitleSearch1.Name = "TitleSearch1";
             this.TitleSearch1.Size = new System.Drawing.Size(76, 23);
@@ -721,7 +719,7 @@
             // 
             this.label17.AutoSize = true;
             this.label17.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label17.Location = new System.Drawing.Point(4, 48);
+            this.label17.Location = new System.Drawing.Point(4, 43);
             this.label17.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(39, 13);
@@ -732,7 +730,7 @@
             // MoveAppToHole
             // 
             this.MoveAppToHole.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.MoveAppToHole.Location = new System.Drawing.Point(230, 41);
+            this.MoveAppToHole.Location = new System.Drawing.Point(230, 36);
             this.MoveAppToHole.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.MoveAppToHole.Name = "MoveAppToHole";
             this.MoveAppToHole.Size = new System.Drawing.Size(142, 27);
@@ -748,8 +746,8 @@
             this.HighlightIncludePopUps.AutoSize = true;
             this.HighlightIncludePopUps.Checked = true;
             this.HighlightIncludePopUps.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.HighlightIncludePopUps.Location = new System.Drawing.Point(119, 178);
-            this.HighlightIncludePopUps.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.HighlightIncludePopUps.Location = new System.Drawing.Point(119, 173);
+            this.HighlightIncludePopUps.Margin = new System.Windows.Forms.Padding(4, 3, 4, 7);
             this.HighlightIncludePopUps.Name = "HighlightIncludePopUps";
             this.HighlightIncludePopUps.Size = new System.Drawing.Size(15, 14);
             this.HighlightIncludePopUps.TabIndex = 43;
@@ -761,7 +759,7 @@
             // 
             this.label15.AutoSize = true;
             this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label15.Location = new System.Drawing.Point(4, 10);
+            this.label15.Location = new System.Drawing.Point(2, 5);
             this.label15.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(92, 20);
@@ -772,7 +770,7 @@
             // 
             this.label16.AutoSize = true;
             this.label16.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label16.Location = new System.Drawing.Point(4, 177);
+            this.label16.Location = new System.Drawing.Point(4, 172);
             this.label16.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(99, 13);
@@ -786,8 +784,8 @@
             this.EnableHilighting.Appearance = System.Windows.Forms.Appearance.Button;
             this.EnableHilighting.Checked = true;
             this.EnableHilighting.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.EnableHilighting.Location = new System.Drawing.Point(406, 8);
-            this.EnableHilighting.Margin = new System.Windows.Forms.Padding(4, 3, 8, 3);
+            this.EnableHilighting.Location = new System.Drawing.Point(411, 3);
+            this.EnableHilighting.Margin = new System.Windows.Forms.Padding(4, 3, 3, 3);
             this.EnableHilighting.Name = "EnableHilighting";
             this.EnableHilighting.Size = new System.Drawing.Size(37, 27);
             this.EnableHilighting.TabIndex = 41;
@@ -800,7 +798,7 @@
             // HighlightDepth
             // 
             this.HighlightDepth.AccessibleDescription = "";
-            this.HighlightDepth.Location = new System.Drawing.Point(62, 37);
+            this.HighlightDepth.Location = new System.Drawing.Point(62, 32);
             this.HighlightDepth.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.HighlightDepth.Maximum = 42;
             this.HighlightDepth.Minimum = 2;
@@ -832,18 +830,17 @@
             this.ZoomPanel.Controls.Add(this.label10);
             this.ZoomPanel.Controls.Add(this.ZoomLevel);
             this.ZoomPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ZoomPanel.Location = new System.Drawing.Point(2, 376);
+            this.ZoomPanel.Location = new System.Drawing.Point(2, 366);
             this.ZoomPanel.Margin = new System.Windows.Forms.Padding(0, 2, 0, 0);
             this.ZoomPanel.Name = "ZoomPanel";
-            this.ZoomPanel.Padding = new System.Windows.Forms.Padding(0, 0, 0, 4);
-            this.ZoomPanel.Size = new System.Drawing.Size(453, 541);
+            this.ZoomPanel.Size = new System.Drawing.Size(453, 530);
             this.ZoomPanel.TabIndex = 16;
             // 
             // label14
             // 
             this.label14.AutoSize = true;
             this.label14.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label14.Location = new System.Drawing.Point(4, 47);
+            this.label14.Location = new System.Drawing.Point(4, 36);
             this.label14.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(33, 13);
@@ -856,7 +853,7 @@
             // 
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Segoe UI Symbol", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label8.Location = new System.Drawing.Point(4, 8);
+            this.label8.Location = new System.Drawing.Point(2, 3);
             this.label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(51, 21);
@@ -869,8 +866,8 @@
             this.EnableZoom.Appearance = System.Windows.Forms.Appearance.Button;
             this.EnableZoom.Checked = true;
             this.EnableZoom.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.EnableZoom.Location = new System.Drawing.Point(406, 8);
-            this.EnableZoom.Margin = new System.Windows.Forms.Padding(4, 3, 8, 3);
+            this.EnableZoom.Location = new System.Drawing.Point(411, 3);
+            this.EnableZoom.Margin = new System.Windows.Forms.Padding(4, 3, 3, 3);
             this.EnableZoom.Name = "EnableZoom";
             this.EnableZoom.Size = new System.Drawing.Size(37, 27);
             this.EnableZoom.TabIndex = 40;
@@ -884,7 +881,7 @@
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label7.Location = new System.Drawing.Point(4, 73);
+            this.label7.Location = new System.Drawing.Point(4, 62);
             this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(26, 13);
@@ -896,7 +893,7 @@
             // CrossHairV
             // 
             this.CrossHairV.BackColor = System.Drawing.Color.Black;
-            this.CrossHairV.Location = new System.Drawing.Point(9, 96);
+            this.CrossHairV.Location = new System.Drawing.Point(9, 85);
             this.CrossHairV.Margin = new System.Windows.Forms.Padding(0);
             this.CrossHairV.Name = "CrossHairV";
             this.CrossHairV.Size = new System.Drawing.Size(54, 115);
@@ -909,7 +906,7 @@
             this.ConstantUpdate.AutoSize = true;
             this.ConstantUpdate.Checked = true;
             this.ConstantUpdate.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.ConstantUpdate.Location = new System.Drawing.Point(59, 73);
+            this.ConstantUpdate.Location = new System.Drawing.Point(59, 62);
             this.ConstantUpdate.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.ConstantUpdate.Name = "ConstantUpdate";
             this.ConstantUpdate.Size = new System.Drawing.Size(15, 14);
@@ -922,7 +919,7 @@
             // CrossHairH
             // 
             this.CrossHairH.BackColor = System.Drawing.Color.Black;
-            this.CrossHairH.Location = new System.Drawing.Point(9, 244);
+            this.CrossHairH.Location = new System.Drawing.Point(9, 233);
             this.CrossHairH.Margin = new System.Windows.Forms.Padding(0);
             this.CrossHairH.Name = "CrossHairH";
             this.CrossHairH.Size = new System.Drawing.Size(54, 115);
@@ -933,8 +930,8 @@
             // Zoom
             // 
             this.Zoom.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.Zoom.Location = new System.Drawing.Point(8, 96);
-            this.Zoom.Margin = new System.Windows.Forms.Padding(0, 0, 0, 4);
+            this.Zoom.Location = new System.Drawing.Point(8, 85);
+            this.Zoom.Margin = new System.Windows.Forms.Padding(0, 0, 0, 8);
             this.Zoom.Name = "Zoom";
             this.Zoom.Size = new System.Drawing.Size(435, 435);
             this.Zoom.TabIndex = 28;
@@ -947,7 +944,7 @@
             this.FasterRefresh.AutoSize = true;
             this.FasterRefresh.Checked = true;
             this.FasterRefresh.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.FasterRefresh.Location = new System.Drawing.Point(296, 73);
+            this.FasterRefresh.Location = new System.Drawing.Point(296, 62);
             this.FasterRefresh.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.FasterRefresh.Name = "FasterRefresh";
             this.FasterRefresh.Size = new System.Drawing.Size(15, 14);
@@ -963,7 +960,7 @@
             this.CrossHair.AutoSize = true;
             this.CrossHair.Checked = true;
             this.CrossHair.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.CrossHair.Location = new System.Drawing.Point(172, 73);
+            this.CrossHair.Location = new System.Drawing.Point(172, 62);
             this.CrossHair.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.CrossHair.Name = "CrossHair";
             this.CrossHair.Size = new System.Drawing.Size(15, 14);
@@ -977,7 +974,7 @@
             // 
             this.FasterRefreshL.AutoSize = true;
             this.FasterRefreshL.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.FasterRefreshL.Location = new System.Drawing.Point(211, 72);
+            this.FasterRefreshL.Location = new System.Drawing.Point(211, 61);
             this.FasterRefreshL.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.FasterRefreshL.Name = "FasterRefreshL";
             this.FasterRefreshL.Size = new System.Drawing.Size(77, 13);
@@ -990,7 +987,7 @@
             // 
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label10.Location = new System.Drawing.Point(101, 73);
+            this.label10.Location = new System.Drawing.Point(101, 62);
             this.label10.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(63, 13);
@@ -1002,7 +999,7 @@
             // ZoomLevel
             // 
             this.ZoomLevel.AccessibleDescription = "";
-            this.ZoomLevel.Location = new System.Drawing.Point(62, 37);
+            this.ZoomLevel.Location = new System.Drawing.Point(62, 26);
             this.ZoomLevel.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.ZoomLevel.Minimum = 1;
             this.ZoomLevel.Name = "ZoomLevel";
@@ -1026,19 +1023,33 @@
             this.InfoPanel.Controls.Add(this.About);
             this.InfoPanel.Controls.Add(this.MouseMeasure);
             this.InfoPanel.Controls.Add(this.label12);
-            this.InfoPanel.Location = new System.Drawing.Point(2, 919);
+            this.InfoPanel.Location = new System.Drawing.Point(2, 898);
             this.InfoPanel.Margin = new System.Windows.Forms.Padding(0, 2, 0, 0);
             this.InfoPanel.Name = "InfoPanel";
-            this.InfoPanel.Size = new System.Drawing.Size(453, 41);
+            this.InfoPanel.Size = new System.Drawing.Size(453, 35);
             this.InfoPanel.TabIndex = 16;
+            // 
+            // AdministratorWarning
+            // 
+            this.AdministratorWarning.Font = new System.Drawing.Font("Segoe MDL2 Assets", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.AdministratorWarning.ForeColor = System.Drawing.Color.Red;
+            this.AdministratorWarning.Location = new System.Drawing.Point(309, 3);
+            this.AdministratorWarning.Margin = new System.Windows.Forms.Padding(4, 3, 8, 3);
+            this.AdministratorWarning.Name = "AdministratorWarning";
+            this.AdministratorWarning.Size = new System.Drawing.Size(28, 27);
+            this.AdministratorWarning.TabIndex = 44;
+            this.AdministratorWarning.Text = "";
+            this.ToolTip.SetToolTip(this.AdministratorWarning, "Extra information about Holey Moley");
+            this.AdministratorWarning.UseVisualStyleBackColor = true;
+            this.AdministratorWarning.Click += new System.EventHandler(this.AdministratorWarning_Click);
             // 
             // EnableDebug
             // 
             this.EnableDebug.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.EnableDebug.Location = new System.Drawing.Point(310, 6);
-            this.EnableDebug.Margin = new System.Windows.Forms.Padding(4, 3, 8, 6);
+            this.EnableDebug.Location = new System.Drawing.Point(340, 3);
+            this.EnableDebug.Margin = new System.Windows.Forms.Padding(4, 3, 8, 3);
             this.EnableDebug.Name = "EnableDebug";
-            this.EnableDebug.Size = new System.Drawing.Size(62, 27);
+            this.EnableDebug.Size = new System.Drawing.Size(51, 27);
             this.EnableDebug.TabIndex = 43;
             this.EnableDebug.Text = "Debug";
             this.ToolTip.SetToolTip(this.EnableDebug, "Extra information about Holey Moley");
@@ -1049,7 +1060,7 @@
             // 
             this.MousePosition.AutoSize = true;
             this.MousePosition.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.MousePosition.Location = new System.Drawing.Point(39, 12);
+            this.MousePosition.Location = new System.Drawing.Point(39, 9);
             this.MousePosition.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.MousePosition.Name = "MousePosition";
             this.MousePosition.Size = new System.Drawing.Size(64, 13);
@@ -1060,7 +1071,7 @@
             // label18
             // 
             this.label18.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label18.Location = new System.Drawing.Point(112, 11);
+            this.label18.Location = new System.Drawing.Point(112, 8);
             this.label18.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(33, 17);
@@ -1071,7 +1082,7 @@
             // MouseMeasure
             // 
             this.MouseMeasure.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.MouseMeasure.Location = new System.Drawing.Point(138, 12);
+            this.MouseMeasure.Location = new System.Drawing.Point(138, 9);
             this.MouseMeasure.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.MouseMeasure.Name = "MouseMeasure";
             this.MouseMeasure.Size = new System.Drawing.Size(75, 15);
@@ -1082,7 +1093,7 @@
             // label12
             // 
             this.label12.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label12.Location = new System.Drawing.Point(10, 11);
+            this.label12.Location = new System.Drawing.Point(10, 8);
             this.label12.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(46, 15);
@@ -1096,12 +1107,13 @@
             this.DebugPanel.BackColor = System.Drawing.Color.White;
             this.DebugPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.DebugPanel.Controls.Add(this.DebugInfo);
-            this.DebugPanel.Location = new System.Drawing.Point(2, 962);
+            this.DebugPanel.Location = new System.Drawing.Point(2, 935);
             this.DebugPanel.Margin = new System.Windows.Forms.Padding(0, 2, 0, 0);
             this.DebugPanel.Name = "DebugPanel";
             this.DebugPanel.Padding = new System.Windows.Forms.Padding(0, 4, 0, 4);
             this.DebugPanel.Size = new System.Drawing.Size(453, 569);
             this.DebugPanel.TabIndex = 16;
+            this.DebugPanel.Visible = false;
             // 
             // DebugInfo
             // 
@@ -1117,20 +1129,6 @@
             this.DebugInfo.Size = new System.Drawing.Size(434, 553);
             this.DebugInfo.TabIndex = 0;
             // 
-            // AdministratorWarning
-            // 
-            this.AdministratorWarning.Font = new System.Drawing.Font("Segoe MDL2 Assets", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.AdministratorWarning.ForeColor = System.Drawing.Color.Red;
-            this.AdministratorWarning.Location = new System.Drawing.Point(277, 6);
-            this.AdministratorWarning.Margin = new System.Windows.Forms.Padding(4, 3, 8, 6);
-            this.AdministratorWarning.Name = "AdministratorWarning";
-            this.AdministratorWarning.Size = new System.Drawing.Size(28, 27);
-            this.AdministratorWarning.TabIndex = 44;
-            this.AdministratorWarning.Text = "";
-            this.ToolTip.SetToolTip(this.AdministratorWarning, "Extra information about Holey Moley");
-            this.AdministratorWarning.UseVisualStyleBackColor = true;
-            this.AdministratorWarning.Click += new System.EventHandler(this.AdministratorWarning_Click);
-            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -1138,7 +1136,7 @@
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.ClientSize = new System.Drawing.Size(951, 1535);
+            this.ClientSize = new System.Drawing.Size(951, 1181);
             this.Controls.Add(this.ControlPanel);
             this.Controls.Add(this.Logo);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
