@@ -96,10 +96,10 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(439, 64);
+            this.Controls.Add(this.Scroller);
             this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.Info);
             this.Controls.Add(this.pictureBox1);
-            this.Controls.Add(this.Scroller);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.Name = "About";

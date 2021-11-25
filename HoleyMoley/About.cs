@@ -18,15 +18,21 @@ namespace HoleyMoley
 
         private Bitmap RawTextBitmap { get; set; }
         Graphics RawTextGraphics { get; set; }
+        private Bitmap MiddleBitmap { get; set; }
+        Graphics MiddleGraphics { get; set; }
         private Bitmap ScrollerBitmap { get; set; }
         //  Graphics G { get; set; }
         Graphics ScrollerGraphics { get; set; }
         int Width { get; set; }
+        int PaddedWidth { get; set; }
         int Height { get; set; }
         int FontHeight { get; set; }
         int FontCenteringOffset { get; set; }
         Point FontOffset { get; set; }
         Font ScrollerFont { get; set; }
+
+        private const int HorizontalWobbleScale = 5;
+        private const int VerticalWobbleScale = 12;
 
         public About()
         {
@@ -34,9 +40,12 @@ namespace HoleyMoley
 
             Width = Scroller.Width;
             Height = Scroller.Height;
+            PaddedWidth = Width + HorizontalWobbleScale + HorizontalWobbleScale;
 
-            RawTextBitmap = new Bitmap(Width, Height);
+            RawTextBitmap = new Bitmap(PaddedWidth, Height);
             RawTextGraphics = Graphics.FromImage(RawTextBitmap);
+            MiddleBitmap = new Bitmap(PaddedWidth, Height);   // Extra space at edges which may become blank - we can clip these
+            MiddleGraphics = Graphics.FromImage(MiddleBitmap);
             ScrollerBitmap = new Bitmap(Width, Height);
             ScrollerGraphics = Graphics.FromImage(ScrollerBitmap);
 
@@ -72,22 +81,36 @@ namespace HoleyMoley
             TextRenderer.DrawText(RawTextGraphics, "Holey Moley Holey Moley Holey Moley Holey Moley Holey Moley", ScrollerFont, FontOffset, Color.Red);
             
             ScrollerGraphics.Clear(Color.Orange);
+            MiddleGraphics.Clear(Color.LightPink);
 
-            IntPtr hdc = ScrollerGraphics.GetHdc();
+            //count+= 1.0;
+
+            IntPtr hdc = MiddleGraphics.GetHdc();
             IntPtr src = NativeMethods.CreateCompatibleDC(hdc);
             IntPtr hOldObject = NativeMethods.SelectObject(src, RawTextBitmap.GetHbitmap());
 
-            //count+= 1.0;
+            for (int j = 0; j < Height; j++)
+            {
+                double offset = (int)(Math.Sin((count * 1.17) + (j * 0.12)) * HorizontalWobbleScale);
+                NativeMethods.BitBlt(hdc, (int)offset, j, PaddedWidth, 1, src, 0, j, PatBltType.SrcCopy);
+            }
+
+            if (hOldObject != IntPtr.Zero)
+                NativeMethods.SelectObject(src, hOldObject);
+
+            NativeMethods.DeleteDC(src);
+            MiddleGraphics.ReleaseHdc(hdc);
+
+            hdc = ScrollerGraphics.GetHdc();
+            src = NativeMethods.CreateCompatibleDC(hdc);
+            hOldObject = NativeMethods.SelectObject(src, MiddleBitmap.GetHbitmap());
+
             for (int i = 0; i < Width; i++)
             {
-                double offset = (int)(Math.Sin(count + (i * 0.02)) * 20.0d);
-                var r = NativeMethods.BitBlt(hdc, i, (int)offset, 1, Height, src, i, 0, PatBltType.SrcCopy);
+                double offset = (int)(Math.Sin(count + (i * 0.02)) * VerticalWobbleScale);
+                NativeMethods.BitBlt(hdc, i, (int)offset, 1, Height, src, i + HorizontalWobbleScale, 0, PatBltType.SrcCopy);
             }
-            //for (int j = 0; j < Height; j++)
-            //{
-            //    double offset = (int)(Math.Sin((count * 1.17) + (j * 0.02)) * 5.0d);
-            //    var r = NativeMethods.BitBlt(hdc, (int)offset,0, Width,1, src, 0, j, PatBltType.SrcCopy);
-            //}
+
 
             if (hOldObject != IntPtr.Zero)
                 NativeMethods.SelectObject(src, hOldObject);
