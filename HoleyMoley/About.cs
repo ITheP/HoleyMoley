@@ -20,6 +20,7 @@ namespace HoleyMoley
         private Bitmap ScrollerBitmap { get; set; }
         //  Graphics G { get; set; }
         Graphics ScrollerGraphics { get; set; }
+        private Bitmap LogoBitmap { get; set; } = (Bitmap)HoleyMoley.Properties.Resources.ResourceManager.GetObject("Logo");
         int ScrollerWidth { get; set; }
         int PaddedWidth { get; set; }
         int ScrollerHeight { get; set; }
@@ -29,12 +30,13 @@ namespace HoleyMoley
 
         private int HorizontalWobbleScale { get; set; } = 10;
         private int VerticalWobbleScale { get; set; } = 24;
-        private string Message { get; set; } = "►Holey Moley◄ ☺ ► I The P ◄ ☺ ►©2010-2021◄ ☺ ►Shout-outs go to my kitty cats here◄ ☺ ";
+        private string Message { get; set; } = "►Holey Moley◄ ☺ ► ©2010-2021 I-The-P ◄ ☺ ►Shout-outs go to my kitty cats here◄ ☺ ";
         private int MessagePos { get; set; } = 0;
         private double RenderOffset { get; set; } = 0;
         private double ScrollSpeed { get; set; } = 5.0d;
 
         private Color[] ScrollerColours = { Color.Pink, Color.Moccasin, Color.LightGoldenrodYellow, Color.PaleGreen, Color.LightCyan, Color.PowderBlue, Color.Thistle };
+
 
         public About()
         {
@@ -173,13 +175,16 @@ namespace HoleyMoley
                 NativeMethods.BitBlt(hdc, i, (int)offset, 1, ScrollerHeight, src, i + HorizontalWobbleScale, 0, PatBltType.SrcCopy);
             }
 
-
             if (hOldObject != IntPtr.Zero)
                 NativeMethods.SelectObject(src, hOldObject);
 
             NativeMethods.DeleteObject(srcHBitmap);
             NativeMethods.DeleteDC(src);
             ScrollerGraphics.ReleaseHdc(hdc);
+
+            // Logo's
+            ScrollerGraphics.DrawImage(LogoBitmap, 0,0,64,64);
+            ScrollerGraphics.DrawImage(LogoBitmap, ScrollerBitmap.Width - 64, 0, 64, 64);
 
             Scroller.Refresh();
             // Invalidate(true);
