@@ -47,7 +47,7 @@ namespace HoleyMoley
         {
             // this.WindowState = FormWindowState.Maximized;
 
-          //  this.SuspendLayout();
+            this.SuspendLayout();
             this.Hide();
             //SendMessage(this.Handle, WM_SETREDRAW, false, 0);
             //SendMessage(ParentForm.Handle, WM_SETREDRAW, false, 0);
@@ -84,7 +84,7 @@ namespace HoleyMoley
             //    this.Show();
 
             
-          //  this.ResumeLayout(false);
+            this.ResumeLayout(false);
         }
 
         public void SetControlVisibility(bool visible)

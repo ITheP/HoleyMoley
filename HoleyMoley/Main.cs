@@ -76,12 +76,13 @@ namespace HoleyMoley
         private void UI_Load(object sender, EventArgs e)
         {
             this.MaximizeBox = false;
-
+            this.Hide();    // Hiding here helps stop start up flickering of controls appearing/dissapearing/resizing etc.
             this.SuspendLayout();
 
             HoleForm = new Hole(this);
             //HoleForm.HoleForm = this;
             HoleForm.Show(this);
+            HoleForm.Visible = false;        // Hiding here stops Hole from flicking on screen during startup if not enabled
             //HoleControls.UI = UI;
 
             LoadSettings();

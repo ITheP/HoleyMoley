@@ -30,7 +30,7 @@ namespace HoleyMoley
 
         private int HorizontalWobbleScale { get; set; } = 10;
         private int VerticalWobbleScale { get; set; } = 24;
-        private string Message { get; set; } = "►Holey Moley◄ ☺ ► ©2010-2021 I-The-P ◄ ☺ ►Shout-outs go to my kitty cats here◄ ☺ ";
+        private string Message { get; set; } = "►Holey Moley◄ ☺ ► ©2010-2021 I-The-P ◄ ☺ ►Shout-outs go to my kitty cats, IRC and bored lunchtimes◄ ☺ ";
         private int MessagePos { get; set; } = 0;
         private double RenderOffset { get; set; } = 0;
         private double ScrollSpeed { get; set; } = 5.0d;
@@ -55,13 +55,16 @@ namespace HoleyMoley
             ScrollerBitmap = new Bitmap(ScrollerWidth, ScrollerHeight);
             ScrollerGraphics = Graphics.FromImage(ScrollerBitmap);
 
+            MiddleGraphics.Clear(Color.Black);
+            ScrollerGraphics.Clear(Color.Black);
+
             //   G = Graphics.FromImage(ScrollerBitmap);
             //   G.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighSpeed;
             //  G.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
             ScrollerFont = new Font("Impact", 48, FontStyle.Regular, GraphicsUnit.Pixel);
 
             Scroller.Image = ScrollerBitmap;
-
+            this.DoubleBuffered = true;
             // Approximate font height based on a couple of letters (ascending/decending content, plus some padding)
             var fontSize = TextRenderer.MeasureText(RawTextGraphics, "Ay", ScrollerFont, new System.Drawing.Size(int.MaxValue, int.MaxValue));
             ApproxFontHeight = fontSize.Height;
@@ -183,8 +186,8 @@ namespace HoleyMoley
             ScrollerGraphics.ReleaseHdc(hdc);
 
             // Logo's
-            ScrollerGraphics.DrawImage(LogoBitmap, 0,0,64,64);
-            ScrollerGraphics.DrawImage(LogoBitmap, ScrollerBitmap.Width - 64, 0, 64, 64);
+            ScrollerGraphics.DrawImage(LogoBitmap, 0,0,LogoBitmap.Width,LogoBitmap.Height);
+            ScrollerGraphics.DrawImage(LogoBitmap, ScrollerBitmap.Width - LogoBitmap.Width, 0, LogoBitmap.Width, LogoBitmap.Height);
 
             Scroller.Refresh();
             // Invalidate(true);
