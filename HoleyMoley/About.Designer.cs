@@ -45,7 +45,7 @@
             this.Scroller.Location = new System.Drawing.Point(0, 0);
             this.Scroller.Margin = new System.Windows.Forms.Padding(0);
             this.Scroller.Name = "Scroller";
-            this.Scroller.Size = new System.Drawing.Size(640, 64);
+            this.Scroller.Size = new System.Drawing.Size(800, 128);
             this.Scroller.TabIndex = 5;
             this.Scroller.TabStop = false;
             // 
@@ -56,7 +56,7 @@
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(719, 135);
+            this.ClientSize = new System.Drawing.Size(815, 142);
             this.Controls.Add(this.Scroller);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);

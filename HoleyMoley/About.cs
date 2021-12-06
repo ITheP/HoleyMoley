@@ -4,9 +4,11 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+//using System.Windows.Media;
 
 namespace HoleyMoley
 {
@@ -29,14 +31,47 @@ namespace HoleyMoley
         Font ScrollerFont { get; set; }
 
         private int HorizontalWobbleScale { get; set; } = 10;
-        private int VerticalWobbleScale { get; set; } = 24;
+        private int VerticalWobbleScale { get; set; } = 48;
         private string Message { get; set; } = "►Holey Moley◄ ☺ ► ©2010-2021 I-The-P ◄ ☺ ►Shout-outs go to my kitty cats, IRC and bored lunchtimes◄ ☺ ";
         private int MessagePos { get; set; } = 0;
         private double RenderOffset { get; set; } = 0;
-        private double ScrollSpeed { get; set; } = 5.0d;
+        private double ScrollSpeed { get; set; } = 9.0d;
 
-        private Color[] ScrollerColours = { Color.Pink, Color.Moccasin, Color.LightGoldenrodYellow, Color.PaleGreen, Color.LightCyan, Color.PowderBlue, Color.Thistle };
+        private Color[] ScrollerColours { get; set; } = { Color.Pink, Color.Moccasin, Color.LightGoldenrodYellow, Color.PaleGreen, Color.LightCyan, Color.PowderBlue, Color.Thistle };
 
+        private Color[] MetalStartColors { get; set; } = new[] { Color.DarkBlue, Color.LightBlue, Color.White, Color.FromArgb(255, 20, 10, 0), Color.Gold, Color.AntiqueWhite };
+        private float[] MetalGradientPositions { get; set; } = new[] { 0.0f, 0.54f, 0.57f, 0.571f, 0.7f, 1.0f };
+        private Color[] MetalAnimatedFirstColours { get; set; } = { Color.DarkBlue, Color.DarkRed, Color.Gold, Color.DarkGreen, Color.Maroon, Color.SaddleBrown, Color.DarkGreen, Color.Purple };
+        private Color[] MetalAnimatedSecondColours { get; set; } = { Color.LightBlue, Color.Pink, Color.LightGoldenrodYellow, Color.PaleGreen, Color.Firebrick, Color.Orange, Color.LimeGreen, Color.Plum };
+        
+        private AnimatedColor FirstAnimatedColor { get; set; }
+        private AnimatedColor SecondAnimatedColor { get; set; }
+        private int MetalAnimationRate { get; set; } = 300;     // number of frames to blend between colours
+        //private float MetalR1 { get; set; }
+        //private float MetalG1 { get; set; }
+        //private float MetalB1 { get; set; }
+        //private float MetalR2 { get; set; }
+        //private float MetalG2 { get; set; }
+        //private float MetalB2 { get; set; }
+        //private int MetalColourPos { get; set; }
+        //private int MetalCounter { get; set; } = 0;
+        //private int MetalChangeRate { get; set; } = 300; // frames
+        //private float MetalR1Change { get; set; }
+        //private float MetalG1Change { get; set; }
+        //private float MetalB1Change { get; set; }
+        //private float MetalR2Change { get; set; }
+        //private float MetalG2Change { get; set; }
+        //private float MetalB2Change { get; set; }
+
+        Rectangle TopFadeRec { get; set; }
+        Rectangle BottomFadeRec { get; set; }
+        Rectangle FontRec { get; set; }
+
+        LinearGradientBrush TopFadeBrush { get; set; }
+        LinearGradientBrush BottomFadeBrush { get; set; }
+        LinearGradientBrush FontBrush { get; set; }
+
+        ColorBlend FontColorBlend { get; set; }
 
         public About()
         {
@@ -61,14 +96,31 @@ namespace HoleyMoley
             //   G = Graphics.FromImage(ScrollerBitmap);
             //   G.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighSpeed;
             //  G.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
-            ScrollerFont = new Font("Impact", 48, FontStyle.Regular, GraphicsUnit.Pixel);
+            ScrollerFont = new Font("Impact", 96, FontStyle.Regular, GraphicsUnit.Pixel);
 
             Scroller.Image = ScrollerBitmap;
             this.DoubleBuffered = true;
             // Approximate font height based on a couple of letters (ascending/decending content, plus some padding)
-            var fontSize = TextRenderer.MeasureText(RawTextGraphics, "Ay", ScrollerFont, new System.Drawing.Size(int.MaxValue, int.MaxValue));
-            ApproxFontHeight = fontSize.Height;
+            //var fontSize = TextRenderer.MeasureText(RawTextGraphics, "Ay", ScrollerFont, new System.Drawing.Size(int.MaxValue, int.MaxValue));
+            var fontSize = RawTextGraphics.MeasureString("Ay", ScrollerFont, new System.Drawing.PointF(int.MaxValue, int.MaxValue), StringFormat.GenericTypographic);
+            ApproxFontHeight = (int)fontSize.Height;
             FontCenteringOffset = (int)((ScrollerHeight - ApproxFontHeight) * 0.5);
+
+            TopFadeRec = new() { X = 0, Y = 0, Width = ScrollerBitmap.Width, Height = (int)(ScrollerBitmap.Height * 0.2) };
+            BottomFadeRec = new() { X = 0, Y = ScrollerBitmap.Height - (int)(ScrollerBitmap.Height * 0.2), Width = ScrollerBitmap.Width, Height = (int)(ScrollerBitmap.Height * 0.2) };
+
+            TopFadeBrush = new(TopFadeRec, Color.Black, Color.Transparent, LinearGradientMode.Vertical);
+            BottomFadeBrush = new(BottomFadeRec, Color.Transparent, Color.Black, LinearGradientMode.Vertical);
+
+            FontRec = new(0, 0, 1, ApproxFontHeight);
+            FontBrush = new(FontRec, Color.Black, Color.Black, LinearGradientMode.Vertical);
+            FontColorBlend = new();
+            FontColorBlend.Positions = MetalGradientPositions;
+            FontColorBlend.Colors = MetalStartColors;
+            FontBrush.InterpolationColors = FontColorBlend;
+
+            FirstAnimatedColor = new(MetalAnimatedFirstColours, MetalAnimationRate);
+            SecondAnimatedColor = new(MetalAnimatedSecondColours, MetalAnimationRate);
         }
 
         private int ColourPos = 0;
@@ -98,7 +150,8 @@ namespace HoleyMoley
             //  Get width of first character
             int messageLength = Message.Length - 1;
             string letter = Message.Substring(MessagePos, 1); //Message[(MessagePos % messageLength)..1]; // Message.Substring(MessageOffset);
-            var fontSize = TextRenderer.MeasureText(RawTextGraphics, letter, ScrollerFont, new System.Drawing.Size(int.MaxValue, int.MaxValue), TextFormatFlags.NoPadding);
+            //var fontSize = TextRenderer.MeasureText(RawTextGraphics, letter, ScrollerFont, new System.Drawing.Size(int.MaxValue, int.MaxValue), TextFormatFlags.NoPadding);
+            var fontSize = RawTextGraphics.MeasureString(letter, ScrollerFont, new System.Drawing.PointF(int.MaxValue, int.MaxValue), StringFormat.GenericTypographic);
 
             //  Move everything to the left
             RenderOffset -= ScrollSpeed;
@@ -118,8 +171,9 @@ namespace HoleyMoley
                 //letter = Message[(messagePos++ % messageLength)..(messagePos % messageLength)];
                 letter = Message.Substring(MessagePos, 1);   // Already got this. Could optimise this fetch away
 
-                fontSize = TextRenderer.MeasureText(RawTextGraphics, letter, ScrollerFont, new System.Drawing.Size(int.MaxValue, int.MaxValue), TextFormatFlags.NoPadding);
-                
+                //fontSize = TextRenderer.MeasureText(RawTextGraphics, letter, ScrollerFont, new System.Drawing.Size(int.MaxValue, int.MaxValue), TextFormatFlags.NoPadding);
+                fontSize = RawTextGraphics.MeasureString(letter, ScrollerFont, new System.Drawing.PointF(int.MaxValue, int.MaxValue), StringFormat.GenericTypographic);
+
                 // And around we go for another check!                
             }
 
@@ -133,6 +187,10 @@ namespace HoleyMoley
                     ColourPos = ScrollerColours.Length - 1;
             }
 
+            FontColorBlend.Colors[0] = FirstAnimatedColor.Next(); // Color.FromArgb(255, (int)MetalR1, (int)MetalG1, (int)MetalB1);
+            FontColorBlend.Colors[1] = SecondAnimatedColor.Next(); // Color.FromArgb(255, (int)MetalR2, (int)MetalG2, (int)MetalB2);
+            FontBrush.InterpolationColors = FontColorBlend;
+
             while (renderOffset < PaddedWidth)
             {
                 //letter = Message[(messagePos++ % messageLength)..(messagePos % messageLength)]; 
@@ -140,14 +198,20 @@ namespace HoleyMoley
                 if (messagePos > messageLength)
                     messagePos = 0;
 
+                // MeasureText gives us better spacing, MeasureString returns zero for spaces.
                 fontSize = TextRenderer.MeasureText(RawTextGraphics, letter, ScrollerFont, new System.Drawing.Size(int.MaxValue, int.MaxValue), TextFormatFlags.NoPadding);
+                //fontSize = RawTextGraphics.MeasureString(letter, ScrollerFont, new System.Drawing.PointF(int.MaxValue, int.MaxValue), StringFormat.GenericTypographic);
 
-                TextRenderer.DrawText(RawTextGraphics, letter , ScrollerFont, new Point((int)renderOffset, FontCenteringOffset), ScrollerColours[colourPos++]);
-                if (colourPos == ScrollerColours.Length)
-                    colourPos = 0;
+                if (letter != " ")
+                    //TextRenderer.DrawText(RawTextGraphics, letter, ScrollerFont, new Point((int)renderOffset, FontCenteringOffset), FontBrush); // ScrollerColours[colourPos++]);
+                    RawTextGraphics.DrawString(letter, ScrollerFont, FontBrush, new Point((int)renderOffset, FontCenteringOffset)); // ScrollerColours[colourPos++]);
+
 
                 renderOffset += fontSize.Width;
             }
+
+            if (colourPos == ScrollerColours.Length)
+                colourPos = 0;
 
             IntPtr hdc = MiddleGraphics.GetHdc();
             IntPtr src = NativeMethods.CreateCompatibleDC(hdc);
@@ -174,7 +238,7 @@ namespace HoleyMoley
 
             for (int i = 0; i < ScrollerWidth; i++)
             {
-                double offset = (int)(Math.Sin(count + (i * 0.02)) * VerticalWobbleScale);
+                double offset = (int)(Math.Sin(count + (i * 0.01117)) * VerticalWobbleScale);
                 NativeMethods.BitBlt(hdc, i, (int)offset, 1, ScrollerHeight, src, i + HorizontalWobbleScale, 0, PatBltType.SrcCopy);
             }
 
@@ -186,8 +250,13 @@ namespace HoleyMoley
             ScrollerGraphics.ReleaseHdc(hdc);
 
             // Logo's
-            ScrollerGraphics.DrawImage(LogoBitmap, 0,0,LogoBitmap.Width,LogoBitmap.Height);
-            ScrollerGraphics.DrawImage(LogoBitmap, ScrollerBitmap.Width - LogoBitmap.Width, 0, LogoBitmap.Width, LogoBitmap.Height);
+            ScrollerGraphics.DrawImage(LogoBitmap, 32, 32, LogoBitmap.Width, LogoBitmap.Height);
+            ScrollerGraphics.DrawImage(LogoBitmap, ScrollerBitmap.Width - LogoBitmap.Width - 32, 32, LogoBitmap.Width, LogoBitmap.Height);
+
+            // Fading
+            ScrollerGraphics.FillRectangle(TopFadeBrush, TopFadeRec);
+            ScrollerGraphics.FillRectangle(BottomFadeBrush, BottomFadeRec);
+
 
             Scroller.Refresh();
             // Invalidate(true);
@@ -216,5 +285,87 @@ namespace HoleyMoley
             NativeMethods.DeleteObject(RawTextBitmap.GetHbitmap());
             RawTextBitmap = null;
         }
+    }
+
+    // Frame based rather than time based, maybe some day if it's important :)
+    // This is note coded for accuracy, as it doesn't matter that much
+    public class AnimatedColor
+    {
+        private float R { get; set; }
+        private float G { get; set; }
+        private float B { get; set; }
+
+        private float RChange { get; set; }
+        private float GChange { get; set; }
+        private float BChange { get; set; }
+
+        private Color[] Colors { get; set; }
+
+        private int ColorPos { get; set; } = 0;
+        private int Counter { get; set; } = 0;
+        private int ChangeRate { get; set; }
+
+        public AnimatedColor(Color[] colors, int changeRate)
+        {
+            ChangeRate = changeRate;
+
+            Colors = colors;
+            R = Colors[0].R;
+            G = Colors[0].G;
+            B = Colors[0].B;
+
+            InitNextColour();
+        }
+
+        private void InitNextColour()
+        {
+            ColorPos++;
+            if (ColorPos == Colors.Length)
+                ColorPos = 0;
+
+            RChange = (Colors[ColorPos].R - R) / ChangeRate;
+            GChange = (Colors[ColorPos].G - G) / ChangeRate;
+            BChange = (Colors[ColorPos].B - B) / ChangeRate;
+        }
+
+        public Color Next()
+        {
+            R += RChange;
+            G += GChange;
+            B += BChange;
+
+            // Just incase, even though it shouldnt strictly speaking be a thing...
+            if (R > 255)
+                R = 255;
+            else if (R < 0)
+                R = 0;
+
+            if (G > 255)
+                G = 255;
+            else if (G < 0)
+                G = 0;
+
+            if (B > 255)
+                B = 255;
+            else if (B < 0)
+                B = 0;
+
+            Counter++;
+            if (Counter == ChangeRate)
+            {
+                Counter = 0;
+
+                ColorPos++;
+                if (ColorPos == Colors.Length)
+                    ColorPos = 0;
+
+                RChange = (Colors[ColorPos].R - R) / ChangeRate;
+                GChange = (Colors[ColorPos].G - G) / ChangeRate;
+                BChange = (Colors[ColorPos].B - B) / ChangeRate;
+            }
+
+            return Color.FromArgb(255, (int)R, (int)G, (int)B);
+        }
+
     }
 }
