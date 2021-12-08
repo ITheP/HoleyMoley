@@ -39,11 +39,11 @@ namespace HoleyMoley
 
         private Color[] ScrollerColours { get; set; } = { Color.Pink, Color.Moccasin, Color.LightGoldenrodYellow, Color.PaleGreen, Color.LightCyan, Color.PowderBlue, Color.Thistle };
 
-        private Color[] MetalStartColors { get; set; } = new[] { Color.DarkBlue, Color.LightBlue, Color.White, Color.FromArgb(255, 20, 10, 0), Color.Gold, Color.AntiqueWhite };
-        private float[] MetalGradientPositions { get; set; } = new[] { 0.0f, 0.54f, 0.57f, 0.571f, 0.7f, 1.0f };
+        private Color[] MetalStartColors { get; set; } = new[] { Color.DarkBlue, Color.LightBlue, Color.White, Color.FromArgb(255, 12, 6, 0), Color.Gold, Color.AntiqueWhite };
+        private float[] MetalGradientPositions { get; set; } = new[] { 0.0f, 0.54f, 0.57f, 0.5701f, 0.7f, 1.0f };
         private Color[] MetalAnimatedFirstColours { get; set; } = { Color.DarkBlue, Color.DarkRed, Color.Gold, Color.DarkGreen, Color.Maroon, Color.SaddleBrown, Color.DarkGreen, Color.Purple };
         private Color[] MetalAnimatedSecondColours { get; set; } = { Color.LightBlue, Color.Pink, Color.LightGoldenrodYellow, Color.PaleGreen, Color.Firebrick, Color.Orange, Color.LimeGreen, Color.Plum };
-        
+
         private AnimatedColor FirstAnimatedColor { get; set; }
         private AnimatedColor SecondAnimatedColor { get; set; }
         private int MetalAnimationRate { get; set; } = 300;     // number of frames to blend between colours
@@ -121,31 +121,29 @@ namespace HoleyMoley
 
             FirstAnimatedColor = new(MetalAnimatedFirstColours, MetalAnimationRate);
             SecondAnimatedColor = new(MetalAnimatedSecondColours, MetalAnimationRate);
+
+            Timer.Start();
         }
 
         private int ColourPos = 0;
         private int Frame = 0;
+        private Stopwatch Timer = new();
+        private long LastTicks { get; set; } = 0;
+        private double CurrentTime { get; set; } = 0;
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            // Could convert frame based animation to time based if we want!
+            // Movement/positioning try and make as accurate as possible, related to time offset, to try and make as smooth as we can
+            // Colour animation does not need to be accurate at all, so we animate frame by frame rather than time offset
 
-            //double offsetx = (double)(System.Environment.TickCount % 2000) / 2000D;
-            //double offsety = (double)(System.Environment.TickCount % 3000) / 3000D;
-
-            //offsetx *= 360;
-            //offsety *= 360;
-
-            //Info.Left = x + (int)(Math.Sin(offsetx * rad) * 10D);
-            //Info.Top = y + (int)(Math.Sin(offsety * rad) * 10D);
+            long currentTicks = Timer.ElapsedTicks;
+            double frameLength = (currentTicks - LastTicks) * 0.0000033d; // 10,000 ticks in a millisecond - and we get fractional numbers :)
+            LastTicks = currentTicks;
+            CurrentTime = currentTicks * 0.0000001d;   // 30ms timer, 0.0001 = ms -> seconds, so we should end up with an approx fractional second we are on
 
             RawTextGraphics.Clear(Color.Black);
 
-            double count = (double)(System.Environment.TickCount * 0.007);
-
-            // Not an optional scroller - renders each character stopping when we've gone over the width of the bitmap, rather than just keeping previous rendered content, shifting to the left and filling the end.
-            // But keeping track of a variable end point, keeping space for buffering off the end etc = a pain in the backside
-            // so this will do for now - it's only a basic bit of fun - and allows for animated text, changing font per character, etc.
+            // Whole scroller re-renders each frame (rather than shifting content) - so we can animate colours and stuff :)
 
             //  Get width of first character
             int messageLength = Message.Length - 1;
@@ -180,15 +178,15 @@ namespace HoleyMoley
             // Get to here? Nice! Render out message
             double renderOffset = RenderOffset;
             int messagePos = MessagePos;
-            int colourPos = ColourPos;
-            if (Frame % 10 == 0)
-            {
-                if (--ColourPos < 0)
-                    ColourPos = ScrollerColours.Length - 1;
-            }
+            //int colourPos = ColourPos;
+            //if (Frame % 10 == 0)
+            //{
+            //    if (--ColourPos < 0)
+            //        ColourPos = ScrollerColours.Length - 1;
+            //}
 
-            FontColorBlend.Colors[0] = FirstAnimatedColor.Next(); // Color.FromArgb(255, (int)MetalR1, (int)MetalG1, (int)MetalB1);
-            FontColorBlend.Colors[1] = SecondAnimatedColor.Next(); // Color.FromArgb(255, (int)MetalR2, (int)MetalG2, (int)MetalB2);
+            FontColorBlend.Colors[0] = FirstAnimatedColor.Next(frameLength); // Color.FromArgb(255, (int)MetalR1, (int)MetalG1, (int)MetalB1);
+            FontColorBlend.Colors[1] = SecondAnimatedColor.Next(frameLength); // Color.FromArgb(255, (int)MetalR2, (int)MetalG2, (int)MetalB2);
             FontBrush.InterpolationColors = FontColorBlend;
 
             while (renderOffset < PaddedWidth)
@@ -210,8 +208,8 @@ namespace HoleyMoley
                 renderOffset += fontSize.Width;
             }
 
-            if (colourPos == ScrollerColours.Length)
-                colourPos = 0;
+            //if (colourPos == ScrollerColours.Length)
+            //    colourPos = 0;
 
             IntPtr hdc = MiddleGraphics.GetHdc();
             IntPtr src = NativeMethods.CreateCompatibleDC(hdc);
@@ -220,7 +218,7 @@ namespace HoleyMoley
 
             for (int j = 0; j < ScrollerHeight; j++)
             {
-                double offset = (int)(Math.Sin((count * 1.17) + (j * 0.048)) * HorizontalWobbleScale);
+                double offset = (int)(Math.Sin((CurrentTime * 11.7d) + (j * 0.048)) * HorizontalWobbleScale);
                 NativeMethods.BitBlt(hdc, (int)offset, j, PaddedWidth, 1, src, 0, j, PatBltType.SrcCopy);
             }
 
@@ -238,7 +236,7 @@ namespace HoleyMoley
 
             for (int i = 0; i < ScrollerWidth; i++)
             {
-                double offset = (int)(Math.Sin(count + (i * 0.01117)) * VerticalWobbleScale);
+                double offset = (int)(Math.Sin((CurrentTime * 8.19d) + (i * 0.01117)) * VerticalWobbleScale);
                 NativeMethods.BitBlt(hdc, i, (int)offset, 1, ScrollerHeight, src, i + HorizontalWobbleScale, 0, PatBltType.SrcCopy);
             }
 
@@ -291,18 +289,18 @@ namespace HoleyMoley
     // This is note coded for accuracy, as it doesn't matter that much
     public class AnimatedColor
     {
-        private float R { get; set; }
-        private float G { get; set; }
-        private float B { get; set; }
+        private double R { get; set; }
+        private double G { get; set; }
+        private double B { get; set; }
 
-        private float RChange { get; set; }
-        private float GChange { get; set; }
-        private float BChange { get; set; }
+        private double RChange { get; set; }
+        private double GChange { get; set; }
+        private double BChange { get; set; }
 
         private Color[] Colors { get; set; }
 
         private int ColorPos { get; set; } = 0;
-        private int Counter { get; set; } = 0;
+        private double Counter { get; set; } = 0;
         private int ChangeRate { get; set; }
 
         public AnimatedColor(Color[] colors, int changeRate)
@@ -328,11 +326,11 @@ namespace HoleyMoley
             BChange = (Colors[ColorPos].B - B) / ChangeRate;
         }
 
-        public Color Next()
+        public Color Next(double frameLength)
         {
-            R += RChange;
-            G += GChange;
-            B += BChange;
+            R += RChange * frameLength;
+            G += GChange * frameLength;
+            B += BChange * frameLength;
 
             // Just incase, even though it shouldnt strictly speaking be a thing...
             if (R > 255)
@@ -350,18 +348,28 @@ namespace HoleyMoley
             else if (B < 0)
                 B = 0;
 
-            Counter++;
-            if (Counter == ChangeRate)
+            Counter += frameLength;
+            if (Counter >= ChangeRate)
             {
-                Counter = 0;
+                Counter -= ChangeRate;
 
                 ColorPos++;
                 if (ColorPos == Colors.Length)
                     ColorPos = 0;
 
-                RChange = (Colors[ColorPos].R - R) / ChangeRate;
-                GChange = (Colors[ColorPos].G - G) / ChangeRate;
-                BChange = (Colors[ColorPos].B - B) / ChangeRate;
+                double rRange = Colors[ColorPos].R - R;
+                double gRange = Colors[ColorPos].G - G;
+                double bRange = Colors[ColorPos].B - B;
+
+                RChange = rRange / ChangeRate;
+                GChange = gRange / ChangeRate;
+                BChange = bRange / ChangeRate;
+
+                // And account for any small initial change, cause, why not :)
+                // Counter has a possible tiny fractional change amount already in it
+                R += RChange * Counter;
+                G += GChange * Counter;
+                B += BChange * Counter;
             }
 
             return Color.FromArgb(255, (int)R, (int)G, (int)B);
