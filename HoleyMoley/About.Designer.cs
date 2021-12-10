@@ -48,6 +48,7 @@
             this.Scroller.Size = new System.Drawing.Size(800, 128);
             this.Scroller.TabIndex = 5;
             this.Scroller.TabStop = false;
+            this.Scroller.Click += new System.EventHandler(this.Scroller_Click);
             // 
             // About
             // 
@@ -57,11 +58,18 @@
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(815, 142);
+            this.ControlBox = false;
             this.Controls.Add(this.Scroller);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "About";
+            this.ShowIcon = false;
+            this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "About";
+            this.TopMost = true;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.About_FormClosing);
             this.Load += new System.EventHandler(this.About_Load);
             ((System.ComponentModel.ISupportInitialize)(this.Scroller)).EndInit();

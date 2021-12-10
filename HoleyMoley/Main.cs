@@ -17,6 +17,8 @@ namespace HoleyMoley
 
     public partial class Main : Form
     {
+        private string Version = "v1.7.1";
+
         //[DllImport("user32.dll")]
         //private static extern int GetSystemMenu(int hwnd, int bRevert);
         //[DllImport("user32.dll")]
@@ -134,6 +136,14 @@ namespace HoleyMoley
                 IsAdministrator = principal.IsInRole(WindowsBuiltInRole.Administrator);
             }
             AdministratorWarning.Visible = !IsAdministrator;
+
+            if (this.Left < 0)
+                this.Left = 0;
+
+            if (this.Top < 0)
+                this.Top = 0;
+
+            this.Text = $"Holey Moley {Version}";
 
             //ApplicationHandler.PopulateAppWindows();
             this.ResumeLayout();

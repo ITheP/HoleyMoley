@@ -47,21 +47,6 @@ namespace HoleyMoley
         private AnimatedColor FirstAnimatedColor { get; set; }
         private AnimatedColor SecondAnimatedColor { get; set; }
         private int MetalAnimationRate { get; set; } = 300;     // number of frames to blend between colours
-        //private float MetalR1 { get; set; }
-        //private float MetalG1 { get; set; }
-        //private float MetalB1 { get; set; }
-        //private float MetalR2 { get; set; }
-        //private float MetalG2 { get; set; }
-        //private float MetalB2 { get; set; }
-        //private int MetalColourPos { get; set; }
-        //private int MetalCounter { get; set; } = 0;
-        //private int MetalChangeRate { get; set; } = 300; // frames
-        //private float MetalR1Change { get; set; }
-        //private float MetalG1Change { get; set; }
-        //private float MetalB1Change { get; set; }
-        //private float MetalR2Change { get; set; }
-        //private float MetalG2Change { get; set; }
-        //private float MetalB2Change { get; set; }
 
         Rectangle TopFadeRec { get; set; }
         Rectangle BottomFadeRec { get; set; }
@@ -73,9 +58,25 @@ namespace HoleyMoley
 
         ColorBlend FontColorBlend { get; set; }
 
+        //private const int WM_NCHITTEST = 0x84;
+        //private const int HTCLIENT = 0x1;
+        //private const int HTCAPTION = 0x2;
+
+        //protected override void WndProc(ref Message message)
+        //{
+        //    base.WndProc(ref message);
+
+        //    if (message.Msg == WM_NCHITTEST && (int)message.Result == HTCLIENT)
+        //        message.Result = (IntPtr)HTCAPTION;
+        //}
+
         public About()
         {
             InitializeComponent();
+
+            this.ControlBox = false;
+            this.Text = String.Empty;
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
 
             SetStyle(ControlStyles.SupportsTransparentBackColor, true);
 
@@ -93,13 +94,14 @@ namespace HoleyMoley
             MiddleGraphics.Clear(Color.Black);
             ScrollerGraphics.Clear(Color.Black);
 
-            //   G = Graphics.FromImage(ScrollerBitmap);
-            //   G.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighSpeed;
-            //  G.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            // G = Graphics.FromImage(ScrollerBitmap);
+            // G.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighSpeed;
+            // G.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
             ScrollerFont = new Font("Impact", 96, FontStyle.Regular, GraphicsUnit.Pixel);
 
             Scroller.Image = ScrollerBitmap;
             this.DoubleBuffered = true;
+
             // Approximate font height based on a couple of letters (ascending/decending content, plus some padding)
             //var fontSize = TextRenderer.MeasureText(RawTextGraphics, "Ay", ScrollerFont, new System.Drawing.Size(int.MaxValue, int.MaxValue));
             var fontSize = RawTextGraphics.MeasureString("Ay", ScrollerFont, new System.Drawing.PointF(int.MaxValue, int.MaxValue), StringFormat.GenericTypographic);
@@ -107,7 +109,7 @@ namespace HoleyMoley
             FontCenteringOffset = (int)((ScrollerHeight - ApproxFontHeight) * 0.5);
 
             TopFadeRec = new() { X = 0, Y = 0, Width = ScrollerBitmap.Width, Height = (int)(ScrollerBitmap.Height * 0.2) };
-            BottomFadeRec = new() { X = 0, Y = ScrollerBitmap.Height - (int)(ScrollerBitmap.Height * 0.2), Width = ScrollerBitmap.Width, Height = (int)(ScrollerBitmap.Height * 0.2) };
+            BottomFadeRec = new() { X = 0, Y = ScrollerBitmap.Height - (int)(ScrollerBitmap.Height * 0.2), Width = ScrollerBitmap.Width, Height = (int)(ScrollerBitmap.Height * 0.2) + 1 }; // The +1 overcomes a gdi bug where extra 1 pixel black line can be drawn https://bytes.com/topic/c-sharp/answers/587091-known-problem-lineargradientbrush
 
             TopFadeBrush = new(TopFadeRec, Color.Black, Color.Transparent, LinearGradientMode.Vertical);
             BottomFadeBrush = new(BottomFadeRec, Color.Transparent, Color.Black, LinearGradientMode.Vertical);
@@ -125,19 +127,18 @@ namespace HoleyMoley
             Timer.Start();
         }
 
-        private int ColourPos = 0;
-        private int Frame = 0;
+        //private int ColourPos = 0;
+        //private int Frame = 0;
         private Stopwatch Timer = new();
         private long LastTicks { get; set; } = 0;
         private double CurrentTime { get; set; } = 0;
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            // Movement/positioning try and make as accurate as possible, related to time offset, to try and make as smooth as we can
-            // Colour animation does not need to be accurate at all, so we animate frame by frame rather than time offset
+            // Movement/positioning related to elapsed time, to try and make as smooth as we can
 
             long currentTicks = Timer.ElapsedTicks;
-            double frameLength = (currentTicks - LastTicks) * 0.0000033d; // 10,000 ticks in a millisecond - and we get fractional numbers :)
+            double frameLength = (currentTicks - LastTicks) * 0.0000033d; // 10,000 ticks in a millisecond
             LastTicks = currentTicks;
             CurrentTime = currentTicks * 0.0000001d;   // 30ms timer, 0.0001 = ms -> seconds, so we should end up with an approx fractional second we are on
 
@@ -154,8 +155,8 @@ namespace HoleyMoley
             //  Move everything to the left
             RenderOffset -= ScrollSpeed;
 
-
-            //  while (left offset + width) < 0
+            // We check to see if the first letter is no longer visible (scrolled too far to the left)
+            // If this is the case, we scan next letters until we are within content appearing on screen
             while (RenderOffset + fontSize.Width < 0)
             {
                 // left offset += width of current 1st character (result should never be > 0)
@@ -167,7 +168,7 @@ namespace HoleyMoley
                     MessagePos = 0;
 
                 //letter = Message[(messagePos++ % messageLength)..(messagePos % messageLength)];
-                letter = Message.Substring(MessagePos, 1);   // Already got this. Could optimise this fetch away
+                letter = Message.Substring(MessagePos, 1);
 
                 //fontSize = TextRenderer.MeasureText(RawTextGraphics, letter, ScrollerFont, new System.Drawing.Size(int.MaxValue, int.MaxValue), TextFormatFlags.NoPadding);
                 fontSize = RawTextGraphics.MeasureString(letter, ScrollerFont, new System.Drawing.PointF(int.MaxValue, int.MaxValue), StringFormat.GenericTypographic);
@@ -185,8 +186,8 @@ namespace HoleyMoley
             //        ColourPos = ScrollerColours.Length - 1;
             //}
 
-            FontColorBlend.Colors[0] = FirstAnimatedColor.Next(frameLength); // Color.FromArgb(255, (int)MetalR1, (int)MetalG1, (int)MetalB1);
-            FontColorBlend.Colors[1] = SecondAnimatedColor.Next(frameLength); // Color.FromArgb(255, (int)MetalR2, (int)MetalG2, (int)MetalB2);
+            FontColorBlend.Colors[0] = FirstAnimatedColor.Next(frameLength);
+            FontColorBlend.Colors[1] = SecondAnimatedColor.Next(frameLength);
             FontBrush.InterpolationColors = FontColorBlend;
 
             while (renderOffset < PaddedWidth)
@@ -259,7 +260,7 @@ namespace HoleyMoley
             Scroller.Refresh();
             // Invalidate(true);
 
-            Frame++;
+            //Frame++;
         }
 
         private void About_Load(object sender, EventArgs e)
@@ -283,10 +284,14 @@ namespace HoleyMoley
             NativeMethods.DeleteObject(RawTextBitmap.GetHbitmap());
             RawTextBitmap = null;
         }
+
+        private void Scroller_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
     }
 
-    // Frame based rather than time based, maybe some day if it's important :)
-    // This is note coded for accuracy, as it doesn't matter that much
+    // This is not coded for accuracy, as it doesn't matter that much
     public class AnimatedColor
     {
         private double R { get; set; }
