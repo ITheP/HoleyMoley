@@ -98,7 +98,6 @@ namespace HoleyMoley
 
         #endregion
 
-#if DEBUG
         public static string WindowInfo(IntPtr hwnd, int idObject = 0)
         {
             string objectInfo = string.Empty;
@@ -251,9 +250,9 @@ namespace HoleyMoley
             else
                 title = $"'{title}'";
 
-            return $"0x{hwnd.ToString("x8")} Title: {sb}, Object: {objectInfo}, WindowStyles:{styleInfo}, WindowStylesEx:{exStyleInfo}";
+            string newLine = System.Environment.NewLine;
+            return $"   Hwnd: 0x{hwnd.ToString("x8")}{newLine}   Title: {sb}{newLine}   Object: {objectInfo}{newLine}   WindowStyles:{styleInfo}{newLine}   WindowStylesEx:{exStyleInfo}";
         }
-#endif
     }
 
     [StructLayout(LayoutKind.Sequential)]

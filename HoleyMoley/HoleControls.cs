@@ -11,7 +11,7 @@ namespace HoleyMoley
 {
     public partial class HoleControls : Form
     {
-        public UI UI { get; set; }
+        public Main UI { get; set; }
 
         public HoleControls()
         {
