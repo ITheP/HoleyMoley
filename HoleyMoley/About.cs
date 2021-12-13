@@ -124,8 +124,12 @@ namespace HoleyMoley
             FirstAnimatedColor = new(MetalAnimatedFirstColours, MetalAnimationRate);
             SecondAnimatedColor = new(MetalAnimatedSecondColours, MetalAnimationRate);
 
+            PrettyParticles = new Particles(ScrollerBitmap, ScrollerGraphics);
+
             Timer.Start();
         }
+
+        private Particles PrettyParticles { get; set; }
 
         //private int ColourPos = 0;
         //private int Frame = 0;
@@ -143,6 +147,7 @@ namespace HoleyMoley
             CurrentTime = currentTicks * 0.0000001d;   // 30ms timer, 0.0001 = ms -> seconds, so we should end up with an approx fractional second we are on
 
             RawTextGraphics.Clear(Color.Black);
+            ScrollerGraphics.Clear(Color.Black);
 
             // Whole scroller re-renders each frame (rather than shifting content) - so we can animate colours and stuff :)
 
@@ -256,6 +261,8 @@ namespace HoleyMoley
             ScrollerGraphics.FillRectangle(TopFadeBrush, TopFadeRec);
             ScrollerGraphics.FillRectangle(BottomFadeBrush, BottomFadeRec);
 
+
+            PrettyParticles.MoveAndRender();
 
             Scroller.Refresh();
             // Invalidate(true);
@@ -380,5 +387,114 @@ namespace HoleyMoley
             return Color.FromArgb(255, (int)R, (int)G, (int)B);
         }
 
+    }
+
+    /// <summary>
+    /// Really lightweight particles, drawn using text :)
+    /// </summary>
+    public class Particles
+    {
+       // private static Bitmap[] Gfx { get; set; }
+        private int Count { get; set; }
+        private Particle[] ParticleList { get; set; }
+
+        public Particles(Bitmap targetBitmap, Graphics targetGraphics)
+        {
+
+            Count = 50;
+            ParticleList = new Particle[Count];
+
+            for (int i = 0; i < Count; i++)
+            {
+                ParticleList[i] = new Particle(targetBitmap, targetGraphics, 2.0d, 6.0d);
+            }
+        }
+
+        public void MoveAndRender()
+        {
+            for (int i = 0; i < Count; i++)
+            {
+                ParticleList[i].MoveAndRender();
+            }
+        }
+    }
+
+    public class Particle
+    {
+        private static Random Rnd { get; set; } = new Random();
+
+        private double X { get; set; }
+        private double Y { get; set; }
+
+        private double XSpeed { get; set; }
+        /// <summary>
+        /// Angle used to calculate sine movement
+        /// </summary>
+        private double XAngle { get; set; }
+        /// <summary>
+        /// Width of any X Offset
+        /// </summary>
+        private double XWidth { get; set; }
+
+        private double YSpeed { get; set; }
+        private double Rotation { get; set; }
+        private double RotationSpeed { get; set; }
+        private Graphics TargetGraphics { get; set; }
+        private Bitmap TargetBitmap { get; set; }
+        private Font Font { get; set; }
+
+        private string Character { get; set; }
+        private float Size { get; set; }
+
+        private double RenderWidth { get; set; }
+        private double RenderHeight { get; set; }
+
+
+        public Particle(Bitmap targetBitmap, Graphics targetGraphics, double minYSpeed, double maxYSpeed)
+        {
+            Character = "*";
+            TargetGraphics = targetGraphics;
+            TargetBitmap = targetBitmap;
+            Font = new Font("Arial", Rnd.Next(100) + 50, FontStyle.Regular, GraphicsUnit.Pixel);
+
+            var fontSize = targetGraphics.MeasureString(Character, Font, new System.Drawing.PointF(int.MaxValue, int.MaxValue), StringFormat.GenericTypographic);
+            RenderWidth = fontSize.Width;
+            RenderHeight = fontSize.Height;
+
+            // We allow a bit of extra space to the sides so particles can drift on/off the edges too
+            X = (Rnd.NextDouble() * (targetBitmap.Width + RenderWidth + RenderWidth)) - RenderWidth;
+            Y = (Rnd.NextDouble() * targetBitmap.Height) - targetBitmap.Height;    // Start off screen and float on :)
+
+            XSpeed = (Rnd.NextDouble() * 0.2d) - 0.1d;
+            XAngle = Rnd.NextDouble() * 360.0d;
+            XWidth = (Rnd.NextDouble() * 40.0) + 10.0d;
+
+            YSpeed = minYSpeed + (Rnd.NextDouble() * (maxYSpeed - minYSpeed));
+
+            Rotation = (Rnd.NextDouble() * 360.0);
+            RotationSpeed = (Rnd.NextDouble() * 0.2d) - 0.1d;
+        }
+
+        public void MoveAndRender()
+        {
+            Y += YSpeed;
+
+            double xOffset = Math.Sin(XAngle) * XWidth;
+            XAngle += XSpeed;
+            double rotation = Math.Sin(Rotation);
+            Rotation += RotationSpeed;
+
+            if (Y > TargetBitmap.Height)
+            {
+                X = (Rnd.NextDouble() * (TargetBitmap.Width + RenderWidth + RenderWidth)) - RenderWidth;
+                Y -= (TargetBitmap.Height + RenderHeight);
+            }
+
+            //TargetGraphics.TranslateTransform((float)(RenderWidth * 0.5), (float)(RenderHeight * 0.5));
+            //TargetGraphics.RotateTransform((float)Rotation);
+            //TargetGraphics.TranslateTransform((float)(-RenderWidth * 0.5), (float)(-RenderHeight * 0.5));
+            TargetGraphics.DrawString(Character, Font, Brushes.White, new Point((int)(X + xOffset), (int)Y));
+            //TargetGraphics.ResetTransform();
+        }
     }
 }
