@@ -218,39 +218,39 @@ namespace HoleyMoley
             //    colourPos = 0;
 
             IntPtr hdc = MiddleGraphics.GetHdc();
-            IntPtr src = NativeMethods.CreateCompatibleDC(hdc);
+            IntPtr src = Native.CreateCompatibleDC(hdc);
             IntPtr srcHBitmap = RawTextBitmap.GetHbitmap();
-            IntPtr hOldObject = NativeMethods.SelectObject(src, srcHBitmap);
+            IntPtr hOldObject = Native.SelectObject(src, srcHBitmap);
 
             for (int j = 0; j < ScrollerHeight; j++)
             {
                 double offset = (int)(Math.Sin((CurrentTime * 11.7d) + (j * 0.048)) * HorizontalWobbleScale);
-                NativeMethods.BitBlt(hdc, (int)offset, j, PaddedWidth, 1, src, 0, j, PatBltType.SrcCopy);
+                Native.BitBlt(hdc, (int)offset, j, PaddedWidth, 1, src, 0, j, PatBltType.SrcCopy);
             }
 
             if (hOldObject != IntPtr.Zero)
-                NativeMethods.SelectObject(src, hOldObject);
+                Native.SelectObject(src, hOldObject);
 
-            NativeMethods.DeleteObject(srcHBitmap);
-            NativeMethods.DeleteDC(src);
+            Native.DeleteObject(srcHBitmap);
+            Native.DeleteDC(src);
             MiddleGraphics.ReleaseHdc(hdc);
 
             hdc = ScrollerGraphics.GetHdc();
-            src = NativeMethods.CreateCompatibleDC(hdc);
+            src = Native.CreateCompatibleDC(hdc);
             srcHBitmap = MiddleBitmap.GetHbitmap();
-            hOldObject = NativeMethods.SelectObject(src, srcHBitmap);
+            hOldObject = Native.SelectObject(src, srcHBitmap);
 
             for (int i = 0; i < ScrollerWidth; i++)
             {
                 double offset = (int)(Math.Sin((CurrentTime * 8.19d) + (i * 0.01117)) * VerticalWobbleScale);
-                NativeMethods.BitBlt(hdc, i, (int)offset, 1, ScrollerHeight, src, i + HorizontalWobbleScale, 0, PatBltType.SrcCopy);
+                Native.BitBlt(hdc, i, (int)offset, 1, ScrollerHeight, src, i + HorizontalWobbleScale, 0, PatBltType.SrcCopy);
             }
 
             if (hOldObject != IntPtr.Zero)
-                NativeMethods.SelectObject(src, hOldObject);
+                Native.SelectObject(src, hOldObject);
 
-            NativeMethods.DeleteObject(srcHBitmap);
-            NativeMethods.DeleteDC(src);
+            Native.DeleteObject(srcHBitmap);
+            Native.DeleteDC(src);
             ScrollerGraphics.ReleaseHdc(hdc);
 
             // Logo's
@@ -283,12 +283,12 @@ namespace HoleyMoley
             ScrollerFont = null;
             ScrollerGraphics?.Dispose();
             ScrollerGraphics = null;
-            NativeMethods.DeleteObject(ScrollerBitmap.GetHbitmap());
+            Native.DeleteObject(ScrollerBitmap.GetHbitmap());
             ScrollerBitmap = null;
 
             RawTextGraphics?.Dispose();
             RawTextGraphics = null;
-            NativeMethods.DeleteObject(RawTextBitmap.GetHbitmap());
+            Native.DeleteObject(RawTextBitmap.GetHbitmap());
             RawTextBitmap = null;
         }
 

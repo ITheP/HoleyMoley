@@ -33,7 +33,7 @@ namespace HoleyMoley
         {
             // Standard `ignore` windows...
             //  "Program Manager" window (windows background etc.)
-            IntPtr programManagerHwnd = NativeMethods.FindWindowByCaption(IntPtr.Zero, "Program Manager");
+            IntPtr programManagerHwnd = Native.FindWindowByCaption(IntPtr.Zero, "Program Manager");
             if (programManagerHwnd != IntPtr.Zero)
                 AddToIgnoreList(programManagerHwnd);
         }
@@ -49,22 +49,22 @@ namespace HoleyMoley
             AddToIgnoreList(Highlight.Handle);
 
             // Listen for name change changes across all processes/threads on current desktop...
-            TitleTextHook = NativeMethods.SetWinEventHook((uint)ObjectEventContants.EVENT_OBJECT_NAMECHANGE, (uint)ObjectEventContants.EVENT_OBJECT_NAMECHANGE, IntPtr.Zero, NameChangeDelegate, 0, 0, (uint)Flags.WINEVENT_OUTOFCONTEXT);
-            LocationChangeHook = NativeMethods.SetWinEventHook((uint)ObjectEventContants.EVENT_OBJECT_LOCATIONCHANGE, (uint)ObjectEventContants.EVENT_OBJECT_LOCATIONCHANGE, IntPtr.Zero, LocationChangeDelegate, 0, 0, (uint)Flags.WINEVENT_OUTOFCONTEXT);
-            FocusChangeHook = NativeMethods.SetWinEventHook((uint)ObjectEventContants.EVENT_OBJECT_FOCUS, (uint)ObjectEventContants.EVENT_OBJECT_FOCUS, IntPtr.Zero, FocusChangeDelegate, 0, 0, (uint)Flags.WINEVENT_OUTOFCONTEXT);
-            DestroyChangeHook = NativeMethods.SetWinEventHook((uint)ObjectEventContants.EVENT_OBJECT_DESTROY, (uint)ObjectEventContants.EVENT_OBJECT_DESTROY, IntPtr.Zero, DestroyChangeDelegate, 0, 0, (uint)Flags.WINEVENT_OUTOFCONTEXT);
+            TitleTextHook = Native.SetWinEventHook((uint)ObjectEventContants.EVENT_OBJECT_NAMECHANGE, (uint)ObjectEventContants.EVENT_OBJECT_NAMECHANGE, IntPtr.Zero, NameChangeDelegate, 0, 0, (uint)Flags.WINEVENT_OUTOFCONTEXT);
+            LocationChangeHook = Native.SetWinEventHook((uint)ObjectEventContants.EVENT_OBJECT_LOCATIONCHANGE, (uint)ObjectEventContants.EVENT_OBJECT_LOCATIONCHANGE, IntPtr.Zero, LocationChangeDelegate, 0, 0, (uint)Flags.WINEVENT_OUTOFCONTEXT);
+            FocusChangeHook = Native.SetWinEventHook((uint)ObjectEventContants.EVENT_OBJECT_FOCUS, (uint)ObjectEventContants.EVENT_OBJECT_FOCUS, IntPtr.Zero, FocusChangeDelegate, 0, 0, (uint)Flags.WINEVENT_OUTOFCONTEXT);
+            DestroyChangeHook = Native.SetWinEventHook((uint)ObjectEventContants.EVENT_OBJECT_DESTROY, (uint)ObjectEventContants.EVENT_OBJECT_DESTROY, IntPtr.Zero, DestroyChangeDelegate, 0, 0, (uint)Flags.WINEVENT_OUTOFCONTEXT);
         }
 
         public static void CleanUp()
         {
             if (DestroyChangeHook != IntPtr.Zero)
-                NativeMethods.UnhookWinEvent(DestroyChangeHook);
+                Native.UnhookWinEvent(DestroyChangeHook);
             if (FocusChangeHook != IntPtr.Zero)
-                NativeMethods.UnhookWinEvent(FocusChangeHook);
+                Native.UnhookWinEvent(FocusChangeHook);
             if (LocationChangeHook != IntPtr.Zero)
-                NativeMethods.UnhookWinEvent(LocationChangeHook);
+                Native.UnhookWinEvent(LocationChangeHook);
             if (TitleTextHook != IntPtr.Zero)
-                NativeMethods.UnhookWinEvent(TitleTextHook);
+                Native.UnhookWinEvent(TitleTextHook);
 
             DestroyChangeHook = IntPtr.Zero;
             FocusChangeHook = IntPtr.Zero;
@@ -137,7 +137,7 @@ namespace HoleyMoley
 
             // ToDo: Will not setting color here if it's not changed save us any performance?
             Highlight.BackColor = color;
-            bool result = NativeMethods.SetWindowPos(Highlight.Handle, parent, x, y, w, h, SetWindowPosFlags.NOACTIVATE | SetWindowPosFlags.SHOWWINDOW);
+            bool result = Native.SetWindowPos(Highlight.Handle, parent, x, y, w, h, SetWindowPosFlags.NOACTIVATE | SetWindowPosFlags.SHOWWINDOW);
             if (result)
             {
                 if (UI.DebugEnabled())
@@ -172,10 +172,10 @@ namespace HoleyMoley
             // We don't actually show anything till a window event occures to trigger highlighting to actually do something
         }
 
-        static NativeMethods.WinEventDelegate NameChangeDelegate = new NativeMethods.WinEventDelegate(TitleChangeProc);
-        static NativeMethods.WinEventDelegate LocationChangeDelegate = new NativeMethods.WinEventDelegate(LocationChangeProc);
-        static NativeMethods.WinEventDelegate FocusChangeDelegate = new NativeMethods.WinEventDelegate(FocusChangeProc);
-        static NativeMethods.WinEventDelegate DestroyChangeDelegate = new NativeMethods.WinEventDelegate(DestroyChangeProc);
+        static Native.WinEventDelegate NameChangeDelegate = new Native.WinEventDelegate(TitleChangeProc);
+        static Native.WinEventDelegate LocationChangeDelegate = new Native.WinEventDelegate(LocationChangeProc);
+        static Native.WinEventDelegate FocusChangeDelegate = new Native.WinEventDelegate(FocusChangeProc);
+        static Native.WinEventDelegate DestroyChangeDelegate = new Native.WinEventDelegate(DestroyChangeProc);
 
         private static IntPtr TitleTextHook { get; set; } = IntPtr.Zero;
         private static IntPtr LocationChangeHook { get; set; } = IntPtr.Zero;
@@ -189,7 +189,7 @@ namespace HoleyMoley
                 return;
 
             // Always check on title changes, it might change the colour of the highlighting
-            long style = (long)NativeMethods.GetWindowLongPtr(hwnd, (int)GetWindowLongFlags.GWL_STYLE);
+            long style = (long)Native.GetWindowLongPtr(hwnd, (int)GetWindowLongFlags.GWL_STYLE);
             long isTopLevel = style & ((long)WindowStyles.WS_CHILD);
 
             // Only parents
@@ -197,7 +197,7 @@ namespace HoleyMoley
                 return;
 
             if (UI.DebugEnabled())
-                UI.AddToDebug($"{DateTime.Now:HH:mm:ss.ff} Highlight.TitleChange: {NativeMethods.WindowInfo(hwnd, idObject)}");
+                UI.AddToDebug($"{DateTime.Now:HH:mm:ss.ff} Highlight.TitleChange: {Native.WindowInfo(hwnd, idObject)}");
 
             HighlightWindow(hwnd);
         }
@@ -236,8 +236,8 @@ namespace HoleyMoley
                 // Ignore ToolWindow windows (covers things like combobox pop ups)
                 // Note that viewing e.g. combobox popups, every single row seems to generate a focus event as you move a mouse over them
                 // Did use hwnd, seems happy enough checking the parentHwnd
-                long style = (long)NativeMethods.GetWindowLongPtr(parentHwnd, (int)GetWindowLongFlags.GWL_STYLE);
-                long exStyle = (long)NativeMethods.GetWindowLongPtr(parentHwnd, (int)GetWindowLongFlags.GWL_EXSTYLE);
+                long style = (long)Native.GetWindowLongPtr(parentHwnd, (int)GetWindowLongFlags.GWL_STYLE);
+                long exStyle = (long)Native.GetWindowLongPtr(parentHwnd, (int)GetWindowLongFlags.GWL_EXSTYLE);
 
                 if ((exStyle & (long)WindowStylesEx.WS_EX_TOOLWINDOW) != 0 && (style & (long)WindowStyles.WS_POPUPWINDOW) != 0)
                 {
@@ -263,7 +263,7 @@ namespace HoleyMoley
 
             if (UI.DebugEnabled())
             {
-                string debug = $"{DateTime.Now:HH:mm:ss.ff} Highlight.Focus (Current {CurrentHwnd.ToString("x8")}): {ignoreReason}{System.Environment.NewLine}{NativeMethods.WindowInfo(parentHwnd, idObject)}";
+                string debug = $"{DateTime.Now:HH:mm:ss.ff} Highlight.Focus (Current {CurrentHwnd.ToString("x8")}): {ignoreReason}{System.Environment.NewLine}{Native.WindowInfo(parentHwnd, idObject)}";
 
                 if (parentHwnd != IntPtr.Zero)
                     debug = $"{debug}{System.Environment.NewLine}   Parent: {parentHwnd.ToString("x8")} (highlight target hwnd)";
@@ -286,9 +286,9 @@ namespace HoleyMoley
 
         private static IntPtr GetParent(IntPtr hwnd)
         {
-            IntPtr parent = NativeMethods.GetAncestor(hwnd, GetAncestorFlags.GetRoot);
+            IntPtr parent = Native.GetAncestor(hwnd, GetAncestorFlags.GetRoot);
 
-            if (parent == IntPtr.Zero || parent == NativeMethods.GetDesktopWindow())
+            if (parent == IntPtr.Zero || parent == Native.GetDesktopWindow())
                 return hwnd;
 
             return parent;
@@ -341,7 +341,7 @@ namespace HoleyMoley
             // Destroy can be nothing more than minimizing to task bar - not closing a window. Obviously does the same thing :)
 
             if (UI.DebugEnabled())
-                UI.AddToDebug($"{DateTime.Now:HH:mm:ss.ff} Highlight.Destroy: {NativeMethods.WindowInfo(hwnd, idObject)}");
+                UI.AddToDebug($"{DateTime.Now:HH:mm:ss.ff} Highlight.Destroy: {Native.WindowInfo(hwnd, idObject)}");
 
             // Byebye to the currently highlighted window - so we hide our highlighting
 
@@ -368,9 +368,9 @@ namespace HoleyMoley
             if (!ignoreTitleCheck)
             {
                 // Get caption
-                int capacity = NativeMethods.GetWindowTextLength(hwnd) * 2;
+                int capacity = Native.GetWindowTextLength(hwnd) * 2;
                 StringBuilder stringBuilder = new StringBuilder(capacity);
-                NativeMethods.GetWindowText(hwnd, stringBuilder, stringBuilder.Capacity);
+                Native.GetWindowText(hwnd, stringBuilder, stringBuilder.Capacity);
                 //Debug.Print($"Original '{stringBuilder}': {hwnd.ToString("x4")}, Parent: {GetParent(hwnd).ToString("x4")} with desktop={NativeMethods.GetDesktopWindow()}");
 
                 string title = stringBuilder.ToString();
@@ -409,7 +409,7 @@ namespace HoleyMoley
         ColorSet:
 
             var rect = new IntRect();
-            NativeMethods.GetWindowRect(hwnd, ref rect);
+            Native.GetWindowRect(hwnd, ref rect);
             //var relativeRect = new System.Drawing.Rectangle(0, 0, rect.Right - rect.Left, rect.Bottom - rect.Top);
 
             SetPosition(hwnd, rect.Left - BorderSize, rect.Top - BorderSize, rect.Right - rect.Left + DoubleBorderSize, rect.Bottom - rect.Top + DoubleBorderSize, CurrentColor);
@@ -424,7 +424,7 @@ namespace HoleyMoley
                 return;
 
             var rect = new IntRect();
-            NativeMethods.GetWindowRect(CurrentHwnd, ref rect);
+            Native.GetWindowRect(CurrentHwnd, ref rect);
 
             SetPosition(CurrentHwnd, rect.Left - BorderSize, rect.Top - BorderSize, rect.Right - rect.Left + DoubleBorderSize, rect.Bottom - rect.Top + DoubleBorderSize, CurrentColor);
         }

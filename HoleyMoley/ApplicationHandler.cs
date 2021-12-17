@@ -30,7 +30,7 @@ namespace HoleyMoley
             foreach (Process process in processList)
             {
 
-                if (!String.IsNullOrEmpty(process.MainWindowTitle) && process.MainWindowHandle != IntPtr.Zero && NativeMethods.IsWindowVisible(process.MainWindowHandle))
+                if (!String.IsNullOrEmpty(process.MainWindowTitle) && process.MainWindowHandle != IntPtr.Zero && Native.IsWindowVisible(process.MainWindowHandle))
                 {
                     //Debug.Print((process.MainWindowTitle.Length < 32 ? process.MainWindowTitle : process.MainWindowTitle.Substring(32) + "..."));
                     app = new AppInfo
@@ -53,7 +53,7 @@ namespace HoleyMoley
             windows.Insert(0, new AppInfo() { Title = "Windows...", HWnd = IntPtr.Zero });
             // windows.Insert(0, new AppInfo() { Title = "", HWnd = IntPtr.Zero });
 
-            IntPtr hWnd = NativeMethods.GetDesktopWindow();
+            IntPtr hWnd = Native.GetDesktopWindow();
 
             for (int i = 0; i < System.Windows.Forms.Screen.AllScreens.Length; i++)
             {

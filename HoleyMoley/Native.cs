@@ -4,7 +4,7 @@ using System.Text;
 
 namespace HoleyMoley
 {
-    internal static class NativeMethods
+    internal static class Native
     {
         private const int WS_EX_TRANSPARENT = 0x20;
 
@@ -74,6 +74,37 @@ namespace HoleyMoley
         [DllImport("user32.dll", EntryPoint = "FindWindow", SetLastError = true)]
         public static extern IntPtr FindWindowByCaption(IntPtr ZeroOnly, string lpWindowName);
 
+        [DllImport("user32.dll")]
+        public static extern IntPtr GetSystemMenu(IntPtr hWnd, bool bRevert);
+        [DllImport("user32.dll")]
+        public static extern bool InsertMenu(IntPtr hMenu, Int32 wPosition, Int32 wFlags, Int32 wIDNewItem, string lpNewItem);
+
+        [DllImport("user32.dll")]
+        public static extern bool RegisterHotKey(IntPtr hWnd, int id, int fsModifiers, int vk);
+
+        [DllImport("user32.dll")]
+        public static extern bool UnregisterHotKey(IntPtr hWnd, int id);
+
+        public enum KeyModifiers
+        {
+            None = 0,
+            Alt = 1,
+            Ctrl = 2,
+            Shift = 4,
+            WinKey = 8
+        }
+
+        public const Int32 WM_SYSCOMMAND = 0x112;
+        public const Int32 WM_HOTKEY = 0x0312;
+        public const Int32 WM_ACTIVATE = 0x0006;
+        public const Int32 WM_NCACTIVATE = 0x0086;
+        public const Int32 SC_RESTORE = 0xF120;
+        public const Int32 MF_SEPARATOR = 0x800;
+        public const Int32 MF_BYPOSITION = 0x400;
+        public const Int32 MF_STRING = 0x0;
+        public const Int32 IDM_TEST = 1000;
+        public const Int32 WM_NCLBUTTONDBLCLK = 0x00A3;
+
         #endregion
 
         #region Gdi32
@@ -88,7 +119,7 @@ namespace HoleyMoley
         internal static extern IntPtr SelectObject(IntPtr hDC, IntPtr hObject);
 
         [DllImport("gdi32.dll", CharSet = CharSet.Auto)]
-        internal static extern bool BitBlt(IntPtr hdcDest, int nXDest, int nYDest, int nWidth, int nHeight, IntPtr hdcSrc, int nXSrc, int nYSrc, PatBltType dwRop);
+        internal static extern int BitBlt(IntPtr hdcDest, int nXDest, int nYDest, int nWidth, int nHeight, IntPtr hdcSrc, int nXSrc, int nYSrc, PatBltType dwRop);
 
         [DllImport("gdi32.dll")]
         internal static extern IntPtr CreateCompatibleBitmap(IntPtr hDC, int nWidth, int nHeight);
@@ -137,7 +168,7 @@ namespace HoleyMoley
                     objectInfo = "Window";
             }
 
-            long style = (long)NativeMethods.GetWindowLongPtr(hwnd, (int)GetWindowLongFlags.GWL_STYLE);
+            long style = (long)Native.GetWindowLongPtr(hwnd, (int)GetWindowLongFlags.GWL_STYLE);
             StringBuilder styleInfo = new StringBuilder();
             if ((style & (long)WindowStyles.WS_BORDER) != 0)
                 styleInfo.Append(" Border");
@@ -184,7 +215,7 @@ namespace HoleyMoley
             if ((style & (long)WindowStyles.WS_VSCROLL) != 0)
                 styleInfo.Append(" VScroll");
 
-            long exStyle = (long)NativeMethods.GetWindowLongPtr(hwnd, (int)GetWindowLongFlags.GWL_EXSTYLE);
+            long exStyle = (long)Native.GetWindowLongPtr(hwnd, (int)GetWindowLongFlags.GWL_EXSTYLE);
             StringBuilder exStyleInfo = new StringBuilder();
             if ((exStyle & (long)WindowStylesEx.WS_EX_ACCEPTFILES) != 0)
                 exStyleInfo.Append(" AcceptFiles");
@@ -241,9 +272,9 @@ namespace HoleyMoley
             if ((exStyle & (long)WindowStylesEx.WS_EX_WINDOWEDGE) != 0)
                 exStyleInfo.Append(" WindowEdge");
 
-            int capacity = NativeMethods.GetWindowTextLength(hwnd) * 2;
+            int capacity = Native.GetWindowTextLength(hwnd) * 2;
             StringBuilder sb = new StringBuilder(capacity);
-            NativeMethods.GetWindowText(hwnd, sb, sb.Capacity);
+            Native.GetWindowText(hwnd, sb, sb.Capacity);
             string title = sb.ToString();
             if (string.IsNullOrEmpty(title))
                 title = "Not set";

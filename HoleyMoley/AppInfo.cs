@@ -23,7 +23,7 @@ namespace HoleyMoley
                 return Bounds;
 
             var rect = new IntRect();
-            NativeMethods.GetWindowRect(HWnd, ref rect);
+            Native.GetWindowRect(HWnd, ref rect);
             return rect;
         }
     }
