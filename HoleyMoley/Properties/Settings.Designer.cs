@@ -346,5 +346,113 @@ namespace HoleyMoley.Properties {
                 this["ZoomEnabled"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Grid {
+            get {
+                return ((bool)(this["Grid"]));
+            }
+            set {
+                this["Grid"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("25.5 x 25.5")]
+        public string GridSize {
+            get {
+                return ((string)(this["GridSize"]));
+            }
+            set {
+                this["GridSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("113")]
+        public int HotKeyLeftMouseHashCode {
+            get {
+                return ((int)(this["HotKeyLeftMouseHashCode"]));
+            }
+            set {
+                this["HotKeyLeftMouseHashCode"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
+        public int HotKeyLeftMouseModifier {
+            get {
+                return ((int)(this["HotKeyLeftMouseModifier"]));
+            }
+            set {
+                this["HotKeyLeftMouseModifier"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Ctrl")]
+        public string HotKeyLeftMouseModifierDescription {
+            get {
+                return ((string)(this["HotKeyLeftMouseModifierDescription"]));
+            }
+            set {
+                this["HotKeyLeftMouseModifierDescription"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("112")]
+        public int HotKeyHashCode {
+            get {
+                return ((int)(this["HotKeyHashCode"]));
+            }
+            set {
+                this["HotKeyHashCode"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
+        public int HotKeyModifier {
+            get {
+                return ((int)(this["HotKeyModifier"]));
+            }
+            set {
+                this["HotKeyModifier"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Ctrl")]
+        public string HotKeyModifierDescription {
+            get {
+                return ((string)(this["HotKeyModifierDescription"]));
+            }
+            set {
+                this["HotKeyModifierDescription"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool PosOnMouseDownOnly {
+            get {
+                return ((bool)(this["PosOnMouseDownOnly"]));
+            }
+            set {
+                this["PosOnMouseDownOnly"] = value;
+            }
+        }
     }
 }

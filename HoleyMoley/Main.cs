@@ -11,6 +11,11 @@ using System.IO;
 using System.Reflection;
 using System.Diagnostics;
 using System.Security.Principal;
+//using System.Windows.Controls;
+//using System.Windows;
+using System.Drawing.Imaging;
+using Microsoft.Win32;
+//using System.Windows;
 
 namespace HoleyMoley
 {
@@ -30,12 +35,6 @@ namespace HoleyMoley
         [DllImport("user32.dll")]
         private static extern IntPtr hookProc(int code, IntPtr wParam, IntPtr lParam);
 
-        public const Int32 WM_SYSCOMMAND = 0x112;
-        public const Int32 MF_SEPARATOR = 0x800;
-        public const Int32 MF_BYPOSITION = 0x400;
-        public const Int32 MF_STRING = 0x0;
-        public const Int32 IDM_TEST = 1000;
-        public const Int32 WM_NCLBUTTONDBLCLK = 0x00A3;
         public Hole HoleForm { get; set; }
 
         private Bitmap ZoomBitmap { get; set; }
@@ -49,9 +48,40 @@ namespace HoleyMoley
         private int MarginSize { get; set; } = -1;
         private int HighlightSize { get; set; } = -1;
 
+        private int HotkeyId = 0;
+        private string HotkeyText = "";
+        private int HotkeyLeftMouseId = 0;
+        private string HotkeyLeftMouseText = "";
+
+        private bool MouseJustPressed = false;
+        private bool ZoomEnabled = true;
+
+        public string About_VersionInfo { get; set; }
+        public string About_Title { get; set; }
+        public string About_Product { get; set; }
+        public string About_TitleInfo { get; set; }
+        public string About_CopyrightInfo { get; set; }
+        public string About_CompanyInfo { get; set; }
+        public string About_DescriptionInfo { get; set; }
+        public string About_CPU { get; set; }
+
+        private AppInfo TrackedApp { get; set; }
+        private int TrackedApp_LastX { get; set; }
+        private int TrackedApp_LastY { get; set; }
+        private int TrackedApp_LastW { get; set; }
+        private int TrackedApp_LastH { get; set; }
+
+        private bool UpdateMouseMeasure { get; set; }
+
+        // Screen colour info
+        Bitmap screenPixel = new Bitmap(1, 1, PixelFormat.Format32bppArgb);
+
         private bool mouseJustPressed { get; set; } = false;
 
         private bool IsAdministrator { get; set; } = false;
+
+
+        private System.Windows.Forms.ToolTip toolTip = new();
 
         public Main()
         {
@@ -80,6 +110,11 @@ namespace HoleyMoley
             this.MaximizeBox = false;
             this.Hide();    // Hiding here helps stop start up flickering of controls appearing/dissapearing/resizing etc.
             this.SuspendLayout();
+
+            // Need to handle screen locking - makes our handles go gaga
+            SystemEvents.SessionSwitch += new SessionSwitchEventHandler(SystemEvents_SessionSwitch);
+
+            InitAbout();
 
             HoleForm = new Hole(this);
             //HoleForm.HoleForm = this;
@@ -112,8 +147,8 @@ namespace HoleyMoley
             IntPtr sysMenuHandle = GetSystemMenu(this.Handle, false);
             //It would be better to find the position at run time of the 'Close' item, but...
 
-            InsertMenu(sysMenuHandle, 5, MF_BYPOSITION | MF_SEPARATOR, 0, string.Empty);
-            InsertMenu(sysMenuHandle, 6, MF_BYPOSITION, IDM_TEST, "TEST");
+            InsertMenu(sysMenuHandle, 5, Native.MF_BYPOSITION | Native.MF_SEPARATOR, 0, string.Empty);
+            InsertMenu(sysMenuHandle, 6, Native.MF_BYPOSITION, Native.IDM_TEST, "TEST");
 
             UpdateHoleSize();
 
@@ -143,15 +178,87 @@ namespace HoleyMoley
             if (this.Top < 0)
                 this.Top = 0;
 
-            this.Text = $"Holey Moley {Version}";
+            toolTip.AutoPopDelay = 60000;
+            toolTip.InitialDelay = 0;
+            toolTip.ReshowDelay = 0;
+            toolTip.ShowAlways = true;
+
+            toolTip.SetToolTip(CH0, "Colour History");
+            toolTip.SetToolTip(CH1, "Colour History");
+            toolTip.SetToolTip(CH2, "Colour History");
+            toolTip.SetToolTip(CH3, "Colour History");
+            toolTip.SetToolTip(CH4, "Colour History");
+            toolTip.SetToolTip(CH5, "Colour History");
+            toolTip.SetToolTip(CH6, "Colour History");
+            toolTip.SetToolTip(CH7, "Colour History");
+
+            UpdateMouseMeasure = false;
 
             //ApplicationHandler.PopulateAppWindows();
             this.ResumeLayout();
         }
 
+        private void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
+        {
+            if ((int)e.Reason == 7) // SessionLocked
+                ZoomEnabled = false;
+            else if ((int)e.Reason == 8)    // SessionUnlocked
+                ZoomEnabled = true;
+        }
+        private void InitAbout()
+        {
+            About_CPU = (System.Runtime.InteropServices.Marshal.SizeOf(IntPtr.Zero) == 8) ? "x64" : "x86";
+
+            Version version;
+            //try
+            //{
+            //    //       version = ApplicationDeployment.CurrentDeployment.CurrentVersion;
+            //}
+            //catch
+            //{
+            version = Assembly.GetExecutingAssembly().GetName().Version;
+            //}
+
+            About_VersionInfo = string.Format("v{0}.{1}.{2}.{3}", version.Major, version.Minor, version.Build, version.Revision);
+            About_Title = GetAssemblyAttribute<AssemblyTitleAttribute>(a => a.Title);
+            About_Product = GetAssemblyAttribute<AssemblyProductAttribute>(a => a.Product);
+
+            if (About_Title != About_Product && !string.IsNullOrWhiteSpace(About_Product))
+            {
+                About_TitleInfo = String.Format("{0} - {1}", About_Title, About_Product);
+            }
+            else
+            {
+                About_TitleInfo = About_Title;
+            }
+
+            About_CopyrightInfo = GetAssemblyAttribute<AssemblyCopyrightAttribute>(a => a.Copyright);
+            About_CompanyInfo = GetAssemblyAttribute<AssemblyCompanyAttribute>(a => a.Company);
+            About_DescriptionInfo = GetAssemblyAttribute<AssemblyDescriptionAttribute>(a => a.Description);
+
+            // All that effort and all we want to do is...
+            this.Text = $"{this.Text} ({About_CPU}) {About_VersionInfo}";
+            // :)
+        }
+        public string GetAssemblyAttribute<T>(Func<T, string> value)
+where T : Attribute
+        {
+            T attribute = (T)Attribute.GetCustomAttribute(Assembly.GetExecutingAssembly(), typeof(T));
+            return value.Invoke(attribute);
+        }
+
         public void SetHighlightingTitle(string title)
         {
             HighlightingTitle.Text = title;
+        }
+
+        private void RegisterHotkeys()
+        {
+            SetHotkeyFromSettings();
+            SetHotkeyLeftMouseFromSettings();
+
+            Hotkey.Text = GetHotkeyText();
+            Hotkey_LeftMouse.Text = GetHotkeyLeftMouseText();
         }
 
         private void ProcessTimerRate()
@@ -179,6 +286,14 @@ namespace HoleyMoley
             // CrossHairH.Left = Zoom.Left;
         }
 
+        private void SetHoleVisibility()
+        {
+            if (Properties.Settings.Default.OverlayVisible)
+                HoleForm.Show();
+            else
+                HoleForm.Hide();
+        }
+
         //protected override void WndProc(ref Message m)
         //{
         //    base.WndProc(ref m);
@@ -198,18 +313,19 @@ namespace HoleyMoley
 
         protected override void WndProc(ref Message m)
         {
-            if (m.Msg == WM_SYSCOMMAND)
+            if (m.Msg == Native.WM_SYSCOMMAND)
             {
                 switch (m.WParam.ToInt32())
                 {
-                    case IDM_TEST:
-                        MessageBox.Show("TEST");
+                    case Native.IDM_TEST:
+                        About about = new About();
+                        about.ShowDialog(this);
                         return;
                     default:
                         break;
                 }
             }
-            else if (m.Msg == WM_NCLBUTTONDBLCLK)
+            else if (m.Msg == Native.WM_NCLBUTTONDBLCLK)
             {
                 m.Result = IntPtr.Zero;
 
@@ -218,6 +334,48 @@ namespace HoleyMoley
                 return;
             }
             base.WndProc(ref m);
+
+            if (m.Msg == Native.WM_HOTKEY)
+            {
+                // Right now, were only using 1 hotkey, so don't care about checking what might be pressed
+                // To expand if we ever want to find out more about the key being pressed (e.g. multiple keys), we can drill down a bit...
+                // m = 32bit int containing key and modifier info. Just need to extract relevant bits.
+                // Keys key = (Keys)(((int)m.LParam >> 16) & 0xffff);
+                // KeyModifier modifier = (KeyModifier)((int)m.LParam & 0xffff);
+                // int hotkeyId = m.WParam.ToInt32();
+                // See code elsewhere for handling Keys stuff
+
+                int key = (((int)m.LParam >> 16) & 0xffff);
+                int modifier = ((int)m.LParam & 0xffff);
+                int hotkeyId = m.WParam.ToInt32();
+
+                if (key == Properties.Settings.Default.HotKeyHashCode && modifier == Properties.Settings.Default.HotKeyModifier)
+                {
+                    if (this.WindowState == FormWindowState.Normal)
+                        MinimiseWindows();
+                    else
+                        RestoreWindows();
+                }
+                else if (key == Properties.Settings.Default.HotKeyLeftMouseHashCode && modifier == Properties.Settings.Default.HotKeyLeftMouseModifier)
+                {
+                    HandleLeftMouseClickHappenings();
+                }
+            }
+        }
+
+        private void MinimiseWindows()
+        {
+            HoleForm.Hide();
+            this.WindowState = FormWindowState.Minimized;
+        }
+
+        private void RestoreWindows()
+        {
+            this.WindowState = FormWindowState.Normal;
+            SetHoleVisibility();
+
+            // Make sure controller is on top
+            this.BringToFront();
         }
 
         private void OpacityLevel_ValueChanged(object sender, EventArgs e)
@@ -247,7 +405,7 @@ namespace HoleyMoley
                 HoleForm.MarginDepth = MarginSize;
                 HoleForm.Width = size.Width;
                 HoleForm.Height = size.Height;
-                HoleForm.SetHole();
+                HoleForm.SetHole(TrackedApp);
 
                 //if (HoleSize.Text == "Size to screen")
                 //{
@@ -501,17 +659,26 @@ namespace HoleyMoley
                     {
                         if (MHS.pt.x != LastMousePos.x || MHS.pt.y != LastMousePos.y)
                         {
-                            int xdif = LastMousePos.x - MHS.pt.x;
-                            int ydif = LastMousePos.y - MHS.pt.y;
+                            float xdif = LastMousePos.x - MHS.pt.x;
+                            float ydif = LastMousePos.y - MHS.pt.y;
 
                             System.Diagnostics.Debug.Print("lastx=" + LastMousePos.x + " xdif=" + xdif);
 
                             LastMousePos = MHS.pt;
 
+                            //// NEEDED?
+                            ////HoleForm.AlterXOffset(xdif);
+                            ////HoleForm.AlterYOffset(ydif);
+
+                            //HoleForm.SetHole(TrackedApp);
+
+                            xdif *= AutoScaleFactor.Width;
+                            ydif *= AutoScaleFactor.Height;
+
                             HoleForm.AlterXOffset(xdif);
                             HoleForm.AlterYOffset(ydif);
 
-                            HoleForm.SetHole();
+                            HoleForm.SetHole(TrackedApp);
                         }
 
                         //Create a string variable that shows the current mouse coordinates.
@@ -562,9 +729,10 @@ namespace HoleyMoley
 
         private void CentreHole()
         {
-            HoleForm.XOffset = 0;
-            HoleForm.YOffset = 0;
-            HoleForm.SetHole();
+            ////NEEDED?
+            ////HoleForm.XOffset = 0;
+            ////HoleForm.YOffset = 0;
+            ////HoleForm.SetHole(TrackedApp);
         }
 
         private void Controller_MouseEnter(object sender, EventArgs e)
@@ -618,7 +786,42 @@ namespace HoleyMoley
             //if (!Properties.Settings.Default.OverlayVisible && ParentForm.Visible)
             //    ParentForm.Hide();
 
+            if (HoleForm.WindowState == FormWindowState.Minimized)
+                return;
+
             bool Update = false;
+
+            if (TrackedApp != null)
+            {
+                IntRect rec = TrackedApp.CurrentWindowRect();
+
+                int x = rec.Left;
+                int y = rec.Top;
+                int w = rec.Right - rec.Left;
+                int h = rec.Bottom - rec.Top;
+
+                // WE DON'T ACTUALLY CARE ABOUT THE WIDTH/HEIGHT - just keeping the app in line with HoleyMoley
+                // TODO: Add an option to scale to app?
+                if (x != TrackedApp_LastX || y != TrackedApp_LastY) // || w != TrackedApp_LastW || h != TrackedApp_LastH)
+                {
+                    //HoleForm.Width = w;
+                    //HoleForm.Height = h;
+                    HoleForm.XOrigin = x; // (rec.Right - rec.Left) / 2.0f;
+                    HoleForm.YOrigin = y; // (rec.Bottom - rec.Top) / 2.0f;
+
+                    TrackedApp_LastX = x;
+                    TrackedApp_LastY = y;
+                    //TrackedApp_LastW = w;
+                    //TrackedApp_LastH = h;
+
+                    HoleForm.SetHole(TrackedApp);
+                }
+            }
+            else
+            {
+                HoleForm.XOrigin = 0.0f;
+                HoleForm.YOrigin = 0.0f;
+            }
 
             if (LastMouseX != Cursor.Position.X)
             {
@@ -636,14 +839,18 @@ namespace HoleyMoley
             {
                 if (!mouseJustPressed)
                 {
-                    MeasureMouseX = LastMouseX;
-                    MeasureMouseY = LastMouseY;
+                    //MeasureMouseX = LastMouseX;
+                    //MeasureMouseY = LastMouseY;
+
+                    HandleLeftMouseClickHappenings();
+
                     mouseJustPressed = true;
                 }
             }
             else
             {
                 mouseJustPressed = false;
+                UpdateMouseMeasure = false;
             }
 
             if (Update || ConstantUpdate.Checked)
@@ -651,9 +858,76 @@ namespace HoleyMoley
                 MousePosition.Text = Cursor.Position.X.ToString() + "," + Cursor.Position.Y.ToString();
                 CopyOverZoom();
                 SetScreenCrossHairPosition();
+
+                // Need to update so we have no highlight under the cursor pixel, and colour isn't messed with
+                UpdateColourInfo(Cursor.Position.X, Cursor.Position.Y, ColourRGB, ColourHex, ColourPreview);
             }
 
-            MouseMeasure.Text = $"{LastMouseX - MeasureMouseX},{LastMouseY - MeasureMouseY}";
+            if (UpdateMouseMeasure || PosOnMouseDownOnly.Checked == false)
+                MouseMeasure.Text = $"{LastMouseX - MeasureMouseX},{LastMouseY - MeasureMouseY}";
+        }
+
+        private void HandleLeftMouseClickHappenings()
+        {
+            this.SuspendLayout();
+
+            MeasureMouseX = LastMouseX;
+            MeasureMouseY = LastMouseY;
+
+            CH7.BackColor = CH6.BackColor;
+            CH6.BackColor = CH5.BackColor;
+            CH5.BackColor = CH4.BackColor;
+            CH4.BackColor = CH3.BackColor;
+            CH3.BackColor = CH2.BackColor;
+            CH2.BackColor = CH1.BackColor;
+            CH1.BackColor = CH0.BackColor;
+
+            toolTip.SetToolTip(CH7, toolTip.GetToolTip(CH6));
+            toolTip.SetToolTip(CH6, toolTip.GetToolTip(CH5));
+            toolTip.SetToolTip(CH5, toolTip.GetToolTip(CH4));
+            toolTip.SetToolTip(CH4, toolTip.GetToolTip(CH3));
+            toolTip.SetToolTip(CH3, toolTip.GetToolTip(CH2));
+            toolTip.SetToolTip(CH2, toolTip.GetToolTip(CH1));
+            toolTip.SetToolTip(CH1, toolTip.GetToolTip(CH0));
+
+            MM3.Text = MM2.Text;
+            MM2.Text = MM1.Text;
+            MM1.Text = MM0.Text;
+            MM0.Text = MouseMeasure.Text;
+
+            UpdateColourInfo(Cursor.Position.X, Cursor.Position.Y, SnapshotColourRGB, SnapshotColourHex, SnapshotColourPreview);
+
+            CH0.BackColor = SnapshotColourPreview.BackColor;
+            toolTip.SetToolTip(CH0, $"{ColourRGB.Text} - {ColourHex.Text}");
+
+            UpdateMouseMeasure = true;
+
+            this.ResumeLayout();
+        }
+
+        private void UpdateColourInfo(int X, int Y, Label RGB, Label Hex, Panel Preview)
+        {
+            // update colour info
+
+            using (Graphics gdest = Graphics.FromImage(screenPixel))
+            {
+                using (Graphics gsrc = Graphics.FromHwnd(IntPtr.Zero))
+                {
+                    IntPtr hSrcDc = gsrc.GetHdc();
+                    IntPtr hDC = gdest.GetHdc();
+                    int retVal = Native.BitBlt(hDC, 0, 0, 1, 1, hSrcDc, X, Y, PatBltType.SrcCopy);
+                    gdest.ReleaseHdc();
+                    gsrc.ReleaseHdc();
+                }
+            }
+
+            Color c = screenPixel.GetPixel(0, 0);
+            //ColourPreview.BackColor = c;
+            Preview.BackColor = c;
+            //ColourRGB.Text = $"{c.R},{c.G},{c.B}";
+            RGB.Text = $"{c.R},{c.G},{c.B}";
+            //ColourHex.Text = $"#{c.A:X2}{c.R:X2}{c.G:X2}{c.B:X2}";
+            Hex.Text = $"#{c.A:X2}{c.R:X2}{c.G:X2}{c.B:X2}";
         }
 
         private void CopyOverZoom()
@@ -804,11 +1078,14 @@ namespace HoleyMoley
             settings.HoleSize = HoleSize.Text;
             settings.OpacityLevel = OpacityLevel.Value;
             settings.Margin = EnableMargin.Checked;
+            settings.Grid = Grid.Checked;
+            settings.GridSize = GridSize.Text;
             settings.ScreenCrossHairs = ScreenCrossHairs.Checked;
+            settings.PosOnMouseDownOnly = PosOnMouseDownOnly.Checked;
             settings.MarginDepth = MarginDepth.Value;
             settings.OverlayVisible = HoleForm.Visible;
-            settings.PosX = HoleForm.XOffset;
-            settings.PosY = HoleForm.YOffset;
+            settings.PosX = (int)HoleForm.XOffset;
+            settings.PosY = (int)HoleForm.YOffset;
             settings.ControllerX = this.Left;
             settings.ControllerY = this.Top;
             settings.HoleControls = HoleControls.Checked;
@@ -854,6 +1131,12 @@ namespace HoleyMoley
             HoleControls.Checked = settings.HoleControls;
             HoleForm.SetControlVisibility(HoleControls.Checked);
 
+            PosOnMouseDownOnly.Checked = Properties.Settings.Default.PosOnMouseDownOnly;
+
+            Grid.Checked = Properties.Settings.Default.Grid;
+            GridSize.Text = Properties.Settings.Default.GridSize;
+            ProcessGridSize();
+
             // Highlighting
             EnableHilighting.Checked = settings.HighlightingEnabled;
             HighlightAppNames.Text = settings.HighlightAppNames;
@@ -872,6 +1155,8 @@ namespace HoleyMoley
             ConstantUpdate.Checked = settings.ConstantUpdate;
             CrossHair.Checked = settings.CrossHair;
             FasterRefresh.Checked = settings.FasterRefresh;
+
+
         }
 
         private void Controller_FormClosing(object sender, FormClosingEventArgs e)
@@ -1102,7 +1387,301 @@ namespace HoleyMoley
 
         private void AdministratorWarning_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Holey Moley isn't running with Administrator privaledges, so may not be able to highlight all windows (due to access restrictions). This will affect things such as Remote Desktop Connection parent windows.", "Access permission restrictions", MessageBoxButtons.OK, MessageBoxIcon.Warning); 
+            MessageBox.Show("Holey Moley isn't running with Administrator privaledges, so may not be able to highlight all windows (due to access restrictions). This will affect things such as Remote Desktop Connection parent windows.", "Access permission restrictions", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+
+        // ------------------------------------
+
+        private void TrackAppList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (TrackAppList.SelectedItem != null)
+            {
+                AppInfo app = (AppInfo)(TrackAppList.SelectedItem);
+
+                if (app.Title == "")
+                {
+                    if (TrackedApp != null)
+                    {
+                        //RECT rec = TrackedApp.CurrentWindowRect();
+
+                        //// need to make sure any position is retained so we don't jump around
+                        //HoleForm.XOffset -= rec.Left;
+                        //HoleForm.XOffset += HoleForm.XOrigin;
+
+                        //HoleForm.YOffset -= rec.Top;
+                        //HoleForm.YOffset += HoleForm.YOrigin;
+
+                        ////HoleForm.XOrigin = 0;
+                        ////HoleForm.YOrigin = 0;
+
+                        TrackedApp = null;
+                        CentreHole();
+                    }
+                    else
+                    {
+                        TrackedApp = null;
+                        HoleForm.SetHole(TrackedApp);
+                    }
+                }
+                else
+                {
+                    TrackedApp = app;
+
+                    IntRect rec = TrackedApp.CurrentWindowRect();
+
+                    HoleForm.XOffset = -6;
+                    HoleForm.YOffset = 1;
+
+                    TrackedApp_LastX = rec.Left;    // account for windows shadow + want to go around window, not over window
+                    TrackedApp_LastY = rec.Top;     // want to go around window, not over window
+
+                    HoleForm.XOrigin = TrackedApp_LastX;
+                    HoleForm.YOrigin = TrackedApp_LastY;
+
+                    HoleForm.SetHole(TrackedApp);
+
+                    //RECT rec = app.CurrentWindowRect();
+                    //Debug.Print($"{rec.Left},{rec.Top},{rec.Right},{rec.Bottom}");
+
+                    //HoleForm.XOffset = 0;
+                    //HoleForm.YOffset = 0;
+                    //HoleForm.XOrigin = 0;
+                    //HoleForm.YOrigin = 0;
+                    ////HoleForm.SetHole();
+                }
+            }
+        }
+
+        private void ProcessGridSize()
+        {
+            string size = GridSize.Text;
+
+            if (string.IsNullOrEmpty(size))
+                return;
+
+            int pos = size.IndexOf('x');
+
+            string tx = size.Substring(0, pos - 1);
+            if (tx == "")
+                tx = "25.5";
+
+            string ty = size.Substring(pos + 2, size.Length - (pos + 2));
+            if (ty == "")
+                ty = "25.5";
+
+            string tsubx;
+            string tsuby;
+
+            int x;
+            int y;
+            int subx;
+            int suby;
+
+            pos = tx.IndexOf('.');
+            if (pos > 0)
+            {
+                tsubx = tx.Substring(pos + 1, tx.Length - pos - 1);
+                tx = tx.Substring(0, pos);
+
+                if (int.TryParse(tx, out x) == false)
+                    x = 25;
+
+                if (int.TryParse(tsubx, out subx) == false)
+                    subx = 5;
+            }
+            else
+            {
+                if (int.TryParse(tx, out x) == false)
+                    x = 25;
+
+                subx = 0;
+            }
+
+            pos = ty.IndexOf('.');
+            if (pos > 0)
+            {
+                tsuby = ty.Substring(pos + 1, ty.Length - pos - 1);
+                ty = ty.Substring(0, pos);
+
+                if (int.TryParse(ty, out y) == false)
+                    y = 25;
+
+                if (int.TryParse(tsuby, out suby) == false)
+                    suby = 5;
+            }
+            else
+            {
+                if (int.TryParse(ty, out y) == false)
+                    y = 25;
+
+                suby = 0;
+            }
+
+            HoleForm.GridEnabled = Grid.Checked;
+            HoleForm.GridX = x;
+            HoleForm.GridY = y;
+            HoleForm.GridSubX = subx;
+            HoleForm.GridSubY = suby;
+            HoleForm.UpdateDrawSpace();
+        }
+
+        private void Hotkey_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+
+        }
+
+        private void Hotkey_KeyUp(object sender, KeyEventArgs e)
+        {
+            // PreviewKeyDown doesnt have a handled property, or cancel property. So KeyPress always fires as well it seems. Couldn't find a way around that.
+            // Set .text in PreviewKeyDown, the key press will bubble through and add the relevant typed letter as well. Screws things up. DOH
+            // So to get round that, we remembered the text pressed, and override the final results here after the controls content has settled down
+            // We can't just run the whole thing here (or KeyPressed) as the Key code and modifer properties isn't around any more
+            Hotkey.Text = HotkeyText;
+        }
+
+        private void SetHotkeyFromSettings()
+        {
+            Native.RegisterHotKey(this.Handle, HotkeyId, Properties.Settings.Default.HotKeyModifier, Properties.Settings.Default.HotKeyHashCode);
+        }
+
+        private void SetHotkeyLeftMouseFromSettings()
+        {
+            Native.RegisterHotKey(this.Handle, HotkeyLeftMouseId, Properties.Settings.Default.HotKeyLeftMouseModifier, Properties.Settings.Default.HotKeyLeftMouseHashCode);
+        }
+
+        private void SetHotkey(int KeyValue, int Modifiers, string ModifiersDescription)
+        {
+            // ignore 20 and below - those seem to be modifier keys being pressed rather than keys we are interested in!
+            if (KeyValue > 20)
+            {
+                Native.UnregisterHotKey(this.Handle, HotkeyId);
+
+                Properties.Settings.Default.HotKeyHashCode = KeyValue;
+                Properties.Settings.Default.HotKeyModifier = Modifiers;
+                Properties.Settings.Default.HotKeyModifierDescription = ModifiersDescription;
+
+                SetHotkeyFromSettings();
+
+                HotkeyText = GetHotkeyText();
+            }
+        }
+        private void SetHotkey_LeftMouse(int KeyValue, int Modifiers, string ModifiersDescription)
+        {
+            // ignore 20 and below - those seem to be modifier keys being pressed rather than keys we are interested in!
+            if (KeyValue > 20)
+            {
+                Native.UnregisterHotKey(this.Handle, HotkeyLeftMouseId);
+
+                Properties.Settings.Default.HotKeyLeftMouseHashCode = KeyValue;
+                Properties.Settings.Default.HotKeyLeftMouseModifier = Modifiers;
+                Properties.Settings.Default.HotKeyLeftMouseModifierDescription = ModifiersDescription;
+
+                SetHotkeyLeftMouseFromSettings();
+
+                HotkeyLeftMouseText = GetHotkeyLeftMouseText();
+            }
+        }
+
+        private string GetHotkeyText()
+        {
+            KeysConverter converter = new KeysConverter();
+
+            string ModifiersDescription = Properties.Settings.Default.HotKeyModifierDescription;
+
+            return (ModifiersDescription + (string.IsNullOrEmpty(ModifiersDescription) ? "" : "+") + converter.ConvertToString(Properties.Settings.Default.HotKeyHashCode));
+        }
+
+        private string GetHotkeyLeftMouseText()
+        {
+            KeysConverter converter = new KeysConverter();
+
+            string ModifiersDescription = Properties.Settings.Default.HotKeyLeftMouseModifierDescription;
+
+            return (ModifiersDescription + (string.IsNullOrEmpty(ModifiersDescription) ? "" : "+") + converter.ConvertToString(Properties.Settings.Default.HotKeyLeftMouseHashCode));
+        }
+
+        private void PopulateAppTrackList()
+        {
+            this.Cursor = System.Windows.Forms.Cursors.WaitCursor;
+
+            TrackAppList.Items.Clear();
+
+            Process[] processList = Process.GetProcesses();
+            AppInfo app = new AppInfo
+            {
+                Title = ""
+            };
+            TrackAppList.Items.Add(app);
+
+            foreach (Process process in processList)
+            {
+
+                if (!String.IsNullOrEmpty(process.MainWindowTitle) && process.MainWindowHandle != IntPtr.Zero && Native.IsWindowVisible(process.MainWindowHandle))
+                {
+                    app = new AppInfo
+                    {
+                        Title = process.MainWindowTitle,
+                        HWnd = process.MainWindowHandle // HandleRef(process, process.MainWindowHandle),
+                    };
+
+                    TrackAppList.Items.Add(app);
+                }
+            }
+
+            this.Cursor = System.Windows.Forms.Cursors.Default;
+        }
+
+        private void TrackAppList_DropDown(object sender, EventArgs e)
+        {
+            PopulateAppTrackList();
+        }
+
+        private void GridSize_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ProcessGridSize();
+        }
+
+        private void Grid_CheckedChanged(object sender, EventArgs e)
+        {
+            ProcessGridSize();
+        }
+
+        private void HotKey_LeftMouse_KeyUp(object sender, KeyEventArgs e)
+        {
+            // PreviewKeyDown doesnt have a handled property, or cancel property. So KeyPress always fires as well it seems. Couldn't find a way around that.
+            // Set .text in PreviewKeyDown, the key press will bubble through and add the relevant typed letter as well. Screws things up. DOH
+            // So to get round that, we remembered the text pressed, and override the final results here after the controls content has settled down
+            // We can't just run the whole thing here (or KeyPressed) as the Key code and modifer properties isn't around any more
+            Hotkey_LeftMouse.Text = HotkeyLeftMouseText;
+        }
+
+        private void HotKey_LeftMouse_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            KeysConverter converter = new KeysConverter();
+            Debug.Print($"Code:{e.KeyCode}, Data:{e.KeyData}, Value:{e.KeyValue}, Modifier:{e.Modifiers}, Translation:{converter.ConvertToString(e.KeyValue)}");
+
+            int Modifiers = 0;
+            string ModifiersDescription = "";
+            string sep = "";
+            if (e.Control)
+            {
+                Modifiers = (int)Native.KeyModifiers.Ctrl;
+                ModifiersDescription = "Ctrl";
+                sep = "+";
+            }
+            if (e.Alt)
+            {
+                Modifiers += (int)Native.KeyModifiers.Alt;
+                ModifiersDescription += sep + "Alt";
+                sep = "+";
+            }
+            if (e.Shift)
+            {
+                Modifiers += (int)Native.KeyModifiers.Shift;
+                ModifiersDescription += sep + "Shift";
+            }
+
+            SetHotkey_LeftMouse((int)e.KeyCode, Modifiers, ModifiersDescription);
         }
     }
 

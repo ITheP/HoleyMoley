@@ -55,6 +55,11 @@
             this.Logo = new System.Windows.Forms.PictureBox();
             this.MouseTimer = new System.Windows.Forms.Timer(this.components);
             this.HolePanel = new System.Windows.Forms.Panel();
+            this.label22 = new System.Windows.Forms.Label();
+            this.TrackAppList = new System.Windows.Forms.ComboBox();
+            this.GridSize = new System.Windows.Forms.ComboBox();
+            this.Grid = new System.Windows.Forms.CheckBox();
+            this.GridL = new System.Windows.Forms.Label();
             this.label20 = new System.Windows.Forms.Label();
             this.HoleControls = new System.Windows.Forms.CheckBox();
             this.ControlPanel = new System.Windows.Forms.FlowLayoutPanel();
@@ -94,6 +99,33 @@
             this.label10 = new System.Windows.Forms.Label();
             this.ZoomLevel = new System.Windows.Forms.TrackBar();
             this.InfoPanel = new System.Windows.Forms.Panel();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.Hotkey_LeftMouse = new System.Windows.Forms.TextBox();
+            this.Hotkey = new System.Windows.Forms.TextBox();
+            this.label23 = new System.Windows.Forms.Label();
+            this.label24 = new System.Windows.Forms.Label();
+            this.label25 = new System.Windows.Forms.Label();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.PosOnMouseDownOnly = new System.Windows.Forms.CheckBox();
+            this.CH0 = new System.Windows.Forms.Panel();
+            this.label19 = new System.Windows.Forms.Label();
+            this.CH1 = new System.Windows.Forms.Panel();
+            this.CH2 = new System.Windows.Forms.Panel();
+            this.CH3 = new System.Windows.Forms.Panel();
+            this.CH4 = new System.Windows.Forms.Panel();
+            this.CH5 = new System.Windows.Forms.Panel();
+            this.CH6 = new System.Windows.Forms.Panel();
+            this.CH7 = new System.Windows.Forms.Panel();
+            this.SnapshotColourPreview = new System.Windows.Forms.Panel();
+            this.ColourPreview = new System.Windows.Forms.Panel();
+            this.SnapshotColourRGB = new System.Windows.Forms.Label();
+            this.ColourRGB = new System.Windows.Forms.Label();
+            this.MM0 = new System.Windows.Forms.Label();
+            this.MM1 = new System.Windows.Forms.Label();
+            this.MM2 = new System.Windows.Forms.Label();
+            this.MM3 = new System.Windows.Forms.Label();
+            this.SnapshotColourHex = new System.Windows.Forms.Label();
+            this.ColourHex = new System.Windows.Forms.Label();
             this.AdministratorWarning = new System.Windows.Forms.Button();
             this.EnableDebug = new System.Windows.Forms.Button();
             this.MousePosition = new System.Windows.Forms.Label();
@@ -103,6 +135,9 @@
             this.DebugPanel = new System.Windows.Forms.Panel();
             this.DebugInfo = new System.Windows.Forms.TextBox();
             this.ToolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.button1 = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.MarginDepth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.OpacityLevel)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Logo)).BeginInit();
@@ -114,6 +149,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.Zoom)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ZoomLevel)).BeginInit();
             this.InfoPanel.SuspendLayout();
+            this.panel2.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.DebugPanel.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -167,7 +204,7 @@
             // 
             this.label11.AutoSize = true;
             this.label11.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label11.Location = new System.Drawing.Point(101, 139);
+            this.label11.Location = new System.Drawing.Point(101, 140);
             this.label11.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(63, 13);
@@ -362,7 +399,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label4.Location = new System.Drawing.Point(4, 139);
+            this.label4.Location = new System.Drawing.Point(4, 140);
             this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(44, 13);
@@ -446,6 +483,14 @@
             this.HolePanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.HolePanel.BackColor = System.Drawing.Color.White;
             this.HolePanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.HolePanel.Controls.Add(this.button3);
+            this.HolePanel.Controls.Add(this.button1);
+            this.HolePanel.Controls.Add(this.button2);
+            this.HolePanel.Controls.Add(this.label22);
+            this.HolePanel.Controls.Add(this.TrackAppList);
+            this.HolePanel.Controls.Add(this.GridSize);
+            this.HolePanel.Controls.Add(this.Grid);
+            this.HolePanel.Controls.Add(this.GridL);
             this.HolePanel.Controls.Add(this.label20);
             this.HolePanel.Controls.Add(this.HoleControls);
             this.HolePanel.Controls.Add(this.OpacityLevel);
@@ -470,14 +515,92 @@
             this.HolePanel.Location = new System.Drawing.Point(2, 3);
             this.HolePanel.Margin = new System.Windows.Forms.Padding(0);
             this.HolePanel.Name = "HolePanel";
-            this.HolePanel.Size = new System.Drawing.Size(453, 163);
+            this.HolePanel.Size = new System.Drawing.Size(453, 248);
             this.HolePanel.TabIndex = 14;
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label22.Location = new System.Drawing.Point(4, 191);
+            this.label22.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(117, 13);
+            this.label22.TabIndex = 57;
+            this.label22.Tag = "HoleVisibility";
+            this.label22.Text = "Snap to application...";
+            // 
+            // TrackAppList
+            // 
+            this.TrackAppList.FormattingEnabled = true;
+            this.TrackAppList.Location = new System.Drawing.Point(8, 212);
+            this.TrackAppList.Margin = new System.Windows.Forms.Padding(4, 3, 4, 11);
+            this.TrackAppList.MaxDropDownItems = 32;
+            this.TrackAppList.Name = "TrackAppList";
+            this.TrackAppList.Size = new System.Drawing.Size(435, 23);
+            this.TrackAppList.Sorted = true;
+            this.TrackAppList.TabIndex = 56;
+            this.TrackAppList.Tag = "HoleVisibility";
+            this.TrackAppList.DropDown += new System.EventHandler(this.TrackAppList_DropDown);
+            this.TrackAppList.SelectedIndexChanged += new System.EventHandler(this.TrackAppList_SelectedIndexChanged);
+            // 
+            // GridSize
+            // 
+            this.GridSize.DisplayMember = "25.5 x 25.5";
+            this.GridSize.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.GridSize.FormattingEnabled = true;
+            this.GridSize.Items.AddRange(new object[] {
+            "5 x 5",
+            "10 x 10",
+            "10.5 x 10.5",
+            "15 x 15",
+            "20 x 20",
+            "25 x 25",
+            "25.5 x 25.5",
+            "50 x 50",
+            "50.5 x 50.5",
+            "50.10 x 50.10",
+            "100.10 x 100.10"});
+            this.GridSize.Location = new System.Drawing.Point(101, 163);
+            this.GridSize.Margin = new System.Windows.Forms.Padding(4, 3, 4, 7);
+            this.GridSize.MaxDropDownItems = 16;
+            this.GridSize.Name = "GridSize";
+            this.GridSize.Size = new System.Drawing.Size(121, 21);
+            this.GridSize.TabIndex = 55;
+            this.GridSize.Tag = "HoleVisibility";
+            this.GridSize.SelectedIndexChanged += new System.EventHandler(this.GridSize_SelectedIndexChanged);
+            // 
+            // Grid
+            // 
+            this.Grid.AutoSize = true;
+            this.Grid.Checked = true;
+            this.Grid.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.Grid.Location = new System.Drawing.Point(62, 167);
+            this.Grid.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.Grid.Name = "Grid";
+            this.Grid.Size = new System.Drawing.Size(15, 14);
+            this.Grid.TabIndex = 54;
+            this.Grid.Tag = "HoleVisibility";
+            this.Grid.UseVisualStyleBackColor = true;
+            this.Grid.CheckedChanged += new System.EventHandler(this.Grid_CheckedChanged);
+            // 
+            // GridL
+            // 
+            this.GridL.AutoSize = true;
+            this.GridL.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.GridL.Location = new System.Drawing.Point(4, 167);
+            this.GridL.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.GridL.Name = "GridL";
+            this.GridL.Size = new System.Drawing.Size(29, 13);
+            this.GridL.TabIndex = 53;
+            this.GridL.Tag = "HoleVisibility";
+            this.GridL.Text = "Grid";
             // 
             // label20
             // 
             this.label20.AutoSize = true;
             this.label20.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label20.Location = new System.Drawing.Point(211, 139);
+            this.label20.Location = new System.Drawing.Point(211, 140);
             this.label20.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(51, 13);
@@ -515,7 +638,7 @@
             this.ControlPanel.Margin = new System.Windows.Forms.Padding(0);
             this.ControlPanel.Name = "ControlPanel";
             this.ControlPanel.Padding = new System.Windows.Forms.Padding(2, 3, 2, 2);
-            this.ControlPanel.Size = new System.Drawing.Size(457, 1506);
+            this.ControlPanel.Size = new System.Drawing.Size(457, 1803);
             this.ControlPanel.TabIndex = 15;
             // 
             // HighlightingPanel
@@ -544,7 +667,7 @@
             this.HighlightingPanel.Controls.Add(this.label16);
             this.HighlightingPanel.Controls.Add(this.EnableHilighting);
             this.HighlightingPanel.Controls.Add(this.HighlightDepth);
-            this.HighlightingPanel.Location = new System.Drawing.Point(2, 168);
+            this.HighlightingPanel.Location = new System.Drawing.Point(2, 253);
             this.HighlightingPanel.Margin = new System.Windows.Forms.Padding(0, 2, 0, 0);
             this.HighlightingPanel.Name = "HighlightingPanel";
             this.HighlightingPanel.Size = new System.Drawing.Size(453, 196);
@@ -736,7 +859,7 @@
             this.MoveAppToHole.Size = new System.Drawing.Size(142, 27);
             this.MoveAppToHole.TabIndex = 40;
             this.MoveAppToHole.Tag = "HilightingVisibility";
-            this.MoveAppToHole.Text = "Move App to Hole";
+            this.MoveAppToHole.Text = "Move Highl. to Hole";
             this.ToolTip.SetToolTip(this.MoveAppToHole, "Move currently highlighted app to fit inside Hole");
             this.MoveAppToHole.UseVisualStyleBackColor = true;
             this.MoveAppToHole.Click += new System.EventHandler(this.MoveAppToHole_Click);
@@ -830,7 +953,7 @@
             this.ZoomPanel.Controls.Add(this.label10);
             this.ZoomPanel.Controls.Add(this.ZoomLevel);
             this.ZoomPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ZoomPanel.Location = new System.Drawing.Point(2, 366);
+            this.ZoomPanel.Location = new System.Drawing.Point(2, 451);
             this.ZoomPanel.Margin = new System.Windows.Forms.Padding(0, 2, 0, 0);
             this.ZoomPanel.Name = "ZoomPanel";
             this.ZoomPanel.Size = new System.Drawing.Size(453, 530);
@@ -881,7 +1004,7 @@
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label7.Location = new System.Drawing.Point(4, 62);
+            this.label7.Location = new System.Drawing.Point(4, 63);
             this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(26, 13);
@@ -974,7 +1097,7 @@
             // 
             this.FasterRefreshL.AutoSize = true;
             this.FasterRefreshL.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.FasterRefreshL.Location = new System.Drawing.Point(211, 61);
+            this.FasterRefreshL.Location = new System.Drawing.Point(211, 62);
             this.FasterRefreshL.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.FasterRefreshL.Name = "FasterRefreshL";
             this.FasterRefreshL.Size = new System.Drawing.Size(77, 13);
@@ -987,7 +1110,7 @@
             // 
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label10.Location = new System.Drawing.Point(101, 62);
+            this.label10.Location = new System.Drawing.Point(101, 63);
             this.label10.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(63, 13);
@@ -1016,6 +1139,8 @@
             this.InfoPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.InfoPanel.BackColor = System.Drawing.Color.White;
             this.InfoPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.InfoPanel.Controls.Add(this.panel2);
+            this.InfoPanel.Controls.Add(this.panel1);
             this.InfoPanel.Controls.Add(this.AdministratorWarning);
             this.InfoPanel.Controls.Add(this.EnableDebug);
             this.InfoPanel.Controls.Add(this.MousePosition);
@@ -1023,11 +1148,305 @@
             this.InfoPanel.Controls.Add(this.About);
             this.InfoPanel.Controls.Add(this.MouseMeasure);
             this.InfoPanel.Controls.Add(this.label12);
-            this.InfoPanel.Location = new System.Drawing.Point(2, 898);
+            this.InfoPanel.Location = new System.Drawing.Point(2, 983);
             this.InfoPanel.Margin = new System.Windows.Forms.Padding(0, 2, 0, 0);
             this.InfoPanel.Name = "InfoPanel";
-            this.InfoPanel.Size = new System.Drawing.Size(453, 35);
+            this.InfoPanel.Size = new System.Drawing.Size(453, 247);
             this.InfoPanel.TabIndex = 16;
+            // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.Hotkey_LeftMouse);
+            this.panel2.Controls.Add(this.Hotkey);
+            this.panel2.Controls.Add(this.label23);
+            this.panel2.Controls.Add(this.label24);
+            this.panel2.Controls.Add(this.label25);
+            this.panel2.Location = new System.Drawing.Point(1, 142);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(200, 100);
+            this.panel2.TabIndex = 46;
+            // 
+            // Hotkey_LeftMouse
+            // 
+            this.Hotkey_LeftMouse.Location = new System.Drawing.Point(82, 67);
+            this.Hotkey_LeftMouse.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.Hotkey_LeftMouse.Name = "Hotkey_LeftMouse";
+            this.Hotkey_LeftMouse.Size = new System.Drawing.Size(118, 23);
+            this.Hotkey_LeftMouse.TabIndex = 45;
+            this.Hotkey_LeftMouse.KeyUp += new System.Windows.Forms.KeyEventHandler(this.HotKey_LeftMouse_KeyUp);
+            this.Hotkey_LeftMouse.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.HotKey_LeftMouse_PreviewKeyDown);
+            // 
+            // Hotkey
+            // 
+            this.Hotkey.Location = new System.Drawing.Point(82, 37);
+            this.Hotkey.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.Hotkey.Name = "Hotkey";
+            this.Hotkey.Size = new System.Drawing.Size(118, 23);
+            this.Hotkey.TabIndex = 46;
+            this.Hotkey.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Hotkey_KeyUp);
+            this.Hotkey.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.Hotkey_PreviewKeyDown);
+            // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label23.Location = new System.Drawing.Point(0, 70);
+            this.label23.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(64, 13);
+            this.label23.TabIndex = 42;
+            this.label23.Text = "Left Mouse";
+            // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label24.Location = new System.Drawing.Point(0, 11);
+            this.label24.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(51, 13);
+            this.label24.TabIndex = 43;
+            this.label24.Text = "Hotkey\'s";
+            // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label25.Location = new System.Drawing.Point(0, 40);
+            this.label25.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(64, 13);
+            this.label25.TabIndex = 44;
+            this.label25.Text = "Show/Hide";
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.PosOnMouseDownOnly);
+            this.panel1.Controls.Add(this.CH0);
+            this.panel1.Controls.Add(this.label19);
+            this.panel1.Controls.Add(this.CH1);
+            this.panel1.Controls.Add(this.CH2);
+            this.panel1.Controls.Add(this.CH3);
+            this.panel1.Controls.Add(this.CH4);
+            this.panel1.Controls.Add(this.CH5);
+            this.panel1.Controls.Add(this.CH6);
+            this.panel1.Controls.Add(this.CH7);
+            this.panel1.Controls.Add(this.SnapshotColourPreview);
+            this.panel1.Controls.Add(this.ColourPreview);
+            this.panel1.Controls.Add(this.SnapshotColourRGB);
+            this.panel1.Controls.Add(this.ColourRGB);
+            this.panel1.Controls.Add(this.MM0);
+            this.panel1.Controls.Add(this.MM1);
+            this.panel1.Controls.Add(this.MM2);
+            this.panel1.Controls.Add(this.MM3);
+            this.panel1.Controls.Add(this.SnapshotColourHex);
+            this.panel1.Controls.Add(this.ColourHex);
+            this.panel1.Location = new System.Drawing.Point(-3, 36);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(433, 100);
+            this.panel1.TabIndex = 45;
+            // 
+            // PosOnMouseDownOnly
+            // 
+            this.PosOnMouseDownOnly.AutoSize = true;
+            this.PosOnMouseDownOnly.Checked = true;
+            this.PosOnMouseDownOnly.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.PosOnMouseDownOnly.Location = new System.Drawing.Point(398, 25);
+            this.PosOnMouseDownOnly.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.PosOnMouseDownOnly.Name = "PosOnMouseDownOnly";
+            this.PosOnMouseDownOnly.Size = new System.Drawing.Size(15, 14);
+            this.PosOnMouseDownOnly.TabIndex = 68;
+            this.PosOnMouseDownOnly.UseVisualStyleBackColor = true;
+            // 
+            // CH0
+            // 
+            this.CH0.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.CH0.Location = new System.Drawing.Point(199, 77);
+            this.CH0.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.CH0.Name = "CH0";
+            this.CH0.Size = new System.Drawing.Size(22, 20);
+            this.CH0.TabIndex = 67;
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label19.Location = new System.Drawing.Point(281, 25);
+            this.label19.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(109, 13);
+            this.label19.TabIndex = 69;
+            this.label19.Text = "Hold mouse for dist";
+            this.label19.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // CH1
+            // 
+            this.CH1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.CH1.Location = new System.Drawing.Point(172, 77);
+            this.CH1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.CH1.Name = "CH1";
+            this.CH1.Size = new System.Drawing.Size(22, 20);
+            this.CH1.TabIndex = 66;
+            // 
+            // CH2
+            // 
+            this.CH2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.CH2.Location = new System.Drawing.Point(145, 77);
+            this.CH2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.CH2.Name = "CH2";
+            this.CH2.Size = new System.Drawing.Size(22, 20);
+            this.CH2.TabIndex = 64;
+            // 
+            // CH3
+            // 
+            this.CH3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.CH3.Location = new System.Drawing.Point(118, 77);
+            this.CH3.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.CH3.Name = "CH3";
+            this.CH3.Size = new System.Drawing.Size(22, 20);
+            this.CH3.TabIndex = 63;
+            // 
+            // CH4
+            // 
+            this.CH4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.CH4.Location = new System.Drawing.Point(92, 77);
+            this.CH4.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.CH4.Name = "CH4";
+            this.CH4.Size = new System.Drawing.Size(22, 20);
+            this.CH4.TabIndex = 62;
+            // 
+            // CH5
+            // 
+            this.CH5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.CH5.Location = new System.Drawing.Point(65, 77);
+            this.CH5.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.CH5.Name = "CH5";
+            this.CH5.Size = new System.Drawing.Size(22, 20);
+            this.CH5.TabIndex = 61;
+            // 
+            // CH6
+            // 
+            this.CH6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.CH6.Location = new System.Drawing.Point(38, 77);
+            this.CH6.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.CH6.Name = "CH6";
+            this.CH6.Size = new System.Drawing.Size(22, 20);
+            this.CH6.TabIndex = 65;
+            // 
+            // CH7
+            // 
+            this.CH7.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.CH7.Location = new System.Drawing.Point(11, 77);
+            this.CH7.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.CH7.Name = "CH7";
+            this.CH7.Size = new System.Drawing.Size(22, 20);
+            this.CH7.TabIndex = 60;
+            // 
+            // SnapshotColourPreview
+            // 
+            this.SnapshotColourPreview.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.SnapshotColourPreview.Location = new System.Drawing.Point(100, 51);
+            this.SnapshotColourPreview.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.SnapshotColourPreview.Name = "SnapshotColourPreview";
+            this.SnapshotColourPreview.Size = new System.Drawing.Size(32, 20);
+            this.SnapshotColourPreview.TabIndex = 59;
+            // 
+            // ColourPreview
+            // 
+            this.ColourPreview.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.ColourPreview.Location = new System.Drawing.Point(100, 25);
+            this.ColourPreview.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.ColourPreview.Name = "ColourPreview";
+            this.ColourPreview.Size = new System.Drawing.Size(32, 20);
+            this.ColourPreview.TabIndex = 58;
+            // 
+            // SnapshotColourRGB
+            // 
+            this.SnapshotColourRGB.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.SnapshotColourRGB.Location = new System.Drawing.Point(4, 53);
+            this.SnapshotColourRGB.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.SnapshotColourRGB.Name = "SnapshotColourRGB";
+            this.SnapshotColourRGB.Size = new System.Drawing.Size(93, 15);
+            this.SnapshotColourRGB.TabIndex = 56;
+            this.SnapshotColourRGB.Text = "Colour RGB";
+            this.SnapshotColourRGB.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // ColourRGB
+            // 
+            this.ColourRGB.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.ColourRGB.Location = new System.Drawing.Point(4, 28);
+            this.ColourRGB.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.ColourRGB.Name = "ColourRGB";
+            this.ColourRGB.Size = new System.Drawing.Size(93, 15);
+            this.ColourRGB.TabIndex = 55;
+            this.ColourRGB.Text = "Colour RGB";
+            this.ColourRGB.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // MM0
+            // 
+            this.MM0.Font = new System.Drawing.Font("Segoe UI Symbol", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.MM0.Location = new System.Drawing.Point(175, 4);
+            this.MM0.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.MM0.Name = "MM0";
+            this.MM0.Size = new System.Drawing.Size(49, 15);
+            this.MM0.TabIndex = 54;
+            this.MM0.Text = "⏺";
+            this.MM0.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // MM1
+            // 
+            this.MM1.Font = new System.Drawing.Font("Segoe UI Symbol", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.MM1.Location = new System.Drawing.Point(120, 4);
+            this.MM1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.MM1.Name = "MM1";
+            this.MM1.Size = new System.Drawing.Size(49, 15);
+            this.MM1.TabIndex = 53;
+            this.MM1.Text = "⏺";
+            this.MM1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // MM2
+            // 
+            this.MM2.Font = new System.Drawing.Font("Segoe UI Symbol", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.MM2.Location = new System.Drawing.Point(64, 4);
+            this.MM2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.MM2.Name = "MM2";
+            this.MM2.Size = new System.Drawing.Size(49, 15);
+            this.MM2.TabIndex = 52;
+            this.MM2.Text = "⏺";
+            this.MM2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // MM3
+            // 
+            this.MM3.Font = new System.Drawing.Font("Segoe UI Symbol", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.MM3.Location = new System.Drawing.Point(8, 4);
+            this.MM3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.MM3.Name = "MM3";
+            this.MM3.Size = new System.Drawing.Size(49, 15);
+            this.MM3.TabIndex = 51;
+            this.MM3.Text = "⏺";
+            this.MM3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // SnapshotColourHex
+            // 
+            this.SnapshotColourHex.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.SnapshotColourHex.Location = new System.Drawing.Point(135, 53);
+            this.SnapshotColourHex.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.SnapshotColourHex.Name = "SnapshotColourHex";
+            this.SnapshotColourHex.Size = new System.Drawing.Size(93, 15);
+            this.SnapshotColourHex.TabIndex = 57;
+            this.SnapshotColourHex.Text = "Colour Hex";
+            this.SnapshotColourHex.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // ColourHex
+            // 
+            this.ColourHex.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.ColourHex.Location = new System.Drawing.Point(135, 28);
+            this.ColourHex.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.ColourHex.Name = "ColourHex";
+            this.ColourHex.Size = new System.Drawing.Size(93, 15);
+            this.ColourHex.TabIndex = 50;
+            this.ColourHex.Text = "Colour Hex";
+            this.ColourHex.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // AdministratorWarning
             // 
@@ -1107,7 +1526,7 @@
             this.DebugPanel.BackColor = System.Drawing.Color.White;
             this.DebugPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.DebugPanel.Controls.Add(this.DebugInfo);
-            this.DebugPanel.Location = new System.Drawing.Point(2, 935);
+            this.DebugPanel.Location = new System.Drawing.Point(2, 1232);
             this.DebugPanel.Margin = new System.Windows.Forms.Padding(0, 2, 0, 0);
             this.DebugPanel.Name = "DebugPanel";
             this.DebugPanel.Padding = new System.Windows.Forms.Padding(0, 4, 0, 4);
@@ -1129,6 +1548,45 @@
             this.DebugInfo.Size = new System.Drawing.Size(434, 553);
             this.DebugInfo.TabIndex = 0;
             // 
+            // button1
+            // 
+            this.button1.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.button1.Location = new System.Drawing.Point(378, 179);
+            this.button1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(65, 27);
+            this.button1.TabIndex = 59;
+            this.button1.Tag = "HoleVisibility";
+            this.button1.Text = "Refit";
+            this.ToolTip.SetToolTip(this.button1, "Restore any window moved to the Hole back to its previous position");
+            this.button1.UseVisualStyleBackColor = true;
+            // 
+            // button2
+            // 
+            this.button2.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.button2.Location = new System.Drawing.Point(309, 179);
+            this.button2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(63, 27);
+            this.button2.TabIndex = 58;
+            this.button2.Tag = "HoleVisibility";
+            this.button2.Text = "Detatch";
+            this.ToolTip.SetToolTip(this.button2, "Move currently highlighted app to fit inside Hole");
+            this.button2.UseVisualStyleBackColor = true;
+            // 
+            // button3
+            // 
+            this.button3.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.button3.Location = new System.Drawing.Point(230, 179);
+            this.button3.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(73, 27);
+            this.button3.TabIndex = 60;
+            this.button3.Tag = "HoleVisibility";
+            this.button3.Text = "Detatch";
+            this.ToolTip.SetToolTip(this.button3, "Move currently highlighted app to fit inside Hole");
+            this.button3.UseVisualStyleBackColor = true;
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -1136,7 +1594,7 @@
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.ClientSize = new System.Drawing.Size(951, 1181);
+            this.ClientSize = new System.Drawing.Size(951, 1397);
             this.Controls.Add(this.ControlPanel);
             this.Controls.Add(this.Logo);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
@@ -1167,6 +1625,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.ZoomLevel)).EndInit();
             this.InfoPanel.ResumeLayout(false);
             this.InfoPanel.PerformLayout();
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.DebugPanel.ResumeLayout(false);
             this.DebugPanel.PerformLayout();
             this.ResumeLayout(false);
@@ -1248,5 +1710,40 @@
         private System.Windows.Forms.Panel DebugPanel;
         private System.Windows.Forms.TextBox DebugInfo;
         private System.Windows.Forms.Button AdministratorWarning;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.CheckBox PosOnMouseDownOnly;
+        private System.Windows.Forms.Panel CH0;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.Panel CH1;
+        private System.Windows.Forms.Panel CH2;
+        private System.Windows.Forms.Panel CH3;
+        private System.Windows.Forms.Panel CH4;
+        private System.Windows.Forms.Panel CH5;
+        private System.Windows.Forms.Panel CH6;
+        private System.Windows.Forms.Panel CH7;
+        private System.Windows.Forms.Panel SnapshotColourPreview;
+        private System.Windows.Forms.Panel ColourPreview;
+        private System.Windows.Forms.Label SnapshotColourRGB;
+        private System.Windows.Forms.Label ColourRGB;
+        private System.Windows.Forms.Label MM0;
+        private System.Windows.Forms.Label MM1;
+        private System.Windows.Forms.Label MM2;
+        private System.Windows.Forms.Label MM3;
+        private System.Windows.Forms.Label SnapshotColourHex;
+        private System.Windows.Forms.Label ColourHex;
+        private System.Windows.Forms.ComboBox GridSize;
+        private System.Windows.Forms.CheckBox Grid;
+        private System.Windows.Forms.Label GridL;
+        private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.ComboBox TrackAppList;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.TextBox Hotkey_LeftMouse;
+        private System.Windows.Forms.TextBox Hotkey;
+        private System.Windows.Forms.Label label23;
+        private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.Label label25;
+        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button button2;
     }
 }

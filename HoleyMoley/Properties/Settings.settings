@@ -83,5 +83,32 @@
     <Setting Name="ZoomEnabled" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
+    <Setting Name="Grid" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="GridSize" Type="System.String" Scope="User">
+      <Value Profile="(Default)">25.5 x 25.5</Value>
+    </Setting>
+    <Setting Name="HotKeyLeftMouseHashCode" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">113</Value>
+    </Setting>
+    <Setting Name="HotKeyLeftMouseModifier" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">2</Value>
+    </Setting>
+    <Setting Name="HotKeyLeftMouseModifierDescription" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Ctrl</Value>
+    </Setting>
+    <Setting Name="HotKeyHashCode" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">112</Value>
+    </Setting>
+    <Setting Name="HotKeyModifier" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">2</Value>
+    </Setting>
+    <Setting Name="HotKeyModifierDescription" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Ctrl</Value>
+    </Setting>
+    <Setting Name="PosOnMouseDownOnly" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
