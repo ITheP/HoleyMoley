@@ -32,7 +32,7 @@ namespace HoleyMoley
 
         private int HorizontalWobbleScale { get; set; } = 10;
         private int VerticalWobbleScale { get; set; } = 48;
-        private string Message { get; set; } = "►Holey Moley◄ ☺ ► ©2010-2021 I-The-P ◄ ☺ ►Shout-outs go to my kitty cats, IRC and bored lunchtimes◄ ☺ ";
+        private string Message { get; set; } = "►Holey Moley◄ ☺ ► ©2010-2022 I-The-P/MisterB ◄ ☺ ►Shout-outs go to my kitty cats, IRC and bored lunchtimes◄ ☺ ";
         private int MessagePos { get; set; } = 0;
         private double RenderOffset { get; set; } = 0;
         private double ScrollSpeed { get; set; } = 9.0d;
