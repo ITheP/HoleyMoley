@@ -17,6 +17,9 @@ v1.7 Test - 10/11/2021
 - Windows min/max/title bar tweaks
 - Logo changes
 
+v1.7.1 Alpha - 17/10/2022
+- First publish of a working version
+
 ToDo:
 - Make sure all settings are saving/restoring properly, including what is enabled/disabled
 - User defined highlighting colours (at the moment, not colour blind friendly)
