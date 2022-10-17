@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Holey Moley")]
-[assembly: AssemblyDescription("Windows Screen Size Overlay Helper and Highlighter")]
+[assembly: AssemblyDescription("Windows Screen Space Overlay Helper, Highlighter and extra information ")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("I The P")]
 [assembly: AssemblyProduct("Holey Moley")]
-[assembly: AssemblyCopyright("Copyright © 2010-21")]
+[assembly: AssemblyCopyright("Copyright © 2010-22")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.5.0.0")]
-[assembly: AssemblyFileVersion("1.5.0.0")]
+[assembly: AssemblyVersion("1.7.2.0")]
+[assembly: AssemblyFileVersion("1.7.2.0")]

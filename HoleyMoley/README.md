@@ -17,8 +17,11 @@ v1.7 Test - 10/11/2021
 - Windows min/max/title bar tweaks
 - Logo changes
 
+v1.7.2 Test - 10/12/2021
+- Ready to go out into the wild for the first time test
+
 v1.7.1 Alpha - 17/10/2022
-- First publish of a working version
+- First publish of a reasonably working version
 
 ToDo:
 - Make sure all settings are saving/restoring properly, including what is enabled/disabled
